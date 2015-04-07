@@ -65,6 +65,36 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	
+	<repositories>
+		<repository>
+			<id>cida-public</id>
+			<name>CIDA Public Nexus</name>
+			<url>http://cida.usgs.gov/maven/cida-public/</url>
+		</repository>
+	</repositories>
+	
+	<pluginRepositories>
+		<pluginRepository>
+			<id>cida-public</id>
+			<name>CIDA Public Plugin repo</name>
+			<url>http://cida.usgs.gov/maven/cida-public/</url>
+		</pluginRepository>
+	</pluginRepositories>
+	
+	<distributionManagement>
+		<repository>
+			<id>cida-releases</id>
+			<name>CIDA Releases</name>
+			<url>https://internal.cida.usgs.gov/maven/content/repositories/cida-public-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>cida-snapshots</id>
+			<name>CIDA Snapshots</name>
+			<url>https://internal.cida.usgs.gov/maven/content/repositories/cida-public-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	
 	<licenses>
 		<license>
 			<name>Public Domain</name>
@@ -82,6 +112,14 @@
 		<connection>scm:git:git@github.com:USGS-CIDA/gdp_web.git</connection>
 		<developerConnection>scm:git@github.com:USGS-CIDA/gdp_web.git</developerConnection>
 	</scm>
+	
+	<dependencies>
+		<dependency>
+			<groupId>gov.usgs.cida</groupId>
+			<artifactId>dynamicProperties</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
