@@ -24,18 +24,7 @@ String versionOpenLayers = props.get("version.openlayers");
 String versionHandlebars = props.get("version.handlebars");
 String versionBackbone = props.get("version.backbone");
 String versionUnderscore = props.get("version.underscore");
-
 %>
-
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GDP Page</title>
 
 <link type="text/css" rel="stylesheet" href="webjars/bootstrap/<%= versionBootstrap%>/css/bootstrap<%= development ? "" : ".min"%>.css" />
 <link type="text/css" rel="stylesheet" href="webjars/font-awesome/<%= versionFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
-
-<script type="text/javascript" src="webjars/jquery/<%= versionJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
-<script type="text/javascript" src="webjars/bootstrap/<%= versionBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
-<script type="text/javascript" src="webjars/underscorejs/<%= versionUnderscore%>/underscore<%= development ? "" : "-min"%>.js"></script>
-<script type="text/javascript" src="webjars/handlebars/<%= versionHandlebars%>/handlebars<%= development ? "" : ".min"%>.js"></script>
-<script type="text/javascript" src="webjars/backbonejs/<%= versionBackbone%>/backbone<%= development ? "" : ".min"%>.js"></script>

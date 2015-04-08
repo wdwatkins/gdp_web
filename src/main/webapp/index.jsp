@@ -39,5 +39,6 @@
 				</jsp:include>
 			</div>
 		</div>
+		<%@include file="/WEB-INF/jsp/scripts.jsp" %>
     </body>
 </html>

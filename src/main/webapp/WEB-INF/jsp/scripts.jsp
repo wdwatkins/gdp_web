@@ -1,11 +1,6 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-    </body>
-</html>
+<script type="text/javascript" src="webjars/jquery/<%= versionJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
+<script type="text/javascript" src="webjars/bootstrap/<%= versionBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
+<script type="text/javascript" src="webjars/underscorejs/<%= versionUnderscore%>/underscore<%= development ? "" : "-min"%>.js"></script>
+<script type="text/javascript" src="webjars/handlebars/<%= versionHandlebars%>/handlebars<%= development ? "" : ".min"%>.js"></script>
+<script type="text/javascript" src="webjars/backbonejs/<%= versionBackbone%>/backbone<%= development ? "" : ".min"%>.js"></script>
+
