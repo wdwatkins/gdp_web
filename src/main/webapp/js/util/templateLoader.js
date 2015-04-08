@@ -23,7 +23,7 @@ GDP.util.templateLoader = function() {
 		for (i = 0; i < names.length; i++) {
 			templates[names[i]] = '';
 			loadingDeferreds.push($.ajax({
-				url : 'templates/' + names[i] + '.html',
+				url : names[i] + '.html',
 				success : function(data) {
 					templates[this] = Handlebars.compile(data);
 				},
