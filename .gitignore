@@ -13,3 +13,6 @@ hs_err_pid*
 /target/
 /src/main/webapp/META-INF/
 /phantomjsdriver.log
+/src/main/webapp/META-INF/context.xml
+/src/main/webapp/META-INF/
+/nb-configuration.xml
