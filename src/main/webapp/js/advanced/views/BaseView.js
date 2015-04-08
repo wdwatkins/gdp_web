@@ -47,6 +47,7 @@ GDP.ADVANCED.view.BaseView = Backbone.View.extend({
 		}
 
 		Backbone.View.prototype.initialize.apply(this, arguments);
+		this.render();
 	}
 });
 
