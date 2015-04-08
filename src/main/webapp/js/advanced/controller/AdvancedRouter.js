@@ -12,7 +12,7 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 		'' : 'hub',
 		'spatial' : 'spatial',
 		'datadetail' : 'datadetail',
-		'process' : 'process',
+		'process' : 'process'
 	},
 
 	hub : function() {
