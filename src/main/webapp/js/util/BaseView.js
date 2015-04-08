@@ -1,12 +1,9 @@
 var GDP = GDP || {};
 
-GDP.ADVANCED = GDP.ADVANCED || {};
+GDP.util = GDP.util || {};
 
-GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
-GDP.ADVANCED.view.BaseView = Backbone.View.extend({
-
-	templateName : '',
+GDP.util.BaseView = Backbone.View.extend({
 
 	/**
 	 * Renders the object's template using it's context into the view's element.
@@ -43,7 +40,7 @@ GDP.ADVANCED.view.BaseView = Backbone.View.extend({
 			this.template = options.template;
 		}
 		else {
-			this.template = GDP.ADVANCED.templates.getTemplate(this.templateName);
+			this.template = function() { return 'No template specified'; };
 		}
 
 		Backbone.View.prototype.initialize.apply(this, arguments);
