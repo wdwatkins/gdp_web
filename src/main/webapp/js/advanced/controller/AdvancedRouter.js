@@ -16,7 +16,7 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 	},
 
 	hub : function() {
-		$(this.applicationContextDiv).html('Hub Page');
+		this.showView(GDP.view.HubView);
 	},
 
 	spatial : function() {
