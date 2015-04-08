@@ -1,3 +1,5 @@
+/*jslint browser: true*/
+/*global Backbone*/
 var GDP = GDP || {};
 
 GDP.ADVANCED = GDP.ADVANCED || {};
@@ -32,7 +34,9 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 	},
 
 	process : function() {
-		$(this.applicationContextDiv).html('Process Page');
+		this.showView(GDP.view.ProcessView, {
+			template : GDP.ADVANCED.templates.getTemplate('process')
+		});
 	},
 
 	showView : function(view, opts) {
@@ -45,6 +49,7 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 			router: this
 		}, opts));
 	},
+	
 	removeCurrentView : function() {
 		if (this.currentView) {
 			this.currentView.remove();

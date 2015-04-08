@@ -1,3 +1,6 @@
+/*jslint browser: true*/
+/*global Backbone*/
+/*global _*/
 var GDP = GDP || {};
 
 GDP.util = GDP.util || {};
