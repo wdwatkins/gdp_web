@@ -3,7 +3,7 @@
 <html>
 
     <head>
-		<%@include file="jsp/head.jsp" %>
+		<%@include file="/WEB-INF/jsp/head.jsp" %>
 		<jsp:include page="template/USGSHead.jsp">
 			<jsp:param name="relPath" value="" />
 			<jsp:param name="shortName" value="USGS Geo Data Portal" />

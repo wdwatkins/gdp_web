@@ -130,6 +130,24 @@
 		</dependency>
 		
 		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>javax.servlet.jsp-api</artifactId>
+			<version>2.3.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
 			<groupId>gov.usgs.cida.jslibs</groupId>
 			<artifactId>usgs-template</artifactId>
 			<version>2.2</version>
@@ -190,7 +208,7 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>openlayers</artifactId>
 			<version>${version.openlayers}</version>
-		</dependency>
+		</dependency>	
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>font-awesome</artifactId>
@@ -218,7 +236,7 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-<!--			<plugin>
+			<!--			<plugin>
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>yuicompressor-maven-plugin</artifactId>
 				<version>1.4.0</version>
