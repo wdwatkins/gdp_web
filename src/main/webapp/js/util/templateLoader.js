@@ -9,7 +9,7 @@ GDP.util.templateLoader = function() {
 	var templates = {};
 
 	self.getTemplate = function(name) {
-		if (Object.has(templates, name)) {
+		if (_.has(templates, name)) {
 			return templates[name];
 		}
 		else {
