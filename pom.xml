@@ -283,6 +283,7 @@
 						<source>webjars/OpenLayers.js</source>
 					</preloadSources>
 					<sourceIncludes>
+						<include>util/*.js</include>
 						<include>**/*.js</include>
 					</sourceIncludes>
 					<sourceExcludes>

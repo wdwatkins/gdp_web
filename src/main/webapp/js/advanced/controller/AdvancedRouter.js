@@ -26,7 +26,9 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 	},
 
 	datadetail : function() {
-		this.showView(GDP.view.DataDetailsView);
+		this.showView(GDP.view.DataDetailsView, {
+			template : GDP.ADVANCED.templates.getTemplate('datadetail')
+		});
 	},
 
 	process : function() {
