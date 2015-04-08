@@ -28,7 +28,7 @@
 				</jsp:include>
 			</div>
 
-			<h1>Hello World!</h1>
+			<div id="advanced-page-content" >Advanced page placeholder</div>
 			
 			<div class="row">
 				<jsp:include page="template/USGSFooter.jsp">
@@ -39,5 +39,9 @@
 				</jsp:include>
 			</div>
 		</div>
+		
+		<script type="text/javascript" src="js/util/templateLoader.js"></script>
+		<script type="text/javascript" src="js/advanced/controller/AdvancedRouter.js"></script>
+		<script type="text/javascript" src="js/advanced/init.js"></script>
     </body>
 </html>
