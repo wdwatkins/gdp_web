@@ -42,7 +42,7 @@
 		
 		<%@include file="/WEB-INF/jsp/scripts.jsp" %>
 		<script type="text/javascript" src="js/util/templateLoader.js"></script>
-		<script type="text/javascript" src="js/advanced/views/BaseView.js"></script>
+		<script type="text/javascript" src="js/util/BaseView.js"></script>
 		<script type="text/javascript" src="js/advanced/views/HubView.js"></script>
 		<script type="text/javascript" src="js/advanced/views/DataDetailsView.js"></script>
 		<script type="text/javascript" src="js/advanced/controller/AdvancedRouter.js"></script>

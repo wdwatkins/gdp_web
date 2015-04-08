@@ -5,13 +5,13 @@ GDP.ADVANCED = GDP.ADVANCED || {};
 $(document).ready(function() {
 	// Preload all templates and partials
 	var TEMPLATES = [
-		'js/advanced/templates/hub',
-		'js/advanced/templates/datadetail'
+		'hub',
+		'datadetail'
 	];
 
 	var PARTIALS = [];
 
-	GDP.ADVANCED.templates = GDP.util.templateLoader();
+	GDP.ADVANCED.templates = GDP.util.templateLoader('js/advanced/templates/');
 	var loadTemplates = GDP.ADVANCED.templates.loadTemplates(TEMPLATES);
 	var loadPartials = GDP.ADVANCED.templates.registerPartials(PARTIALS);
 	$.when(loadTemplates, loadPartials).always(function() {

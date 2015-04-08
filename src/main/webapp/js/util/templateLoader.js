@@ -2,7 +2,7 @@ var GDP = GDP || {};
 
 GDP.util = GDP.util || {};
 
-GDP.util.templateLoader = function() {
+GDP.util.templateLoader = function(templateDir) {
 
 	var self = {};
 
@@ -23,7 +23,7 @@ GDP.util.templateLoader = function() {
 		for (i = 0; i < names.length; i++) {
 			templates[names[i]] = '';
 			loadingDeferreds.push($.ajax({
-				url : names[i] + '.html',
+				url : templateDir + names[i] + '.html',
 				success : function(data) {
 					templates[this] = Handlebars.compile(data);
 				},
@@ -42,7 +42,7 @@ GDP.util.templateLoader = function() {
 		var loadingDeferreds = [];
 		for (i = 0; i < names.length; i++) {
 			loadingDeferreds.push($.ajax({
-				url : 'templates/partials/' + names[i] + '.html',
+				url : templateDir + 'partials/' + names[i] + '.html',
 				success : function(data) {
 					Handlebars.registerPartial(this, data);
 				},

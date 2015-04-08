@@ -1,7 +1,7 @@
 describe('Tests for templateLoader', function() {
 	var loader, server;
 	beforeEach(function() {
-		loader = GDP.util.templateLoader();
+		loader = GDP.util.templateLoader("templates/");
 
 		server = sinon.fakeServer.create();
 	});
@@ -24,15 +24,15 @@ describe('Tests for templateLoader', function() {
 		spyOn($, 'ajax').andCallThrough();
 		loader.loadTemplates(['home', 'next']).always(loadSpy);
 		expect($.ajax.calls.length).toBe(2);
-		expect($.ajax.calls[0].args[0].url).toMatch('home.html');
-		expect($.ajax.calls[1].args[0].url).toMatch('next.html');
+		expect($.ajax.calls[0].args[0].url).toMatch('templates/home.html');
+		expect($.ajax.calls[1].args[0].url).toMatch('templates/next.html');
 		expect(loadSpy).not.toHaveBeenCalled();
 	});
 
 	it('Expects loadTemplate to be resolved if the ajax calls where completed', function() {
 		var loadSpy = jasmine.createSpy('loadSpy');
-		server.respondWith('home.html', [200, {"Content-Type" : "text/html"}, "Home content"]);
-		server.respondWith('next.html', [200, {"Content-Type" : "text/html"}, "Next content"]);
+		server.respondWith('templates/home.html', [200, {"Content-Type" : "text/html"}, "Home content"]);
+		server.respondWith('templates/next.html', [200, {"Content-Type" : "text/html"}, "Next content"]);
 
 		loader.loadTemplates(['home', 'next']).always(loadSpy);
 		server.respond();
@@ -46,8 +46,8 @@ describe('Tests for templateLoader', function() {
 	});
 
 	it('Expects a template which can\'t be retrieved to use default contents', function() {
-		server.respondWith('home.html', [200, {"Content-Type" : "text/html"}, "Home content"]);
-		server.respondWith('next.html', [500, {}, "Error"]);
+		server.respondWith('templates/home.html', [200, {"Content-Type" : "text/html"}, "Home content"]);
+		server.respondWith('templates/next.html', [500, {}, "Error"]);
 
 		loader.loadTemplates(['home', 'next']);
 		server.respond();
