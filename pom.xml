@@ -65,13 +65,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		
 		<!-- js lib versions -->
-        <jquery.version>1.11.2</jquery.version>
-        <bootstrap.version>3.3.4</bootstrap.version>
-		<backbone.version>1.1.2</backbone.version>
-		<underscore.version>1.8.2</underscore.version>
-		<handlebars.version>3.0.0</handlebars.version>
-		<openlayers.version>2.13.1</openlayers.version>
-        <fontawesome.version>4.3.0</fontawesome.version>
+        <version.jquery>1.11.2</version.jquery>
+        <version.bootstrap>3.3.4</version.bootstrap>
+		<version.backbone>1.1.2</version.backbone>
+		<version.underscore>1.8.2</version.underscore>
+		<version.handlebars>3.0.0</version.handlebars>
+		<version.openlayers>2.13.1</version.openlayers>
+        <version.fontawesome>4.3.0</version.fontawesome>
 	</properties>
 	
 	<repositories>
@@ -130,24 +130,11 @@
 		</dependency>
 		
 		<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>javax.servlet-api</artifactId>
-				<version>3.0.1</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>javax.servlet.jsp</groupId>
-				<artifactId>javax.servlet.jsp-api</artifactId>
-				<version>2.3.1</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>jstl</artifactId>
-				<version>1.2</version>
-			</dependency>
+			<groupId>gov.usgs.cida.jslibs</groupId>
+			<artifactId>usgs-template</artifactId>
+			<version>2.2</version>
+			<type>war</type>
+		</dependency>
 			
 			<!-- Log4j dependencies -->
         <!-- ================================================================== -->
@@ -162,38 +149,38 @@
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
-			<version>${jquery.version}</version>
+			<version>${version.jquery}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
-			<version>${bootstrap.version}</version>
+			<version>${version.bootstrap}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>backbonejs</artifactId>
-			<version>${backbone.version}</version>
+			<version>${version.backbone}</version>
 		</dependency>
 		<!-- Needed by backbone -->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>underscorejs</artifactId>
-			<version>${underscore.version}</version>
+			<version>${version.underscore}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>handlebars</artifactId>
-			<version>${handlebars.version}</version>
+			<version>${version.handlebars}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>openlayers</artifactId>
-			<version>${openlayers.version}</version>
+			<version>${version.openlayers}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>font-awesome</artifactId>
-			<version>${fontawesome.version}</version>
+			<version>${version.fontawesome}</version>
 		</dependency>	
 	</dependencies>
 

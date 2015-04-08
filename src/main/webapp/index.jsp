@@ -1,50 +1,43 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
-
 <!DOCTYPE html>
 <html>
 
     <head>
-		
-		<%@page import="java.io.File"%>
-		<%@page import="java.net.URL"%>
-		<%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
-		
-		<%!
-		protected DynamicReadOnlyProperties props = null;
-			{
-			try {
-				URL applicationProperties = getClass().getClassLoader().getResource("application.properties");
-				File propsFile = new File(applicationProperties.toURI());
-				props = new DynamicReadOnlyProperties(propsFile);
-				props = props.addJNDIContexts(new String[0]);
-			} catch (Exception e) {
-			}
-			}
-
-		String applicationVersion = props.get("application.version");
-		String versionJquery = props.get("version.jquery");
-		String versionJqueryUi = props.get("version.jquery.ui");
-		String versionBootstrap = props.get("version.bootstrap");
-		String versionFontAwesome = props.get("version.fontawesome");
-		String versionOpenLayers = props.get("version.openlayers");
-		String versionSugar = props.get("version.sugarjs");
-		String versionBootstrapSwitch = props.get("version.bootstrap.switch");
-		String versionHandlebars = props.get("version.handlebars");
-
-		%>
-		
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>GDP Page</title>
-		<link type="text/css" rel="stylesheet" href="webjars/bootstrap/<%=versionBootstrap%>/css/bootstrap.min.css" />
-		<link type="text/css" rel="stylesheet" href="webjars/bootstrap/<%=versionBootstrap%>/css/bootstrap-responsive.min.css" />
-		<link type="text/css" rel="stylesheet" href="webjars/font-awesome/<%=versionFontAwesome%>/css/font-awesome.min.css" />
-		<script type="text/javascript" src="webjars/jquery/<%= versionJquery%>/jquery.min.js"></script>
-		<script type="text/javascript" src="webjars/bootstrap/<%=versionBootstrap%>/js/bootstrap.min.js"></script>
-    </head>
+		<%@include file="jsp/head.jsp" %>
+		<jsp:include page="template/USGSHead.jsp">
+			<jsp:param name="relPath" value="" />
+			<jsp:param name="shortName" value="USGS Geo Data Portal" />
+			<jsp:param name="title" value="USGS Geo Data Portal" />
+			<jsp:param name="description" value="" />
+			<jsp:param name="author" value="Ivan Suftin" />
+			<jsp:param name="keywords" value="" />
+			<jsp:param name="publisher" value="" />
+			<jsp:param name="revisedDate" value="" />
+			<jsp:param name="nextReview" value="" />
+			<jsp:param name="expires" value="never" />
+			<jsp:param name="development" value="<%=development%>" />
+		</jsp:include>
+	</head>
     <body>
-        <h1>Hello World!</h1>
+		<div class="container">
+			<div class="row">
+				<jsp:include page="template/USGSHeader.jsp">
+					<jsp:param name="relPath" value="" />
+					<jsp:param name="header-class" value="" />
+					<jsp:param name="site-title" value="USGS Geo Data Portal" />
+				</jsp:include>
+			</div>
+
+			<h1>Hello World!</h1>
+			
+			<div class="row">
+				<jsp:include page="template/USGSFooter.jsp">
+					<jsp:param name="relPath" value="" />
+					<jsp:param name="header-class" value="" />
+					<jsp:param name="site-url" value="<script type='text/javascript'>document.write(document.location.href);</script>" />
+					<jsp:param name="contact-info" value="<a href='mailto:gdp@usgs.gov?Subject=GDP%20Derivative%20Portal%20Help%20Request'>Contact the Geo Data Portal team</a>" />
+				</jsp:include>
+			</div>
+		</div>
     </body>
 </html>
