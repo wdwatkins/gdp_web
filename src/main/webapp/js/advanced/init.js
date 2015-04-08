@@ -5,7 +5,8 @@ GDP.ADVANCED = GDP.ADVANCED || {};
 $(document).ready(function() {
 	// Preload all templates and partials
 	var TEMPLATES = [
-		'js/advanced/templates/hub'
+		'js/advanced/templates/hub',
+		'js/advanced/templates/datadetail'
 	];
 
 	var PARTIALS = [];
