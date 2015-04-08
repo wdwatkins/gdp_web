@@ -18,13 +18,12 @@ protected DynamicReadOnlyProperties props = null;
 Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));
 String versionProject = props.get("version.project");
 String versionJquery = props.get("version.jquery");
-String versionJqueryUi = props.get("version.jquery.ui");
 String versionBootstrap = props.get("version.bootstrap");
 String versionFontAwesome = props.get("version.fontawesome");
 String versionOpenLayers = props.get("version.openlayers");
-String versionSugar = props.get("version.sugarjs");
-String versionBootstrapSwitch = props.get("version.bootstrap.switch");
 String versionHandlebars = props.get("version.handlebars");
+String versionBackbone = props.get("version.backbone");
+String versionUnderscore = props.get("version.underscore");
 
 %>
 
@@ -33,8 +32,9 @@ String versionHandlebars = props.get("version.handlebars");
 <title>GDP Page</title>
 
 <link type="text/css" rel="stylesheet" href="webjars/bootstrap/<%= versionBootstrap%>/css/bootstrap<%= development ? "" : ".min"%>.css" />
-<link type="text/css" rel="stylesheet" href="webjars/bootstrap/<%= versionBootstrap%>/css/bootstrap-responsive<%= development ? "" : ".min"%>.css" />
 <link type="text/css" rel="stylesheet" href="webjars/font-awesome/<%= versionFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
 
 <script type="text/javascript" src="webjars/jquery/<%= versionJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
 <script type="text/javascript" src="webjars/bootstrap/<%= versionBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
+<script type="text/javascript" src="webjars/underscorejs/<%= versionUnderscore%>/underscore<%= development ? "" : ".min"%>.js"></script>
+<script type="text/javascript" src="webjars/backbonejs/<%= versionBackbone%>/backbone<%= development ? "" : ".min"%>.js"></script>
