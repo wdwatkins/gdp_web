@@ -19,14 +19,11 @@ $(document).ready(function() {
 	GDP.ADVANCED.templates = GDP.util.templateLoader('js/advanced/templates/');
 	var loadTemplates = GDP.ADVANCED.templates.loadTemplates(TEMPLATES);
 	var loadPartials = GDP.ADVANCED.templates.registerPartials(PARTIALS);
-	var loadConfigModel = $.when.apply(null, [$.ajax('config', {
+	var loadConfigModel = $.when($.ajax('config', {
 			success: function (data) {
 				GDP.config = new GDP.model.Config(data);
-			},
-			error: function () {
-				// TODO: What to do here?
 			}
-		})]);
+		}));
 	
 	$.when(loadTemplates, loadPartials, loadConfigModel).always(function() {
 		GDP.ADVANCED.router = new GDP.ADVANCED.controller.AdvancedRouter();
