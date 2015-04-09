@@ -1,6 +1,7 @@
 /*jslint browser: true*/
 /*global Backbone*/
 /*global _*/
+/*global log4javascript*/
 var GDP = GDP || {};
 
 GDP.ADVANCED = GDP.ADVANCED || {};
@@ -34,6 +35,10 @@ $(document).ready(function() {
 	var loadPartials = GDP.ADVANCED.templates.registerPartials(PARTIALS);
 
 	$.when(loadTemplates, loadPartials, loadConfigModel).always(function () {
+		initializeLogging({
+			LOG4JS_LOG_THRESHOLD: GDP.config ? 'debug' : 'info'
+		});
+		GDP.logger = log4javascript.getLogger();
 		GDP.processes = new GDP.ADVANCED.collection.Processes(_.map(GDP.config.get('process').processes, function (m) {
 			return new GDP.ADVANCED.model.Process(m);
 		}));
