@@ -294,6 +294,7 @@
 						<source>webjars/OpenLayers.js</source>
 					</preloadSources>
 					<sourceIncludes>
+						<include>advanced/models/Process.js</include>
 						<include>util/*.js</include>
 						<include>**/*.js</include>
 					</sourceIncludes>
