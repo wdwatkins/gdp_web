@@ -2,11 +2,13 @@
 /*global Backbone*/
 var GDP = GDP || {};
 
-GDP.model = GDP.model || {};
+GDP.ADVANCED = GDP.ADVANCED || {};
 
-GDP.model.Process = Backbone.Model.extend({
+GDP.ADVANCED.model = GDP.ADVANCED.model || {};
+
+GDP.ADVANCED.model.Job = Backbone.Model.extend({
     defaults: {
-	dataSource : new GDP.model.DataSource,
+	dataSource : new GDP.ADVANCED.model.DataSource,
 	//reference to the spatial extent on geoserver
 	featureCollection:[],
 
