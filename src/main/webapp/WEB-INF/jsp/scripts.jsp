@@ -1,3 +1,8 @@
+<jsp:include page="js/log4javascript/log4javascript.jsp">
+	<jsp:param name="relPath" value="" />
+	<jsp:param name="debug-qualifier" value="<%= development%>" />
+</jsp:include>
+
 <script type="text/javascript" src="webjars/jquery/<%= versionJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
 <script type="text/javascript" src="webjars/bootstrap/<%= versionBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
 <script type="text/javascript" src="webjars/underscorejs/<%= versionUnderscore%>/underscore<%= development ? "" : "-min"%>.js"></script>

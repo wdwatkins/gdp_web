@@ -6,6 +6,8 @@ GDP.ADVANCED = GDP.ADVANCED || {};
 
 $(document).ready(function() {
 	"use strict";
+
+
 	// Preload all templates and partials
 	var TEMPLATES = [
 		'hub',
@@ -15,7 +17,7 @@ $(document).ready(function() {
 	];
 
 	var PARTIALS = [];
-	
+
 	GDP.ADVANCED.templates = GDP.util.templateLoader('js/advanced/templates/');
 	var loadTemplates = GDP.ADVANCED.templates.loadTemplates(TEMPLATES);
 	var loadPartials = GDP.ADVANCED.templates.registerPartials(PARTIALS);
@@ -24,8 +26,12 @@ $(document).ready(function() {
 				GDP.config = new GDP.model.Config(data);
 			}
 		}));
-	
+
 	$.when(loadTemplates, loadPartials, loadConfigModel).always(function() {
+		initializeLogging({
+			LOG4JS_LOG_THRESHOLD: GDP.config ? 'debug' : 'info'
+		});
+		GDP.logger = log4javascript.getLogger();
 		GDP.ADVANCED.router = new GDP.ADVANCED.controller.AdvancedRouter();
 		Backbone.history.start();
 	});
