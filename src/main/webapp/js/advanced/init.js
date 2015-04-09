@@ -9,6 +9,7 @@ $(document).ready(function() {
 	// Preload all templates and partials
 	var TEMPLATES = [
 		'hub',
+		'spatial',
 		'datadetail',
 		'process'
 	];

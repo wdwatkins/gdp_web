@@ -24,7 +24,9 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 	},
 
 	spatial : function() {
-		$(this.applicationContextDiv).html('Spatial Page');
+		this.showView(GDP.view.SpatialView, {
+			template : GDP.ADVANCED.templates.getTemplate('spatial')
+		});
 	},
 
 	datadetail : function() {
@@ -49,7 +51,7 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 			router: this
 		}, opts));
 	},
-	
+
 	removeCurrentView : function() {
 		if (this.currentView) {
 			this.currentView.remove();
