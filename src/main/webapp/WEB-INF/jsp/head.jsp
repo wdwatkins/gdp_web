@@ -24,9 +24,9 @@ String versionOpenLayers = props.get("version.openlayers");
 String versionHandlebars = props.get("version.handlebars");
 String versionBackbone = props.get("version.backbone");
 String versionUnderscore = props.get("version.underscore");
-String versionBsDatepicker= props.get("version.bsDatepicker");
+String versionBsDatePicker= props.get("version.bsDatePicker");
 %>
 
 <link type="text/css" rel="stylesheet" href="webjars/bootstrap/<%= versionBootstrap%>/css/bootstrap<%= development ? "" : ".min"%>.css" />
 <link type="text/css" rel="stylesheet" href="webjars/font-awesome/<%= versionFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
-<link type="text/css" rel="stylesheet" href="webjars/bootstrap-datepicker/<%= versionBsDatepicker%>/css/datepicker<%= development ? "" : ".min"%>.css" />
+<link type="text/css" rel="stylesheet" href="webjars/bootstrap-datepicker/<%= versionBsDatePicker%>/css/bootstrap-datepicker3<%= development ? "" : ".min"%>.css" />
