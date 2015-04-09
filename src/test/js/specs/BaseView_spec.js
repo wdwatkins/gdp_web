@@ -28,4 +28,4 @@ describe ('GDP.util.BaseView', function() {
 		expect(templateSpy).toHaveBeenCalledWith({a : 'this', b : 'that'});
 	});
 
-})
+});
