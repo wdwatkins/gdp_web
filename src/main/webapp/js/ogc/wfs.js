@@ -6,7 +6,7 @@ var GDP = GDP || {};
 GDP.OGC = GDP || {};
 
 
-GDP.OGC.WFS = function() {
+GDP.OGC.WFS = (function() {
     var _getCapabilities;
 
     function _callWFS(data, async, successCallback) {
@@ -20,9 +20,9 @@ GDP.OGC.WFS = function() {
         // Merge defaultData with data, putting results in wfsData. If there are
         // any conflicts, the property from data will overwrite the one in defaultData.
         $.extend(wfsData, defaultData, data);
-        logger.debug('GDP: Calling WFS Service with a '+ wfsData.request + ' request.');
+        GDP.logger.debug('GDP: Calling WFS Service with a '+ wfsData.request + ' request.');
         var promise = $.ajax({
-            url: GDP.model.Config.get('endpoints').geoserver ,
+            url: GDP.config.get('application').endpoints.geoserver  + '/wfs',
             async: async,
             data: wfsData,
             cache: false,
@@ -44,6 +44,6 @@ GDP.OGC.WFS = function() {
         callWFS: _callWFS,
         cachedGetCapabilities: _getCapabilities
     };
-};
+}());
 
 
