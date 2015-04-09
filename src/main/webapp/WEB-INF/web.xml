@@ -22,4 +22,21 @@
 		<servlet-name>config</servlet-name>
 		<url-pattern>/config</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+        <servlet-name>GeoServerProxyServlet</servlet-name>
+        <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+        <init-param>
+            <param-name>forward-url-param</param-name>
+            <param-value>gdp.endpoint.geoserver</param-value>
+        </init-param>
+        <init-param>
+            <param-name>readTimeout</param-name>
+            <param-value>300000</param-value>
+        </init-param>
+    </servlet>
+	 <servlet-mapping>
+        <servlet-name>GeoServerProxyServlet</servlet-name>
+        <url-pattern>/geoserver/*</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -21,7 +21,10 @@
 %>
 {
 	"application" : {
-		"development" : "<%= development %>"
+		"development" : "<%= development %>",
+		"endpoints" : {
+			"geoserver" : "/geoserver"
+		}
 	},
 	"map" : {
 		"extent" : {
