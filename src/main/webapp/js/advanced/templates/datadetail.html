@@ -2,27 +2,29 @@
 <div class="panel panel-default">
     <div class="panel-heading">Data Details</div>
 <form class="panel-body" action="#/">
-    <div class="row">
-	<div class="col-xs-12 col-sm-4 text-center">Data Source URL</div>
-	<input class="col-xs-12 col-sm-7" type="url" required></input>
+    <div class="form-group">
+	<label for="data-source-url">Data Source URL</label>
+	<input id="data-source-url" class="form-control" type="url" required/>
     </div>
-    <div class="row">
-	<div class="col-xs-12 col-sm-4 text-center">Parameters</div>
-	<select class="col-xs-12 col-sm-7" required multiple>
+    <div class="form-group">
+	<label for="data-source-vars">Variables</label>
+	<select id="data-source-vars" class="form-control" required multiple size="10">
 	    <option value="dummy1">dummy1</option>
 	    <option value="dummy2">dummy2</option>
 	    <option value="dummy3">dummy3</option>
 	    <option value="dummy4">dummy4</option>
 	</select>
     </div>
-    <div class="row">
-	<div class="col-xs-12 col-sm-4 text-center">Date Range</div>
-	<input class="col-xs-12 col-sm-3" type="date" required></input>
-	<div class="col-xs-12 col-sm-1" >to</div>
-	<input class="col-xs-12 col-sm-3" type="date" required></input>
+    <div class="form-horizontal">
+    <div class="form-group">
+	<label for="start-date" class="col-xs-12 col-sm-4 text-center">Date Range</label>
+	<input id="start-date" class="col-xs-12 col-sm-3" type="date" required/>
+	<label for="end-data" class="col-xs-12 col-sm-1" >to</label>
+	<input id="end-data" class="col-xs-12 col-sm-3" type="date" required/>
+    </div>
     </div>
     <div class="row center-block">
-	<button class="btn btn-default center-block">Done</button>
+	<button class="btn btn-default center-block form-control">Done</button>
     </div>
 </form>
 </div>
