@@ -36,7 +36,7 @@ $(document).ready(function() {
 
 	$.when(loadTemplates, loadPartials, loadConfigModel).always(function () {
 		initializeLogging({
-			LOG4JS_LOG_THRESHOLD: GDP.config.application.development === 'true' ? 'debug' : 'info'
+			LOG4JS_LOG_THRESHOLD: GDP.config.get('application').development === 'true' ? 'debug' : 'info'
 		});
 		GDP.logger = log4javascript.getLogger();
 		GDP.processes = new GDP.ADVANCED.collection.Processes(_.map(GDP.config.get('process').processes, function (m) {
