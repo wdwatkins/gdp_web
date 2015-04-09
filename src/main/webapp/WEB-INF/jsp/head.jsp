@@ -28,8 +28,3 @@ String versionUnderscore = props.get("version.underscore");
 
 <link type="text/css" rel="stylesheet" href="webjars/bootstrap/<%= versionBootstrap%>/css/bootstrap<%= development ? "" : ".min"%>.css" />
 <link type="text/css" rel="stylesheet" href="webjars/font-awesome/<%= versionFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
-
-<script type="text/javascript">
-	
-</script>
-	
