@@ -1,3 +1,6 @@
+/*jslint browser: true*/
+/*global Handlebars*/
+/*global _*/
 var GDP = GDP || {};
 
 GDP.util = GDP.util || {};

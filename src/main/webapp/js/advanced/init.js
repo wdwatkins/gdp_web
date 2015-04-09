@@ -6,7 +6,8 @@ $(document).ready(function() {
 	// Preload all templates and partials
 	var TEMPLATES = [
 		'hub',
-		'datadetail'
+		'datadetail',
+		'process'
 	];
 
 	var PARTIALS = [];
