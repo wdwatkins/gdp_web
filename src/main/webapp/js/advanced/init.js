@@ -7,6 +7,8 @@ GDP.ADVANCED = GDP.ADVANCED || {};
 
 $(document).ready(function() {
 	"use strict";
+
+
 	// Preload all templates and partials
 	var TEMPLATES = [
 		'hub',
@@ -16,7 +18,7 @@ $(document).ready(function() {
 	];
 
 	var PARTIALS = [];
-	
+
 	GDP.ADVANCED.templates = GDP.util.templateLoader('js/advanced/templates/');
 	
 	var loadConfigModel = $.when($.ajax('config', {
