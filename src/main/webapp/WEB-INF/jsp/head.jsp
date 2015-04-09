@@ -3,19 +3,19 @@
 <%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
 
 <%!
-protected DynamicReadOnlyProperties props = null;
+	protected DynamicReadOnlyProperties props = null;
 	{
-	try {
-		URL applicationProperties = getClass().getClassLoader().getResource("application.properties");
-		File propsFile = new File(applicationProperties.toURI());
-		props = new DynamicReadOnlyProperties(propsFile);
-		props = props.addJNDIContexts(new String[0]);
-	} catch (Exception e) {
-	}
+		try {
+			URL applicationProperties = getClass().getClassLoader().getResource("application.properties");
+			File propsFile = new File(applicationProperties.toURI());
+			props = new DynamicReadOnlyProperties(propsFile);
+			props = props.addJNDIContexts(new String[0]);
+		} catch (Exception e) {
+		}
 	}
 %>
 <%
-Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));
+	Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));
 String versionProject = props.get("version.project");
 String versionJquery = props.get("version.jquery");
 String versionBootstrap = props.get("version.bootstrap");
