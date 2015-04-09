@@ -1,5 +1,6 @@
 /*jslint browser: true*/
 /*global Backbone*/
+/*global _*/
 var GDP = GDP || {};
 
 GDP.ADVANCED = GDP.ADVANCED || {};
@@ -26,6 +27,10 @@ $(document).ready(function() {
 		}));
 	
 	$.when(loadTemplates, loadPartials, loadConfigModel).always(function() {
+		// Load up the process collection based on incoming model definitions from the config object
+		GDP.processes = new GDP.collection.Processes(_.map(GDP.config.get('process').processes, function (m) {
+			return new GDP.model.Process(m);
+		}));
 		GDP.ADVANCED.router = new GDP.ADVANCED.controller.AdvancedRouter();
 		Backbone.history.start();
 	});

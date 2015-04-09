@@ -26,6 +26,28 @@
 			"geoserver" : "/geoserver"
 		}
 	},
+	"process" : {
+		"processes" : [
+			{ 
+				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageIntersectionAlgorithm" 
+			},
+			{ 
+				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+			},
+			{ 
+				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureCategoricalGridCoverageAlgorithm"
+			},
+			{ 
+				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm"
+			},
+			{ 
+				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm"
+			},
+			{ 
+				"id" : "gov.usgs.cida.gdp.wps.algorithm.PRMSParameterGeneratorAlgorithm"
+			}
+		]
+	},
 	"map" : {
 		"extent" : {
 			"conus" : {
