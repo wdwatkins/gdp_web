@@ -2,8 +2,10 @@
 /*global Backbone*/
 var GDP = GDP || {};
 
-GDP.collection = GDP.collection || {};
+GDP.ADVANCED = GDP.ADVANCED || {};
 
-GDP.collection.Processes = Backbone.Collection.extend({
-	model: GDP.model.Process
+GDP.ADVANCED.collection = GDP.ADVANCED.collection || {};
+
+GDP.ADVANCED.collection.Processes = Backbone.Collection.extend({
+	model: GDP.ADVANCED.model.Process
 });

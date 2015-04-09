@@ -2,6 +2,8 @@
 /*global Backbone*/
 var GDP = GDP || {};
 
-GDP.model = GDP.model || {};
+GDP.ADVANCED = GDP.ADVANCED || {};
 
-GDP.model.Process = Backbone.Model.extend({});
+GDP.ADVANCED.model = GDP.ADVANCED.model || {};
+
+GDP.ADVANCED.model.Process = Backbone.Model.extend({});
