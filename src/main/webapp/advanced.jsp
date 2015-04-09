@@ -43,6 +43,7 @@
 		<%@include file="/WEB-INF/jsp/scripts.jsp" %>
 		<script type="text/javascript" src="js/util/templateLoader.js"></script>
 		<script type="text/javascript" src="js/util/BaseView.js"></script>
+		<script type="text/javascript" src="js/advanced/models/Config.js"></script>
 		<script type="text/javascript" src="js/advanced/views/HubView.js"></script>
 		<script type="text/javascript" src="js/advanced/views/ProcessView.js" />
 		<script type="text/javascript" src="js/advanced/views/DataDetailsView.js"></script>
