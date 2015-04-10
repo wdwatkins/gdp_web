@@ -1,7 +1,20 @@
 <div id="process-configuration">
 	<form>
-		<div class="form-group">
-			
-		</div>
+		{{#each inputs}}
+			{{#ifAlgorithmInputTypeIsLiteral this.input-type}}
+				{{#ifAlgorithmDataTypeIsBoolean this.data-type}}
+				<div class="checkbox">
+					<label><input type="checkbox" id="input-{{this.identifier}}">{{this.title}}</label>
+				</div>
+				{{/ifAlgorithmDataTypeIsBoolean}}
+			{{/ifAlgorithmInputTypeIsLiteral}}
+			{{#ifAlgorithmInputTypeIsComplex this.input-type}}
+				<div class="form-group">
+					<label for="input-{{this.identifier}}">{{this.title}} (complex)</label>
+					<input type="text" class="form-control" id="input-{{this.identifier}}" />
+				</div>
+			{{/ifAlgorithmInputTypeIsComplex}}
+		{{/each}}
+		<button type="submit" class="btn btn-default">Go Go Go!</button>
 	</form>
 </div>
