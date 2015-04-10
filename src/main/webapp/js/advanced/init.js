@@ -15,7 +15,8 @@ $(document).ready(function() {
 		'hub',
 		'spatial',
 		'datadetail',
-		'process'
+		'process',
+		'algorithm-config'
 	];
 
 	var PARTIALS = [];

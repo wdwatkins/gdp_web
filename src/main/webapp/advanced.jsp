@@ -50,6 +50,7 @@
 		<script type="text/javascript" src="js/advanced/collections/Processes.js"></script>
 		<script type="text/javascript" src="js/advanced/views/HubView.js"></script>
 		<script type="text/javascript" src="js/advanced/views/SpatialView.js"></script>
+		<script type="text/javascript" src="js/advanced/views/AlgorithmConfigView.js"></script>
 		<script type="text/javascript" src="js/advanced/views/ProcessView.js"></script>
 		<script type="text/javascript" src="js/advanced/views/DataDetailsView.js"></script>
 		<script type="text/javascript" src="js/advanced/controller/AdvancedRouter.js"></script>

@@ -1,6 +1,6 @@
 <div id="execution-form-container" class="row">
 	<div class="dropdown">
-		<button class="btn btn-default dropdown-toggle" type="button" id="button-dropdown-algorithm" data-toggle="dropdown" aria-expanded="true">Alg Button<span class="caret"></span></button>
+		<button class="btn btn-default dropdown-toggle" type="button" id="button-dropdown-algorithm" data-toggle="dropdown" aria-expanded="true">Choose An Algorithm<span class="caret"></span></button>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="button-dropdown-algorithm">
 			{{#each this}}
 			<li role="presentation"><a role="menuitem" tabindex="-1" id="process-selection-{{this.attributes.name}}" class="menu-dropdown-select-process">{{this.attributes.title}}</a></li>
@@ -15,4 +15,5 @@
 		</div>
 		{{/each}}
 	</div>
+	<div id="container-process-configuration"></div>
 </div>

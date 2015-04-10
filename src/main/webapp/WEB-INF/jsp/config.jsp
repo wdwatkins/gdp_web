@@ -33,13 +33,175 @@
 				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageIntersectionAlgorithm",
 				"name" : "FeatureCoverageIntersectionAlgorithm",
 				"title" : "WCS Subset",
-				"abstract" : "This service returns the subset of data that intersects a set of vector polygon features and a Web Coverage Service (WCS) data source. A GeoTIFF file will be returned."
+				"abstract" : "This service returns the subset of data that intersects a set of vector polygon features and a Web Coverage Service (WCS) data source. A GeoTIFF file will be returned.",
+				"inputs" : [
+					{
+						"identifier" : "REQUIRE_FULL_COVERAGE",
+						"title" : "Require Full Coverage",
+						"abstract" : "If turned on, the service will require that the dataset of interest fully cover the polygon analysis zone data.",
+						"input-type" : "literal",
+						"data-type" : "boolean",
+						"default" : "true",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "FEATURE_COLLECTION",
+						"title" : "Feature Collectione",
+						"abstract" : "A feature collection encoded as a WFS request or one of the supported GML profiles.",
+						"input-type" : "complex",
+						"minOccurs" : "1",
+						"maxOccurs" : "1",
+						"data-type" : [
+							{
+								"format" : {
+									"mime-type" : "text/xml",
+									"schema" : "http://schemas.opengis.net/gml/2.0.0/feature.xsd"
+								}
+							},
+							{
+								"format" : {
+									"mime-type" : "text/xml",
+									"schema" : "http://schemas.opengis.net/gml/2.1.1/feature.xsd<"
+								}
+							}
+						],
+						"default" : {
+							"format" : {
+								"mime-type" : "text/xml",
+								"schema" : "http://schemas.opengis.net/gml/2.0.0/feature.xsd"
+							}
+						}
+					},
+					{
+						"identifier" : "DATASET_URI",
+						"title" : "Dataset URI",
+						"abstract" : "The base data web service URI for the dataset of interest. The data web service must adhere to the Web Coverage Service standard.",
+						"input-type" : "uri",
+						"data-type" : "any",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "DATASET_URI",
+						"title" : "Dataset URI",
+						"abstract" : "The base data web service URI for the dataset of interest. The data web service must adhere to the Web Coverage Service standard.",
+						"input-type" : "literal",
+						"data-type" : "uri",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "DATASET_ID",
+						"title" : "Dataset Identifier",
+						"abstract" : "The unique identifier for the data type or variable of interest.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"default" : "true",
+						"minOccurs" : "1",
+						"maxOccurs" : "2147483647"
+					}
+				],
+				"outputs" : [
+					{
+						"identifier" : "OUTPUT",
+						"title" : "Output File",
+						"abstract" : "A GeoTIFF file containing the requested data.",
+						"output-type" : "complex",
+						"format" : "image/geotiff"
+					}
+				]
 			},
 			{ 
 				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm",
 				"name" : "FeatureCoverageOPeNDAPIntersectionAlgorithm",
 				"title" : "OPeNDAP Subset",
-				"abstract" : "This service returns the subset of data that intersects a set of vector polygon features and time range, if specified. A NetCDF file will be returned."
+				"abstract" : "This service returns the subset of data that intersects a set of vector polygon features and time range, if specified. A NetCDF file will be returned.",
+				"inputs" : [
+					{
+						"identifier" : "REQUIRE_FULL_COVERAGE",
+						"title" : "Require Full Coverage",
+						"abstract" : "If turned on, the service will require that the dataset of interest fully cover the polygon analysis zone data.",
+						"input-type" : "literal",
+						"data-type" : "boolean",
+						"default" : "true",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "FEATURE_COLLECTION",
+						"title" : "Feature Collectione",
+						"abstract" : "A feature collection encoded as a WFS request or one of the supported GML profiles.",
+						"input-type" : "complex",
+						"minOccurs" : "1",
+						"maxOccurs" : "1",
+						"data-type" : [
+							{
+								"format" : {
+									"mime-type" : "text/xml",
+									"schema" : "http://schemas.opengis.net/gml/2.0.0/feature.xsd"
+								}
+							},
+							{
+								"format" : {
+									"mime-type" : "text/xml",
+									"schema" : "http://schemas.opengis.net/gml/2.1.1/feature.xsd<"
+								}
+							}
+						],
+						"default" : {
+							"format" : {
+								"mime-type" : "text/xml",
+								"schema" : "http://schemas.opengis.net/gml/2.0.0/feature.xsd"
+							}
+						}
+					},
+					{
+						"identifier" : "DATASET_URI",
+						"title" : "Dataset URI",
+						"abstract" : "The base data web service URI for the dataset of interest. The data web service must adhere to the Web Coverage Service standard.",
+						"input-type" : "literal",
+						"data-type" : "uri",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "DATASET_ID",
+						"title" : "Dataset Identifier",
+						"abstract" : "The unique identifier for the data type or variable of interest.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"minOccurs" : "1",
+						"maxOccurs" : "2147483647"
+					},
+					{
+						"identifier" : "TIME_START",
+						"title" : "Time Start",
+						"abstract" : "The date to begin analysis.",
+						"input-type" : "literal",
+						"data-type" : "dateTime",
+						"minOccurs" : "0",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "TIME_END",
+						"title" : "Time End",
+						"abstract" : "The date to end analysis.",
+						"input-type" : "literal",
+						"data-type" : "dateTime",
+						"minOccurs" : "0",
+						"maxOccurs" : "1"
+					}
+				],
+				"outputs" : [
+					{
+						"identifier" : "OUTPUT",
+						"title" : "Output File",
+						"abstract" : "A NetCDF file containing requested data.",
+						"output-type" : "complex",
+						"format" : "application/netcdf"
+					}
+				]
 			},
 			{ 
 				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureCategoricalGridCoverageAlgorithm",
