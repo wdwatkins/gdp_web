@@ -45,7 +45,7 @@ var GDP = GDP || {};
 		
 	    datePickers.start.$el = $(datePickers.start.selector);
 	    datePickers.end.$el = $(datePickers.end.selector);
-	    
+	    urlPicker.$el = $(urlPicker.selector);
 	    var disabled;
 	    
 	    //disable the datepickers unless they already have values
@@ -62,7 +62,9 @@ var GDP = GDP || {};
 	    disabled = _.isNull(url) || _.isUndefined(url);
 	    variablePicker.$el = $(variablePicker.selector);
 	    variablePicker.$el.prop('disabled', disabled);
-	    
+	    if(!disabled){
+		urlPicker.$el.val(url);
+	    }
 	    return this;
 	}
     });
