@@ -59,7 +59,7 @@ GDP.util.templateLoader = function(templateDir) {
 					return options.fn(this);
 				}
 				return options.inverse(this);
-			},
+			}
 		});
 	};
 
