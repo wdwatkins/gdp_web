@@ -67,25 +67,9 @@ var GDP = GDP || {};
 	    datePickers.start.$el = $(datePickers.start.selector);
 	    datePickers.end.$el = $(datePickers.end.selector);
 	    urlPicker.$el = $(urlPicker.selector);
-	    var disabled;
 	    
-//	    //disable the datepickers unless they already have values
-//	    datePickers.start.$el.datepicker();
-//	    disabled = !this.model.get('startDate');
-//	    datePickers.start.$el.prop('disabled', disabled);
-//	    
-//	    datePickers.end.$el.datepicker();
-//	    disabled = !this.model.get('endDate');
-//	    datePickers.end.$el.prop('disabled', disabled);
-//		
-//	    //disable the variable selection unless the url already has a value
-//	    var url = this.model.get('url');
-//	    disabled = _.isNull(url) || _.isUndefined(url);
-//	    variablePicker.$el = $(variablePicker.selector);
-//	    variablePicker.$el.prop('disabled', disabled);
-//	    if(!disabled){
-//		urlPicker.$el.val(url);
-//	    }
+	    datePickers.start.$el.datepicker();
+	    datePickers.end.$el.datepicker();
 	    return this;
 	}
     });

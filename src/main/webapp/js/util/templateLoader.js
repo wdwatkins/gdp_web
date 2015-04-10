@@ -59,6 +59,12 @@ GDP.util.templateLoader = function(templateDir) {
 					return options.fn(this);
 				}
 				return options.inverse(this);
+			},
+			'ifNoVariablesSelected' : function(variables, options){
+			    if (variables.getSelected().length){
+				return options.inverse(this);
+			    }
+			    return options.fn(this);
 			}
 		});
 	};
