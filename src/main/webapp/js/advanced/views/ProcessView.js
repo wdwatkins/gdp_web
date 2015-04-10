@@ -17,8 +17,9 @@ GDP.view.ProcessView = GDP.util.BaseView.extend({
 		this.$el.html(this.template(this.collection.models));
 		this.algorithmConfigView = new GDP.view.AlgorithmConfigView({
 			template : GDP.ADVANCED.templates.getTemplate('algorithm-config'),
-			collection : this.collection.models
+			model : GDP.ADVANCED.Job
 		});
+		this.algorithmConfigView.processModelsCollection = this.collection;
 		this.algorithmConfigView.$el = this.$("#container-process-configuration");
 		return this;
 	},
