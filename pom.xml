@@ -72,6 +72,7 @@
 		<version.handlebars>3.0.0</version.handlebars>
 		<version.openlayers>2.13.1</version.openlayers>
 		<version.fontawesome>4.3.0</version.fontawesome>
+		<version.bsDatePicker>1.4.0</version.bsDatePicker>
 	</properties>
 	
 	<repositories>
@@ -219,6 +220,11 @@
 			<groupId>org.webjars</groupId>
 			<artifactId>font-awesome</artifactId>
 			<version>${version.fontawesome}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap-datepicker</artifactId>
+			<version>${version.bsDatePicker}</version>
 		</dependency>
 		<dependency>
 			<artifactId>proxy-utils</artifactId>
