@@ -6,7 +6,7 @@ GDP.view = GDP.view || {};
 
 GDP.view.ProcessView = GDP.util.BaseView.extend({
 	
-	algorithmConfigView : new GDP.view.AlgorithmConfigView(),
+	algorithmConfigView : null,
 	
 	events : {
 		"click .menu-dropdown-select-process" : "selectProcess"
@@ -15,9 +15,11 @@ GDP.view.ProcessView = GDP.util.BaseView.extend({
 	render : function () {
 		"use strict";
 		this.$el.html(this.template(this.collection.models));
+		this.algorithmConfigView = new GDP.view.AlgorithmConfigView({
+			template : GDP.ADVANCED.templates.getTemplate('algorithm-config'),
+			collection : this.collection.models
+		});
 		this.algorithmConfigView.$el = this.$("#container-process-configuration");
-		this.algorithmConfigView.render();
-		this.algorithmConfigView.delegateEvents();
 		return this;
 	},
 	
