@@ -44,7 +44,6 @@ $(document).ready(function() {
 			return new GDP.ADVANCED.model.Process(m);
 		}));
 		GDP.ADVANCED.router = new GDP.ADVANCED.controller.AdvancedRouter();
-		GDP.ADVANCED.Job = new GDP.ADVANCED.model.Job();
 		Backbone.history.start();
 	});
 

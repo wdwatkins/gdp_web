@@ -17,12 +17,24 @@ var GDP = GDP || {};
 	end : {
 	    selector: '#end-date',
 	    $el: null
-	}   
+	}
+    };
+    var urlPicker = {
+	selector: '#data-source-url',
+	$el: null
+    };
+    var urlChanged = function(ev){
+	var value = ev.target.value;
+	//todo: validation
+	this.model.set('url', value);
     };
     GDP.view.DataDetailsView = GDP.util.BaseView.extend({
-	events: {
-	    
-	},
+	model: GDP.ADVANCED.model.dataSource,
+	events : (function(){
+	    var ret = {};
+	    ret['change ' + urlPicker.selector] = urlChanged;
+	    return ret;
+	}()),
 	initialize: function() {
 
 	    //super
