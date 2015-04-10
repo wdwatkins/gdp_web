@@ -5,6 +5,9 @@ var GDP = GDP || {};
 GDP.view = GDP.view || {};
 
 GDP.view.ProcessView = GDP.util.BaseView.extend({
+	
+	algorithmConfigView : new GDP.view.AlgorithmConfigView(),
+	
 	events : {
 		"click .menu-dropdown-select-process" : "selectProcess"
 	},
@@ -12,6 +15,9 @@ GDP.view.ProcessView = GDP.util.BaseView.extend({
 	render : function () {
 		"use strict";
 		this.$el.html(this.template(this.collection.models));
+		this.algorithmConfigView.$el = this.$("#container-process-configuration");
+		this.algorithmConfigView.render();
+		this.algorithmConfigView.delegateEvents();
 		return this;
 	},
 	
@@ -44,6 +50,11 @@ GDP.view.ProcessView = GDP.util.BaseView.extend({
 		return $selectedDescription;
 	},
 	
+	/**
+	 * Hook for process selection from dropdown
+	 * @param {JQuery event} evt
+	 * @returns {undefined}
+	 */
 	selectProcess : function (evt) {
 		"use strict";
 		var targetId = evt.target.id;
