@@ -3,8 +3,16 @@
 		<button class="btn btn-default dropdown-toggle" type="button" id="button-dropdown-algorithm" data-toggle="dropdown" aria-expanded="true">Alg Button<span class="caret"></span></button>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="button-dropdown-algorithm">
 			{{#each this}}
-			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{this.attributes.title}}</a></li>
+			<li role="presentation"><a role="menuitem" tabindex="-1" id="process-selection-{{this.attributes.name}}" class="menu-dropdown-select-process">{{this.attributes.title}}</a></li>
 			{{/each}}
 		</ul>
+	</div>
+	<div id="container-process-description">
+		{{#each this}}
+		<div class="process-description" id="process-description-{{this.attributes.name}}">
+			<h4>{{this.attributes.title}}</h4>
+			{{this.attributes.abstract}}
+		</div>
+		{{/each}}
 	</div>
 </div>
