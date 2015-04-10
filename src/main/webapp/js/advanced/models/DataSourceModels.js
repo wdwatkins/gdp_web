@@ -9,12 +9,17 @@ var GDP = GDP || {};
 
     var DataSourceVariable = Backbone.Model.extend({
 	defaults:{
-	    name: null
+	    text: '',
+	    value: null,
+	    selected: false
 	}
     });
     
     var DataSourceVariables = Backbone.Collection.extend({
-	model: DataSourceVariable
+	model: DataSourceVariable,
+	hasAtLeastOneSelected: function(){
+	    return this.findWhere({'selected': true});
+	}
     });
     var theDataSourceVariables = new DataSourceVariables();
     
