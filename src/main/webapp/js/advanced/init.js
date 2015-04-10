@@ -9,7 +9,6 @@ GDP.ADVANCED = GDP.ADVANCED || {};
 $(document).ready(function() {
 	"use strict";
 
-
 	// Preload all templates and partials
 	var TEMPLATES = [
 		'hub',
@@ -39,6 +38,8 @@ $(document).ready(function() {
 		initializeLogging({
 			LOG4JS_LOG_THRESHOLD: GDP.config.get('application').development === 'true' ? 'debug' : 'info'
 		});
+		
+		GDP.ADVANCED.templates.registerHelpers();
 		GDP.logger = log4javascript.getLogger();
 		GDP.processes = new GDP.ADVANCED.collection.Processes(_.map(GDP.config.get('process').processes, function (m) {
 			return new GDP.ADVANCED.model.Process(m);

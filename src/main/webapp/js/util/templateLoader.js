@@ -36,8 +36,31 @@ GDP.util.templateLoader = function(templateDir) {
 				context : names[i]
 			}));
 		}
-
+		
 		return $.when.apply(null, loadingDeferreds);
+	};
+	
+	self.registerHelpers = function () {
+		Handlebars.registerHelper({
+			'ifAlgorithmInputTypeIsLiteral' : function (type, options) {
+				if (type === 'literal') {	
+					return options.fn(this);
+				}
+				return options.inverse(this);
+			},
+			'ifAlgorithmInputTypeIsComplex' : function (type, options) {
+				if (type === 'complex') {
+					return options.fn(this);
+				}
+				return options.inverse(this);
+			},
+			'ifAlgorithmDataTypeIsBoolean' : function (type, options) {
+				if (type === 'boolean') {
+					return options.fn(this);
+				}
+				return options.inverse(this);
+			}
+		});
 	};
 
 	self.registerPartials = function(names) {

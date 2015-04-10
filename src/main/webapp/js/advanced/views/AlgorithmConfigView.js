@@ -12,9 +12,11 @@ GDP.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 			return false;
 		}
 		
+		var algorithm = this.processModelsCollection.get(this.model.attributes.algorithmId);
+		
 		this.$el.html(this.template({
 			"job" : this.model.attributes,
-			"algorithm" : this.processModelsCollection.get(this.model.attributes.algorithmId)
+			"inputs" : algorithm.get('inputs')
 		}));
 		return this;
 	}
