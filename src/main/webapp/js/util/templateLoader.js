@@ -59,6 +59,24 @@ GDP.util.templateLoader = function(templateDir) {
 					return options.fn(this);
 				}
 				return options.inverse(this);
+			},
+			'ifAlgorithmDataTypeIsString' : function (type, options) {
+				if (type === 'string') {
+					return options.fn(this);
+				}
+				return options.inverse(this);
+			},
+			'defaultChecked' : function (bool) {
+				if (bool) {
+					return 'checked="checked"';
+				}
+				return '';
+			},
+			'defaultSelected' : function (curr, def) {
+				if (curr === def) {
+					return 'selected="selected"';
+				}
+				return '';
 			}
 		});
 	};

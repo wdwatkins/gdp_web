@@ -47,7 +47,7 @@
 					},
 					{
 						"identifier" : "FEATURE_COLLECTION",
-						"title" : "Feature Collectione",
+						"title" : "Feature Collection",
 						"abstract" : "A feature collection encoded as a WFS request or one of the supported GML profiles.",
 						"input-type" : "complex",
 						"minOccurs" : "1",
@@ -79,15 +79,6 @@
 						"abstract" : "The base data web service URI for the dataset of interest. The data web service must adhere to the Web Coverage Service standard.",
 						"input-type" : "uri",
 						"data-type" : "any",
-						"minOccurs" : "1",
-						"maxOccurs" : "1"
-					},
-					{
-						"identifier" : "DATASET_URI",
-						"title" : "Dataset URI",
-						"abstract" : "The base data web service URI for the dataset of interest. The data web service must adhere to the Web Coverage Service standard.",
-						"input-type" : "literal",
-						"data-type" : "uri",
 						"minOccurs" : "1",
 						"maxOccurs" : "1"
 					},
@@ -130,7 +121,7 @@
 					},
 					{
 						"identifier" : "FEATURE_COLLECTION",
-						"title" : "Feature Collectione",
+						"title" : "Feature Collection",
 						"abstract" : "A feature collection encoded as a WFS request or one of the supported GML profiles.",
 						"input-type" : "complex",
 						"minOccurs" : "1",
@@ -207,7 +198,98 @@
 				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureCategoricalGridCoverageAlgorithm",
 				"name" : "FeatureCategoricalGridCoverageAlgorithm",
 				"title" : "Categorical Coverage Fraction",
-				"abstract" : "This processing service is used with categorical gridded data to assess the percent coverage of each category for a set of features. This service does not process gridded time series. Using the feature dataset bounding-box, a subset of the gridded dataset is requested from the remote gridded data server. The location of each grid-cell center is then projected to the feature dataset coordinate reference system. For each grid-cell in the subsetted grid, the grid-cell center is tested for inclusion in each feature in the feature dataset. If the grid-cell center is in a given feature, the count for that cell's category is incremented for that feature. After all the grid-cell centers are processed the coverage fraction for each category is calculated for each feature." 
+				"abstract" : "This processing service is used with categorical gridded data to assess the percent coverage of each category for a set of features. This service does not process gridded time series. Using the feature dataset bounding-box, a subset of the gridded dataset is requested from the remote gridded data server. The location of each grid-cell center is then projected to the feature dataset coordinate reference system. For each grid-cell in the subsetted grid, the grid-cell center is tested for inclusion in each feature in the feature dataset. If the grid-cell center is in a given feature, the count for that cell's category is incremented for that feature. After all the grid-cell centers are processed the coverage fraction for each category is calculated for each feature.",
+				"inputs" : [
+					{
+						"identifier" : "REQUIRE_FULL_COVERAGE",
+						"title" : "Require Full Coverage",
+						"abstract" : "If turned on, the service will require that the dataset of interest fully cover the polygon analysis zone data.",
+						"input-type" : "literal",
+						"data-type" : "boolean",
+						"default" : "true",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "FEATURE_COLLECTION",
+						"title" : "Feature Collection",
+						"abstract" : "A feature collection encoded as a WFS request or one of the supported GML profiles.",
+						"input-type" : "complex",
+						"minOccurs" : "1",
+						"maxOccurs" : "1",
+						"data-type" : [
+							{
+								"format" : {
+									"mime-type" : "text/xml",
+									"schema" : "http://schemas.opengis.net/gml/2.0.0/feature.xsd"
+								}
+							},
+							{
+								"format" : {
+									"mime-type" : "text/xml",
+									"schema" : "http://schemas.opengis.net/gml/2.1.1/feature.xsd<"
+								}
+							}
+						],
+						"default" : {
+							"format" : {
+								"mime-type" : "text/xml",
+								"schema" : "http://schemas.opengis.net/gml/2.0.0/feature.xsd"
+							}
+						}
+					},
+					{
+						"identifier" : "DATASET_URI",
+						"title" : "Dataset URI",
+						"abstract" : "The base data web service URI for the dataset of interest. The data web service must adhere to the Web Coverage Service standard.",
+						"input-type" : "literal",
+						"data-type" : "uri",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "DATASET_ID",
+						"title" : "Dataset Identifier",
+						"abstract" : "The unique identifier for the data type or variable of interest.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"minOccurs" : "1",
+						"maxOccurs" : "2147483647"
+					},
+					{
+						"identifier" : "DELIMITER",
+						"title" : "Delimiter",
+						"abstract" : "The delimiter that will be used to separate columns in the processing output.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"default" : "COMMA",
+						"minOccurs" : "1",
+						"maxOccurs" : "1",
+						"options" : [
+							"COMMA",
+							"TAB",
+							"SPACE"
+						]
+					},
+					{
+						"identifier" : "TIME_END",
+						"title" : "Time End",
+						"abstract" : "The date to end analysis.",
+						"input-type" : "literal",
+						"data-type" : "dateTime",
+						"minOccurs" : "0",
+						"maxOccurs" : "1"
+					}
+				],
+				"outputs" : [
+					{
+						"identifier" : "OUTPUT",
+						"title" : "Output File",
+						"abstract" : "A NetCDF file containing requested data.",
+						"output-type" : "complex",
+						"format" : "application/netcdf"
+					}
+				]
 			},
 			{ 
 				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm",
