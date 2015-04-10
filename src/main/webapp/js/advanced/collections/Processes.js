@@ -11,8 +11,15 @@ GDP.ADVANCED.collection.Processes = Backbone.Collection.extend({
 	model: GDP.ADVANCED.model.Process,
 	getByName: function (name) {
 		"use strict";
-		return _.filter(this.models, function (m) {
+		
+		if (!name) {
+			return null;
+		}
+		
+		var algorithm = _.filter(this.models, function (m) {
 			return m.get('name') === name;
 		});
+		
+		return _.first(algorithm);
 	}
 });
