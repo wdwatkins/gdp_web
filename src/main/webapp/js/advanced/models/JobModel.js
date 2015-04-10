@@ -8,7 +8,7 @@ GDP.ADVANCED.model = GDP.ADVANCED.model || {};
 
 GDP.ADVANCED.model.Job = Backbone.Model.extend({
     defaults: {
-	dataSource : new GDP.ADVANCED.model.DataSource,
+	dataSource : new GDP.ADVANCED.model.DataSourceVariable,
 	//reference to the spatial extent on geoserver
 	featureCollection:[],
 
