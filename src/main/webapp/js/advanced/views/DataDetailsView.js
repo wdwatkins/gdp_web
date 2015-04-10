@@ -25,14 +25,21 @@ var GDP = GDP || {};
     };
     var urlChanged = function(ev){
 	var value = ev.target.value;
-	//todo: validation
+
+	var variables = [];
+	
+	//todo: url validation
+	
+	if(!(_.isNull(value) || _.isUndefined(value) || _.isEmpty(value))){
+	    //todo: launch ajax call to retrieve variables
+	    variables = [
+		{'text': 'dummy1', 'value': 'dummy1', 'selected': false},
+		{'text': 'dummy2', 'value': 'dummy2', 'selected': false},
+		{'text': 'dummy3', 'value': 'dummy3', 'selected': false}
+	    ];
+	}
 	this.model.set('url', value);
-	//todo: launch ajax call to retrieve variables
-	this.model.get('variables').reset([
-	    {'text': 'dummy1', 'value': 'dummy1', 'selected': false},
-	    {'text': 'dummy2', 'value': 'dummy2', 'selected': false},
-	    {'text': 'dummy3', 'value': 'dummy3', 'selected': false}
-	]);
+	this.model.get('variables').reset(variables);
 	this.render();
     };
     var variableSelected = function(ev){

@@ -16,10 +16,7 @@ var GDP = GDP || {};
     });
     
     var DataSourceVariables = Backbone.Collection.extend({
-	model: DataSourceVariable,
-	getSelected: function(){
-	    return this.where({'selected': true});
-	}
+	model: DataSourceVariable
     });
     var theDataSourceVariables = new DataSourceVariables();
     
