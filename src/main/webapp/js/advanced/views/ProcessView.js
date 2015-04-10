@@ -62,6 +62,9 @@ GDP.view.ProcessView = GDP.util.BaseView.extend({
 		var targetId = evt.target.id;
 		var algorithmName = _.last(targetId.split('-'));
 		
+		GDP.ADVANCED.Job.algorithmId = this.collection.getByName(algorithmName);
 		this.displayAlgorithmDescription(algorithmName);
+		this.algorithmConfigView.render();
+		this.algorithmConfigView.delegateEvents();
 	}
 });
