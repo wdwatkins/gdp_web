@@ -74,10 +74,9 @@ var WPS = function () {
 
     // Public members and methods
     return {
-        init: _.once(function() {
+        init: _.memoize(function(wpsUrl) {
             // Warm up the OGC proxy by making a getting the GetCaps from the process 
             // wps server
-            var wpsURL = Constant.endpoint.proxy + Constant.endpoint.processwps;
             WPS.sendWPSGetRequest(wpsURL, WPS.getCapabilitiesParams, false, function() {
             });
         }),
