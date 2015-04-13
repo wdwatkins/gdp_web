@@ -9,21 +9,22 @@ var GDP = GDP || {};
     
     var Job = Backbone.Model.extend({
 	defaults: {
-	    dataSource : GDP.ADVANCED.model.dataSource,
+	    dataSourceUrl : null,
+	    dataSourceVariables : new GDP.ADVANCED.model.DataSourceVariables(),
+	    startDate: null,
+	    endDate: null,
 	    //reference to the spatial extent on geoserver
 	    featureCollection:[],
 
 	    //ows identifier for the algorithm. Ex: gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm
 	    algorithmId: null,
-	    algorithmConfig: {
-		featureAttributeName:null,
-		requireFullCoverage:null,
-		delimiter:null,
-		summarizeTimestep:null,
-		groupBy:null,
-		statistics: [],
-		sumarizeFeatureAttribute: null
-	    }
+	    featureAttributeName:null,
+	    requireFullCoverage:null,
+	    delimiter:null,
+	    summarizeTimestep:null,
+	    groupBy:null,
+	    statistics: [],
+	    sumarizeFeatureAttribute: null
 	} 
     });
     GDP.ADVANCED.model.job = new Job();
