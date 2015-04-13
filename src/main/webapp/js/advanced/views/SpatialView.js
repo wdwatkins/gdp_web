@@ -67,12 +67,7 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 	},
 
 	changeValues : function(ev) {
-		var values = [];
-		var i;
-		for (i = 0; i < ev.target.selectedOptions.length; i++) {
-			values.push(ev.target.selectedOptions[i].value);
-		}
-		this.model.set('aoiAttributeValues', values);
+		this.model.set('aoiAttributeValues', _.pluck(values, value));
 	},
 
 	updateAttributes : function() {
@@ -91,10 +86,15 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 				},
 				false,
 				function(data) {
+					var optionValues = [];
 					var options = '';
+
 					$(data).find('complexContent').find('element[name!="the_geom"]').each(function() {
-						var attribute = $(this).attr('name');
-						options += '<option value="' + attribute +'">' + attribute + '</option>';
+						optionValues.push($(this).attr('name'));
+					});
+					optionValues.sort();
+					_.each(optionValues, function(v) {
+						options += '<option value="' + v +'">' + v+ '</option>';
 					});
 					$select.append(options);
 				}
@@ -120,16 +120,19 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 				},
 				false,
 				function(data) {
-					var optValues = [];
+					var optionValues = [];
 					var options = '';
 
-					$select.html();
 					$(data).find(attribute).each(function() {
+						// Don't repeat values in the list
 						var value = $(this).text();
-						if (_.indexOf(optValues, value) === -1) {
-							optValues.push(value);
-							options += '<option value="' + value + '">' + value + '</option>';
+						if (_.indexOf(optionValues, value) === -1) {
+							optionValues.push(value);
 						}
+					});
+					optionValues.sort();
+					_.each(optionValues, function(v) {
+						options += '<option value="' + v + '">' + v + '</option>';
 					});
 					$select.append(options);
 				}
