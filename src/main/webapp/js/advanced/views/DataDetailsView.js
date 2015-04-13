@@ -38,8 +38,8 @@ var GDP = GDP || {};
 		{'text': 'dummy3', 'value': 'dummy3', 'selected': false}
 	    ];
 	}
-	this.model.set('url', value);
-	this.model.get('variables').reset(variables);
+	this.model.set('dataSourceUrl', value);
+	this.model.get('dataSourceVariables').reset(variables);
 	this.render();
     };
     var variableSelected = function(ev){
@@ -52,7 +52,7 @@ var GDP = GDP || {};
 	    };
 	});
 	
-	this.model.get('variables').reset(variables);
+	this.model.get('dataSourceVariables').reset(variables);
 	this.render();
     };
     
@@ -69,7 +69,10 @@ var GDP = GDP || {};
 	    GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 	},
 	render : function () {
-	    this.$el.html(this.template(this.model.attributes));
+	    this.$el.html(this.template({
+		url : this.model.get('dataSourceUrl'),
+		variables : this.model.get('dataSourceVariables')
+	    }));
 		
 	    datePickers.start.$el = $(datePickers.start.selector);
 	    datePickers.end.$el = $(datePickers.end.selector);

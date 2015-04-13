@@ -67,14 +67,10 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 	},
 
 	changeValues : function(ev) {
-		var values = [];
-		var i;
-		for (i = 0; i < ev.target.selectedOptions.length; i++) {
-			values.push(ev.target.selectedOptions[i].value);
-		}
-		this.model.set('aoiAttributeValues', values);
+	    var aoiAttributeValues = _.pluck(ev.target.selectedOptions, 'value');
+	    this.model.set('aoiAttributeValues', aoiAttributeValues);
 	},
-
+	
 	updateAttributes : function() {
 		var name = this.model.get('aoiName');
 		var $select = $('#select-attribute');

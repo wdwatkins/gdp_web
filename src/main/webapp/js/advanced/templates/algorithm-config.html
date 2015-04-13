@@ -2,30 +2,32 @@
 	<form>
 		<div id="process-algorithm-configuration-description">
 		{{#each inputs}}
-			{{#ifAlgorithmInputTypeIsLiteral this.input-type}}
+			{{#ifAlgorithmInputTypeIsLiteral input-type}}
 			
 				{{!-- Booleans --}}
-				{{#ifAlgorithmDataTypeIsBoolean this.data-type}}
+				{{#ifAlgorithmDataTypeIsBoolean data-type}}
 				<div class="checkbox">
-					<label><input type="checkbox" {{defaultChecked this.default}} id="input-{{this.identifier}}">{{this.title}}</label>
+					<label for="input-{{identifier}}">
+					    <input type="checkbox" {{defaultChecked default}} id="input-{{identifier}}"/>{{title}}
+					</label>
 				</div>
 				{{/ifAlgorithmDataTypeIsBoolean}}
 				
 				{{!-- Strings --}}
-				{{#ifAlgorithmDataTypeIsString this.data-type}}
+				{{#ifAlgorithmDataTypeIsString data-type}}
 				
-				{{#if this.options}}
+				{{#if options}}
 					{{!-- Select Box --}}
 					<select class="form-control">
-						{{#each this.options}}
+						{{#each options}}
 						<option value="{{this}}" {{defaultSelected this ../default}}>{{this}}</option>
 						{{/each}}
 					</select>
 				{{else}}
 					{{!-- Text Box --}}
 					<div class="form-group">
-						<label for="input-{{this.identifier}}">{{this.title}}</label>
-						<input type="text" class="form-control" id="input-{{this.identifier}}" />
+						<label for="input-{{identifier}}">{{title}}</label>
+						<input type="text" class="form-control" id="input-{{identifier}}" />
 					</div>
 				{{/if}}
 				
@@ -34,10 +36,10 @@
 				
 				
 			{{/ifAlgorithmInputTypeIsLiteral}}
-			{{#ifAlgorithmInputTypeIsComplex this.input-type}}
+			{{#ifAlgorithmInputTypeIsComplex input-type}}
 				<div class="form-group">
-					<label for="input-{{this.identifier}}">{{this.title}} (complex)</label>
-					<input type="text" class="form-control" id="input-{{this.identifier}}" />
+					<label for="input-{{identifier}}">{{title}} (complex)</label>
+					<input type="text" class="form-control" id="input-{{identifier}}" />
 				</div>
 			{{/ifAlgorithmInputTypeIsComplex}}
 		{{/each}}
