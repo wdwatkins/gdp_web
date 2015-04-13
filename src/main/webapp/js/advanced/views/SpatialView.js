@@ -27,7 +27,7 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 				return;
 			},
 			function() {
-				GDP.logger.debug('GDP.view.SpatialView getAvailableFeatures failed');
+				GDP.logger.error('GDP.view.SpatialView getAvailableFeatures failed');
 			}
 		);
 		this.listenTo(this.model, 'change:aoiName', this.updateAttributes);
@@ -109,18 +109,19 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 
 	updateValues : function() {
 		var attribute = this.model.get('aoiAttribute');
+		var name = this.model.get('aoiName');
 		var $select = $('#select-values');
 
 		this.model.set('aoiAttributeValues', []);
 		$select.find('option').not(':first-child').remove();
 		$select.val();
 
-		if (attribute) {
+		if ((name) || (attribute)) {
 			GDP.OGC.WFS.callWFS(
 				{
 					request : 'GetFeature',
-					typeName : this.model.get('aoiName'),
-					propertyName : attribute,
+					typename : this.model.get('aoiName'),
+					propertyname : attribute,
 					maxFeatures : 5001 //TODO verify that this is correct
 				},
 				false,
