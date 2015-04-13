@@ -25,9 +25,9 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 	},
 
 	spatial : function() {
-		this.showView(GDP.view.SpatialView, {
+		this.showView(GDP.ADVANCED.view.SpatialView, {
 			template : GDP.ADVANCED.templates.getTemplate('spatial'),
-			model : new GDP.ADVANCED.model.SpatialModel()
+			model : GDP.ADVANCED.model.job
 		});
 	},
 
