@@ -6,7 +6,7 @@ var GDP = GDP || {};
     GDP.ADVANCED = GDP.ADVANCED || {};
 
     GDP.ADVANCED.model = GDP.ADVANCED.model || {};
-    
+
     var Job = Backbone.Model.extend({
 	defaults: {
 	    //data detailsL
@@ -20,7 +20,6 @@ var GDP = GDP || {};
 	    aoiAttribute : '',
 	    aoiAttributeValues : [],
 	    
-	    //algorithm details;
 	    //ows identifier for the algorithm. Ex: gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm
 	    processes: new GDP.ADVANCED.collection.Processes(),
 	    algorithmId: null,
@@ -32,6 +31,7 @@ var GDP = GDP || {};
 	    statistics: [],
 	    sumarizeFeatureAttribute: null
 	} 
+
     });
     GDP.ADVANCED.model.Job = Job;
 }());
