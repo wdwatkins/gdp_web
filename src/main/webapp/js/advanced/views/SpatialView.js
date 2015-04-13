@@ -37,14 +37,18 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 	getAvailableFeatures : function() {
 		var populateFeatureTypesSelectBox = function(data) {
 			var $select = $('#select-aoi');
+			var optionValues = [];
 			var options = '';
 
 			$select.find('option').not(':first-child').remove();
 			$select.val(null);
 
 			$(data).find('FeatureType').each(function() {
-				var name = $(this).find('Name').text();
-				options += '<option value="' + name + '">' + name + '</option>';
+				optionValues.push($(this).find('Name').text());
+			});
+			optionValues.sort();
+			_.each(optionValues, function(v) {
+				options += '<option value="' + v + '">' + v + '</option>';
 			});
 			$select.append(options);
 		};
@@ -67,8 +71,8 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 	},
 
 	changeValues : function(ev) {
-
-		this.model.set('aoiAttributeValues', _.pluck(values, value));
+		var aoiAttributeValues = _.pluck(ev.target.selectedOptions, 'value');
+	    this.model.set('aoiAttributeValues', aoiAttributeValues);
 	},
 
 	updateAttributes : function() {
