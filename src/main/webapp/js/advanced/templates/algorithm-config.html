@@ -1,12 +1,38 @@
 <div id="process-configuration">
 	<form>
+		<div id="process-algorithm-configuration-description">
 		{{#each inputs}}
 			{{#ifAlgorithmInputTypeIsLiteral this.input-type}}
+			
+				{{!-- Booleans --}}
 				{{#ifAlgorithmDataTypeIsBoolean this.data-type}}
 				<div class="checkbox">
-					<label><input type="checkbox" id="input-{{this.identifier}}">{{this.title}}</label>
+					<label><input type="checkbox" {{defaultChecked this.default}} id="input-{{this.identifier}}">{{this.title}}</label>
 				</div>
 				{{/ifAlgorithmDataTypeIsBoolean}}
+				
+				{{!-- Strings --}}
+				{{#ifAlgorithmDataTypeIsString this.data-type}}
+				
+				{{#if this.options}}
+					{{!-- Select Box --}}
+					<select class="form-control">
+						{{#each this.options}}
+						<option value="{{this}}" {{defaultSelected this ../default}}>{{this}}</option>
+						{{/each}}
+					</select>
+				{{else}}
+					{{!-- Text Box --}}
+					<div class="form-group">
+						<label for="input-{{this.identifier}}">{{this.title}}</label>
+						<input type="text" class="form-control" id="input-{{this.identifier}}" />
+					</div>
+				{{/if}}
+				
+				{{/ifAlgorithmDataTypeIsString}}
+				
+				
+				
 			{{/ifAlgorithmInputTypeIsLiteral}}
 			{{#ifAlgorithmInputTypeIsComplex this.input-type}}
 				<div class="form-group">
@@ -15,6 +41,17 @@
 				</div>
 			{{/ifAlgorithmInputTypeIsComplex}}
 		{{/each}}
+		</div>
+		
+		<div id="process-algorithm-execution-definition">
+			<label for="email">
+				<input type="text" class="form-control" id="email" placeholder="Email Address">
+			</label>
+			<label for="filename">
+				<input type="text" class="form-control" id="filename" placeholder="Filename (Optional)">
+			</label>
+		</div>
+		
 		<button type="submit" class="btn btn-default">Go Go Go!</button>
 	</form>
 </div>
