@@ -67,6 +67,7 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 	},
 
 	changeValues : function(ev) {
+
 		this.model.set('aoiAttributeValues', _.pluck(values, value));
 	},
 

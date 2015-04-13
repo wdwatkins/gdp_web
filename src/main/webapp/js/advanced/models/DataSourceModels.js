@@ -18,16 +18,7 @@ var GDP = GDP || {};
     var DataSourceVariables = Backbone.Collection.extend({
 	model: DataSourceVariable
     });
-    var theDataSourceVariables = new DataSourceVariables();
     
-    var DataSource = Backbone.Model.extend({
-	defaults:{
-	    startDate: null,
-	    endDate: null,
-	    url: null,
-	    variables: theDataSourceVariables
-	}
-    });
-    GDP.ADVANCED.model.dataSource = new DataSource();
-
+    GDP.ADVANCED.model.DataSourceVariable = DataSourceVariable;
+    GDP.ADVANCED.model.DataSourceVariables = DataSourceVariables;
 }());

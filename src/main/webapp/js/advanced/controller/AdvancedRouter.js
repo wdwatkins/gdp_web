@@ -9,7 +9,10 @@ GDP.ADVANCED.controller = GDP.ADVANCED.controller || {};
 GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 
 	applicationContextDiv : '#advanced-page-content',
-
+	jobModel: null,
+	initialize: function(jobModel){
+	  this.jobModel = jobModel;
+	},
 	routes : {
 		'' : 'hub',
 		'spatial' : 'spatial',
@@ -20,28 +23,28 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 	hub : function() {
 		this.showView(GDP.view.HubView, {
 			template : GDP.ADVANCED.templates.getTemplate('hub'),
-			model: GDP.ADVANCED.model.job
+			model: this.jobModel
 		});
 	},
 
 	spatial : function() {
 		this.showView(GDP.ADVANCED.view.SpatialView, {
 			template : GDP.ADVANCED.templates.getTemplate('spatial'),
-			model : GDP.ADVANCED.model.job
+			model : this.jobModel
 		});
 	},
 
 	datadetail : function() {
 		this.showView(GDP.view.DataDetailsView, {
 			template : GDP.ADVANCED.templates.getTemplate('datadetail'),
-			model: GDP.ADVANCED.model.dataSource
+			model: this.jobModel
 		});
 	},
 
 	process : function() {
 		this.showView(GDP.view.ProcessView, {
 			template : GDP.ADVANCED.templates.getTemplate('process'),
-			collection : GDP.processes
+			model: this.jobModel
 		});
 	},
 
