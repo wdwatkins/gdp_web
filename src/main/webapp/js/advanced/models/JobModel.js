@@ -9,14 +9,20 @@ var GDP = GDP || {};
     
     var Job = Backbone.Model.extend({
 	defaults: {
+	    //data detailsL
 	    dataSourceUrl : null,
 	    dataSourceVariables : new GDP.ADVANCED.model.DataSourceVariables(),
 	    startDate: null,
 	    endDate: null,
-	    //reference to the spatial extent on geoserver
-	    featureCollection:[],
-
+	    
+	    //spatial details:
+	    aoiName : '',
+	    aoiAttribute : '',
+	    aoiAttributeValues : [],
+	    
+	    //algorithm details;
 	    //ows identifier for the algorithm. Ex: gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm
+	    processes: new GDP.ADVANCED.collection.Processes(),
 	    algorithmId: null,
 	    featureAttributeName:null,
 	    requireFullCoverage:null,

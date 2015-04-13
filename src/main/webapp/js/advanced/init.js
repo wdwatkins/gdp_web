@@ -41,9 +41,7 @@ $(document).ready(function() {
 		
 		GDP.ADVANCED.templates.registerHelpers();
 		GDP.logger = log4javascript.getLogger();
-		GDP.processes = new GDP.ADVANCED.collection.Processes(_.map(GDP.config.get('process').processes, function (m) {
-			return new GDP.ADVANCED.model.Process(m);
-		}));
+		GDP.ADVANCED.model.job.get('processes').reset(GDP.config.get('process').processes);
 		GDP.ADVANCED.router = new GDP.ADVANCED.controller.AdvancedRouter();
 		Backbone.history.start();
 	});

@@ -47,10 +47,10 @@
 		<script type="text/javascript" src="js/ogc/wfs.js"></script>
 		<script type="text/javascript" src="js/advanced/models/Process.js"></script>
 		<script type="text/javascript" src="js/advanced/models/DataSourceModels.js"></script>
-		<script type="text/javascript" src="js/advanced/models/JobModel.js"></script>
 		<script type="text/javascript" src="js/advanced/models/SpatialModel.js"></script>
 		<script type="text/javascript" src="js/advanced/models/DataSourceModels.js"></script>
 		<script type="text/javascript" src="js/advanced/collections/Processes.js"></script>
+		<script type="text/javascript" src="js/advanced/models/JobModel.js"></script>
 		<script type="text/javascript" src="js/advanced/views/HubView.js"></script>
 		<script type="text/javascript" src="js/advanced/views/SpatialView.js"></script>
 		<script type="text/javascript" src="js/advanced/views/AlgorithmConfigView.js"></script>
