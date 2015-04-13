@@ -33,5 +33,5 @@ var GDP = GDP || {};
 	    sumarizeFeatureAttribute: null
 	} 
     });
-    GDP.ADVANCED.model.job = new Job();
+    GDP.ADVANCED.model.Job = Job;
 }());
