@@ -6,9 +6,13 @@ var GDP = GDP || {};
     GDP.ADVANCED = GDP.ADVANCED || {};
 
     GDP.ADVANCED.model = GDP.ADVANCED.model || {};
-    
+
     var Job = Backbone.Model.extend({
 	defaults: {
+		aoiName : '',
+		aoiAttribute : '',
+		aoiAttributeValues : [],
+		
 	    dataSource : GDP.ADVANCED.model.dataSource,
 	    //reference to the spatial extent on geoserver
 	    featureCollection:[],
@@ -24,7 +28,7 @@ var GDP = GDP || {};
 		statistics: [],
 		sumarizeFeatureAttribute: null
 	    }
-	} 
+	}
     });
     GDP.ADVANCED.model.job = new Job();
 }());
