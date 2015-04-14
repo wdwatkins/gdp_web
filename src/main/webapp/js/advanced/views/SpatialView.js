@@ -43,7 +43,10 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				}),
 				new OpenLayers.Control.Zoom()
 			];
+
 			this.aoiLayer = null;
+			this.highlightLayer = null;
+
 			this.map = GDP.util.mapUtils.createMap(baseLayers, controls);
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
@@ -76,6 +79,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.listenTo(this.model, 'change:aoiName', this.updateAttributes);
 			this.listenTo(this.model, 'change:aoiName', this.updateAOILayer);
 			this.listenTo(this.model, 'change:aoiAttribute', this.updateValues);
+			this.listenTo(this.model, 'change:aoiAttributeValues', this.highlightFeatures);
 		},
 
 		getAvailableFeatures : function() {
@@ -124,7 +128,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						GDP.config.get('application').endpoints.geoserver + '/wms?',
 						{
 							layers : name,
-							transparent : true,
+							transparent : true
 						},
 						{
 							opacity: 0.6,
@@ -198,6 +202,48 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						this.attributeValuesSelectMenuView.updateMenuOptions(optionValues);
 					}, this)
 				);
+			}
+		},
+
+		highlightFeatures : function() {
+			var name = this.model.get('aoiName');
+			var attribute = this.model.get('aoiAttribute');
+			var values = _.map(this.model.get('aoiAttributeValues'), function(v) {
+				return '\'' + v + '\'';
+			});
+
+			if ((name) && (attribute) && (values)) {
+				var filter = attribute + ' IN (' + values.join(',') + ')';
+				if (this.highlightLayer) {
+					this.highlightLayer.mergeNewParams({
+						layers : name,
+						cql_filter : filter
+					});
+				}
+				else {
+					this.highlightLayer = new OpenLayers.Layer.WMS(
+						"Selected AOI",
+						GDP.config.get('application').endpoints.geoserver + '/wms?',
+						{
+							layers : name,
+							transparent : true,
+							styles : 'highlight',
+							cql_filter : filter
+						},
+						{
+							opacity: 0.6,
+							displayInLayerSwitcher : false,
+							visibility : true,
+							isBaseLayer : false,
+							singleTile : true
+						}
+					);
+					this.map.addLayer(this.highlightLayer);
+				}
+			}
+			else if (this.highlightLayer) {
+				this.map.removeLayer(this.highlightLayer);
+				this.highlightLayer = null;
 			}
 		}
 
