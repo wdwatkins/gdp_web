@@ -3,6 +3,7 @@
 /*global $*/
 /*global GDP.util.BaseView*/
 /*global GDP.util.SelectMenuView*/
+/*global GDP.util.mapUtils*/
 /*global GDP.OGC.WFS*/
 
 var GDP = GDP || {};
@@ -20,8 +21,28 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 		'change #select-values' : 'changeValues'
 	},
 
+	render : function() {
+		GDP.util.BaseView.prototype.render.apply(this, arguments);
+		this.map.render('spatial-map');
+		this.map.zoomToExtent(this.map.getMaxExtent(), true);
+	},
+
 	initialize : function(options) {
 		"use strict";
+		var baseLayers = [GDP.util.mapUtils.createWorldStreetMapLayer()];
+		var controls = [
+			new OpenLayers.Control.Navigation(),
+			new OpenLayers.Control.MousePosition({
+				prefix: 'POS: ',
+				numDigits: 2,
+				displayProjection: GDP.util.mapUtils.WGS84_GEOGRAPHIC
+			}),
+			new OpenLayers.Control.ScaleLine({
+				geodesic: true
+			}),
+			new OpenLayers.Control.Zoom()
+		];
+		this.map = GDP.util.mapUtils.createMap(baseLayers, controls);
 
 		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 

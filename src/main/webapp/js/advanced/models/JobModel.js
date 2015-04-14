@@ -2,7 +2,7 @@
 /*global Backbone*/
 var GDP = GDP || {};
 (function(){
-
+ 
     GDP.ADVANCED = GDP.ADVANCED || {};
 
     GDP.ADVANCED.model = GDP.ADVANCED.model || {};
@@ -14,12 +14,12 @@ var GDP = GDP || {};
 	    dataSourceVariables : new GDP.ADVANCED.model.DataSourceVariables(),
 	    startDate: null,
 	    endDate: null,
-	    
+
 	    //spatial details:
 	    aoiName : '',
 	    aoiAttribute : '',
 	    aoiAttributeValues : [],
-	    
+
 	    //ows identifier for the algorithm. Ex: gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm
 	    processes: new GDP.ADVANCED.collection.Processes(),
 	    algorithmId: null,
@@ -30,7 +30,7 @@ var GDP = GDP || {};
 	    groupBy:null,
 	    statistics: [],
 	    sumarizeFeatureAttribute: null
-	} 
+	}
 
     });
     GDP.ADVANCED.model.Job = Job;
