@@ -1,7 +1,9 @@
 /*jslint browser: true*/
-/*global Backbone*/
 /*global _*/
-/*global GDP.ADVANCED.model.Job */
+/*global $*/
+/*global GDP.util.BaseView*/
+/*global GDP.util.SelectMenuView*/
+/*global GDP.OGC.WFS*/
 
 var GDP = GDP || {};
 
@@ -19,15 +21,32 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 	},
 
 	initialize : function(options) {
+		"use strict";
 
 		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+
+		this.nameSelectMenuView = new GDP.util.SelectMenuView({
+			el : '#select-aoi',
+			emptyPlaceholder : true,
+			sortOptions: true
+		});
+		this.attributeSelectMenuView = new GDP.util.SelectMenuView({
+			el : '#select-attribute',
+			emptyPlaceholder : true,
+			sortOptions: true
+		});
+		this.attributeValuesSelectMenuView = new GDP.util.SelectMenuView({
+			el : '#select-values',
+			emptyPlaceholder : true,
+			sortOptions: true
+		});
 
 		this.getAvailableFeatures().then(
 			function() {
 				return;
 			},
 			function() {
-				GDP.logger.debug('GDP.view.SpatialView getAvailableFeatures failed');
+				GDP.logger.error('GDP.view.SpatialView getAvailableFeatures failed');
 			}
 		);
 		this.listenTo(this.model, 'change:aoiName', this.updateAttributes);
@@ -35,19 +54,16 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 	},
 
 	getAvailableFeatures : function() {
-		var populateFeatureTypesSelectBox = function(data) {
-			var $select = $('#select-aoi');
-			var options = '';
+		"use strict";
 
-			$select.find('option').not(':first-child').remove();
-			$select.val(null);
-
+		var populateFeatureTypesSelectBox = _.bind(function(data) {
+			var optionValues = [];
+			this.nameSelectMenuView.$el.val(null);
 			$(data).find('FeatureType').each(function() {
-				var name = $(this).find('Name').text();
-				options += '<option value="' + name + '">' + name + '</option>';
+				optionValues.push($(this).find('Name').text());
 			});
-			$select.append(options);
-		};
+			this.nameSelectMenuView.updateMenuOptions(optionValues);
+		}, this);
 
 		return GDP.OGC.WFS.callWFS(
 			{
@@ -59,26 +75,29 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 	},
 
 	changeName : function(ev) {
+		"use strict";
 		this.model.set('aoiName', ev.target.value);
 	},
 
 	changeAttribute : function(ev) {
+		"use strict";
 		this.model.set('aoiAttribute', ev.target.value);
 	},
 
 	changeValues : function(ev) {
-	    var aoiAttributeValues = _.pluck(ev.target.selectedOptions, 'value');
-	    this.model.set('aoiAttributeValues', aoiAttributeValues);
+		"use strict";
+		var aoiAttributeValues = _.pluck(ev.target.selectedOptions, 'value');
+		this.model.set('aoiAttributeValues', aoiAttributeValues);
 	},
-	
+
 	updateAttributes : function() {
+		"use strict";
 		var name = this.model.get('aoiName');
-		var $select = $('#select-attribute');
 
-		$select.find('option').not(':first-child').remove();
-		$select.val(null);
-
+		this.attributeSelectMenuView.$el.val(null);
+		this.attributeSelectMenuView.updateMenuOptions([]);
 		this.model.set('aoiAttribute', '');
+
 		if (name) {
 			GDP.OGC.WFS.callWFS(
 				{
@@ -86,49 +105,48 @@ GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 					typename : name
 				},
 				false,
-				function(data) {
-					var options = '';
+				_.bind(function(data) {
+					var optionValues = [];
+
 					$(data).find('complexContent').find('element[name!="the_geom"]').each(function() {
-						var attribute = $(this).attr('name');
-						options += '<option value="' + attribute +'">' + attribute + '</option>';
+						optionValues.push($(this).attr('name'));
 					});
-					$select.append(options);
-				}
+					this.attributeSelectMenuView.updateMenuOptions(optionValues);
+				}, this)
 			);
 		}
 	},
 
 	updateValues : function() {
+		"use strict";
 		var attribute = this.model.get('aoiAttribute');
-		var $select = $('#select-values');
+		var name = this.model.get('aoiName');
 
 		this.model.set('aoiAttributeValues', []);
-		$select.find('option').not(':first-child').remove();
-		$select.val();
+		this.attributeValuesSelectMenuView.$el.val(null);
+		this.attributeValuesSelectMenuView.updateMenuOptions([]);
 
-		if (attribute) {
+		if ((name) && (attribute)) {
 			GDP.OGC.WFS.callWFS(
 				{
 					request : 'GetFeature',
-					typeName : this.model.get('aoiName'),
-					propertyName : attribute,
+					typename : name,
+					propertyname : attribute,
 					maxFeatures : 5001 //TODO verify that this is correct
 				},
 				false,
-				function(data) {
-					var optValues = [];
-					var options = '';
+				_.bind(function(data) {
+					var optionValues = [];
 
-					$select.html();
 					$(data).find(attribute).each(function() {
+						// Don't repeat values in the list
 						var value = $(this).text();
-						if (_.indexOf(optValues, value) === -1) {
-							optValues.push(value);
-							options += '<option value="' + value + '">' + value + '</option>';
+						if (_.indexOf(optionValues, value) === -1) {
+							optionValues.push(value);
 						}
 					});
-					$select.append(options);
-				}
+					this.attributeValuesSelectMenuView.updateMenuOptions(optionValues);
+				}, this)
 			);
 		}
 	}
