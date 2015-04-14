@@ -110,7 +110,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		changeValues : function(ev) {
-			var aoiAttributeValues = _.pluck(ev.target.selectedOptions, 'value');
+			var aoiAttributeValues = _.pluck(ev.target.selectedOptions, 'text');
 			this.model.set('aoiAttributeValues', aoiAttributeValues);
 		},
 
