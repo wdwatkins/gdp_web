@@ -23,52 +23,58 @@ var GDP = GDP || {};
 	selector: '#data-source-url',
 	$el: null
     };
-    var populateDatasetIdSelect = function(){
-	console.dir(arguments);
-	debugger;
-    };
-    var changeUrl = function(ev){
-	var value = ev.target.value;
-
-	var variables = [];
-	var wpsInputs = {
-		"catalog-url":[value],
-		"allow-cached-response":["true"]
+    var populateDatasetIdSelect = function () {
+		console.dir(arguments);
+		debugger;
 	};
-	var wpsOutput = ["result_as_json"];
-	//todo: url validation
-	this.wps.sendWpsExecuteRequest(
-		this.wpsEndpoint + '/WebProcessingService',
-		VARIABLE_WPS_PROCESS_ID,
-		wpsInputs,
-		wpsOutput,
-		false,
-		null,
-		true,
-		'json',
-		'application/json'
-	).done(function(){
-		console.dir(arguments);
-		debugger;
-	}).fail(function(){
-		console.dir(arguments);
-		debugger;
-	});
-	
-	//this.wps.sendWpsExecuteRequest(null, DATE_RANGE_WPS_PROCESS_ID);
-	
-	if(!(_.isNull(value) || _.isUndefined(value) || _.isEmpty(value))){
-	    //todo: launch ajax call to retrieve variables
-	    variables = [
-		{'text': 'dummy1', 'value': 'dummy1', 'selected': false},
-		{'text': 'dummy2', 'value': 'dummy2', 'selected': false},
-		{'text': 'dummy3', 'value': 'dummy3', 'selected': false}
-	    ];
-	}
-	this.model.set('dataSourceUrl', value);
-	this.model.get('dataSourceVariables').reset(variables);
-	this.render();
-    };
+	var changeUrl = function (ev) {
+		var value = ev.target.value;
+		this.model.set('dataSourceUrl', value);
+		if (!(_.isNull(value) || _.isUndefined(value) || _.isEmpty(value))) {
+			var variables = [];
+			var wpsInputs = {
+				"catalog-url": [value],
+				"allow-cached-response": ["true"]
+			};
+			var wpsOutput = ["result_as_json"];
+			//todo: url validation
+			var self = this;
+			this.wps.sendWpsExecuteRequest(
+				this.wpsEndpoint + '/WebProcessingService',
+				VARIABLE_WPS_PROCESS_ID,
+				wpsInputs,
+				wpsOutput,
+				false,
+				null,
+				true,
+				'json',
+				'application/json'
+			).done(function () {
+				variables = [
+					{'text': 'dummy1', 'value': 'dummy1', 'selected': false},
+					{'text': 'dummy2', 'value': 'dummy2', 'selected': false},
+					{'text': 'dummy3', 'value': 'dummy3', 'selected': false}
+				];
+
+				self.model.get('dataSourceVariables').reset(variables);
+				self.invalidUrl = false;
+			}).fail(function (jqxhr, textStatus, message) {
+				//todo: anything better than 'alert'
+				alert(message);	
+				self.invalidUrl = true;
+				self.model.get('dataSourceVariables').reset();
+				self.render();
+			}).always(function(){
+				self.render();
+			});
+			
+
+			//this.wps.sendWpsExecuteRequest(null, DATE_RANGE_WPS_PROCESS_ID);
+
+		}else{
+			this.render();
+		}
+	};
     var selectVariables = function(ev){
 	
 	var variables = _.map(ev.target.options, function(option){
@@ -94,6 +100,7 @@ var GDP = GDP || {};
 	    return ret;
 	}()),
 	wps : null,
+	invalidUrl: true,
 	initialize: function(options) {
 	    this.wps = options.wps;
 	    this.wpsEndpoint = options.wpsEndpoint;
@@ -103,7 +110,8 @@ var GDP = GDP || {};
 	render : function () {
 	    this.$el.html(this.template({
 		url : this.model.get('dataSourceUrl'),
-		variables : this.model.get('dataSourceVariables')
+		variables : this.model.get('dataSourceVariables'),
+		invalidUrl : this.invalidUrl
 	    }));
 		
 	    datePickers.start.$el = $(datePickers.start.selector);
