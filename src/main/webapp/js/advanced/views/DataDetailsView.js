@@ -28,6 +28,7 @@ var GDP = GDP || {};
 		debugger;
 	};
 	var changeUrl = function (ev) {
+		var self = this;
 		var value = ev.target.value;
 		this.model.set('dataSourceUrl', value);
 		if (!(_.isNull(value) || _.isUndefined(value) || _.isEmpty(value))) {
@@ -38,7 +39,7 @@ var GDP = GDP || {};
 			};
 			var wpsOutput = ["result_as_json"];
 			//todo: url validation
-			var self = this;
+			
 			this.wps.sendWpsExecuteRequest(
 				this.wpsEndpoint + '/WebProcessingService',
 				VARIABLE_WPS_PROCESS_ID,
@@ -57,13 +58,12 @@ var GDP = GDP || {};
 				];
 
 				self.model.get('dataSourceVariables').reset(variables);
-				self.invalidUrl = false;
+				self.model.set('invalidDataSourceUrl', false);
 			}).fail(function (jqxhr, textStatus, message) {
 				//todo: anything better than 'alert'
-				alert(message);	
-				self.invalidUrl = true;
+				alert(message);
+				self.model.set('invalidDataSourceUrl', true);
 				self.model.get('dataSourceVariables').reset();
-				self.render();
 			}).always(function(){
 				self.render();
 			});
@@ -72,6 +72,8 @@ var GDP = GDP || {};
 			//this.wps.sendWpsExecuteRequest(null, DATE_RANGE_WPS_PROCESS_ID);
 
 		}else{
+			self.model.set('invalidDataSourceUrl', true);
+			self.model.get('dataSourceVariables').reset();
 			this.render();
 		}
 	};
@@ -100,7 +102,6 @@ var GDP = GDP || {};
 	    return ret;
 	}()),
 	wps : null,
-	invalidUrl: true,
 	initialize: function(options) {
 	    this.wps = options.wps;
 	    this.wpsEndpoint = options.wpsEndpoint;
@@ -111,7 +112,7 @@ var GDP = GDP || {};
 	    this.$el.html(this.template({
 		url : this.model.get('dataSourceUrl'),
 		variables : this.model.get('dataSourceVariables'),
-		invalidUrl : this.invalidUrl
+		invalidUrl : this.model.get('invalidDataSourceUrl')
 	    }));
 		
 	    datePickers.start.$el = $(datePickers.start.selector);

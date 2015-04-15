@@ -11,6 +11,7 @@ var GDP = GDP || {};
 	defaults: {
 	    //data detailsL
 	    dataSourceUrl : null,
+		invalidDataSourceUrl : true,
 	    dataSourceVariables : new GDP.ADVANCED.model.DataSourceVariables(),
 	    startDate: null,
 	    endDate: null,
