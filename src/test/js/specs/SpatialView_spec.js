@@ -14,6 +14,20 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 			aoiAttribute : '',
 			aoiValues : []
 		});
+		GDP.config = new GDP.model.Config({
+			application : {
+				endpoints : {
+					geoserver : 'http://fakegeoserver.com'
+				}
+			},
+			map : {
+				extent : {
+					conus : {
+						'3857' : [-14819398.304233, -92644.611414691, -6718296.2995848, 9632591.3700111]
+					}
+				}
+			}
+		});
 
 		wfsDeferred = $.Deferred();
 
@@ -28,6 +42,8 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 			}
 		};
 
+		$('body').append('<div id="spatial-map"></div>')
+
 		testView = new GDP.ADVANCED.view.SpatialView({
 			model : model,
 			template : templateSpy
@@ -35,6 +51,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 	});
 
 	afterEach(function() {
+		$('#spatial-map').remove();
 		server.restore();
 	});
 
@@ -87,7 +104,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 	});
 
 	it('Expects changeValues to change the model\'s aoiValues property', function() {
-		testView.changeValues({ target : { selectedOptions : [ { value : '1' }, { value : '2' }, { value : '3' } ] } });
+		testView.changeValues({ target : { selectedOptions : [ { text : '1' }, { text : '2' }, { text : '3' } ] } });
 		expect(testView.model.get('aoiAttributeValues')).toEqual(['1', '2', '3']);
 	});
 });
