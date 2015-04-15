@@ -4,6 +4,7 @@
 
     <head>
 		<%@include file="/WEB-INF/jsp/head.jsp" %>
+		<link rel="stylesheet" type="text/css" href="webjars/openlayers/<%= versionOpenLayers%>/theme/default/style.css" />
 		<jsp:include page="template/USGSHead.jsp">
 			<jsp:param name="relPath" value="" />
 			<jsp:param name="shortName" value="USGS Geo Data Portal" />
@@ -41,9 +42,13 @@
 		</div>
 		
 		<%@include file="/WEB-INF/jsp/scripts.jsp" %>
+		<script type="text/javascript" src="webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? "" : ".debug"%>.js"></script>
+
 		<script type="text/javascript" src="js/util/templateLoader.js"></script>
 		<script type="text/javascript" src="js/util/BaseView.js"></script>
+		<script type="text/javascript" src="js/util/SelectMenuView.js"></script>
 		<script type="text/javascript" src="js/models/Config.js"></script>
+		<script type="text/javascript" src="js/util/mapUtils.js"></script>
 		<script type="text/javascript" src="js/ogc/wfs.js"></script>
 		<script type="text/javascript" src="js/ogc/wps.js"></script>
 		<script type="text/javascript" src="js/advanced/models/Process.js"></script>
