@@ -77,26 +77,31 @@ GDP.OGC.WPS = function (logger) {
         return xml;
     }
     
-    function checkWpsResponse(responseText, message) {
-	var response = $(responseText);
-            var success = response.find('ns|ExecuteResponse'),
-				error,
-				cause;
+		/**
+		 * @param {String} responseText - the xml string
+		 * @returns {String|false} Parsed string error message if present, false otherwise
+		 */
+		function getWpsErrorMessage(responseText) {
+			var response = $(responseText);
 
-            if (success.length > 0) {
-                return true;
-            } else {
-                error = response.find('ns|Exception');
+			var success = response.find('ows\\:ExecuteResponse'),
+					error,
+					message;
 
-                if (error.length > 0) {
-                    cause = response.find('ns|Exception[exceptionCode="JAVA_RootCause"] > ns|ExceptionText:eq(0)').text();
-                    message += ' Cause: ' + cause;
-                }
+			if (success.length > 0) {
+				return false;
+			} else {
+				error = response.find('ows\\:Exception');
 
-                logger.error("GDP: A WPS error was encountered: " + message);
-                return false;
-            }
-        }
+				if (error.length > 0) {
+					message = response.find('ows\\:Exception[exceptionCode="JAVA_RootCause"] > ows\\:ExceptionText:eq(0)').text();
+
+				}
+
+				logger.error(message);
+				return message;
+			}
+		}
 
 	/**
 	 * @param {Object} ajaxOptions - the options to pass to $.ajax
@@ -112,17 +117,17 @@ GDP.OGC.WPS = function (logger) {
 		$.ajax(ajaxOptions).done(function(){
 			deferred.resolve.apply(this, arguments);
 		}).fail(function(response){
-			var message = '';
 			try{
-			if(checkWpsResponse(response.responseText, message)){
-				//use the first two arguments as-is, override 
-				//the third argument with the parsed error message
-				var newArgs = _.first(arguments, 2).concat(message);
-				deferred.reject.apply(this, newArgs);
-			}
-			else{
-				deferred.reject.apply(this, arguments);
-			}
+				var errorMessage = getWpsErrorMessage(response.responseText);
+				if(errorMessage){
+					//use the first two arguments as-is, override 
+					//the third argument with the parsed error message
+					var newArgs = _.first(arguments, 2).concat(errorMessage);
+					deferred.reject.apply(this, newArgs);
+				}
+				else{
+					deferred.reject.apply(this, arguments);
+				}
 			} catch(e){
 				deferred.reject.apply(this, arguments);
 			}
@@ -197,7 +202,7 @@ GDP.OGC.WPS = function (logger) {
 
             return xml;
         },
-        checkWpsResponse: checkWpsResponse,
+        checkWpsResponse: getWpsErrorMessage,
         createGeoserverBoundingBoxWPSRequest : function (wfsXML) {
             var wpsExecuteRequest = '';
             if (wfsXML) {
