@@ -84,11 +84,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 		getAvailableFeatures : function() {
 			var populateFeatureTypesSelectBox = _.bind(function(data) {
-				var optionValues = [];
 				this.nameSelectMenuView.$el.val(null);
-				$(data).find('FeatureType').each(function() {
-					optionValues.push($(this).find('Name').text());
+				var optionValues = _.map($(data).find('FeatureType'), function(el) {
+					return $(el).find('Name').text();
 				});
+				
 				this.nameSelectMenuView.updateMenuOptions(optionValues);
 			}, this);
 
@@ -161,11 +161,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					},
 					false,
 					_.bind(function(data) {
-						var optionValues = [];
-
-						$(data).find('complexContent').find('element[name!="the_geom"]').each(function() {
-							optionValues.push($(this).attr('name'));
+						var $elements = $(data).find('complexContent').find('element[name!="the_geom"]');
+						var optionValues = _.map($elements, function(el) {
+							return $(el).attr('name');
 						});
+
 						this.attributeSelectMenuView.updateMenuOptions(optionValues);
 					}, this)
 				);
@@ -189,6 +189,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						maxFeatures : 5001 //TODO verify that this is correct
 					},
 					false,
+
 					_.bind(function(data) {
 						var optionValues = [];
 
