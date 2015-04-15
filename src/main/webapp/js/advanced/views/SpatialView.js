@@ -26,7 +26,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		render : function() {
 			GDP.util.BaseView.prototype.render.apply(this, arguments);
 			this.map.render('spatial-map');
-			this.map.zoomToExtent(this.map.getMaxExtent(), true);
+			this.map.zoomToExtent(new OpenLayers.Bounds(GDP.config.get('map').extent.conus['3857']), true);
 		},
 
 		initialize : function(options) {
@@ -88,7 +88,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				var optionValues = _.map($(data).find('FeatureType'), function(el) {
 					return $(el).find('Name').text();
 				});
-				
+
 				this.nameSelectMenuView.updateMenuOptions(optionValues);
 			}, this);
 
@@ -116,6 +116,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 		updateAOILayer : function() {
 			var name = this.model.get('aoiName');
+
 			if (name) {
 				if (this.aoiLayer) {
 					this.aoiLayer.mergeNewParams({
@@ -139,6 +140,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					);
 					this.map.addLayer(this.aoiLayer);
 				}
+				// zoom map to extent of the feature.
+				this.map.zoomToExtent(GDP.util.mapUtils.transformWGS84ToMercator(GDP.OGC.WFS.getBoundsFromCache(name)), true);
 			}
 			else if (this.aoiLayer) {
 				this.map.removeLayer(this.aoiLayer);
@@ -167,6 +170,9 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						});
 
 						this.attributeSelectMenuView.updateMenuOptions(optionValues);
+
+						//Get geom and set map extent to the geometry bounds
+
 					}, this)
 				);
 			}

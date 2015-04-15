@@ -7,7 +7,7 @@ GDP.OGC = GDP || {};
 
 
 GDP.OGC.WFS = (function() {
-    var _getCapabilities;
+    var capabilitiesCache;
 
     function _callWFS(data, async, successCallback) {
         var defaultData = {
@@ -29,7 +29,7 @@ GDP.OGC.WFS = (function() {
             success: function(data, textStatus, jqXHR) {
                 if (!$(data).find('ExceptionReport').length) {
                     if ('GetCapabilities' === wfsData.request) {
-                        GDP.OGC.WFS.cachedGetCapabilities = data;
+                        capabilitiesCache = data;
                     }
                 } else {
                     alert('WFS endpoint did not provide a proper response.');
@@ -40,9 +40,29 @@ GDP.OGC.WFS = (function() {
 		return promise;
     }
 
+	function _getBoundsFromCache(featureName) {
+		var result;
+		$(capabilitiesCache).find('FeatureType').each(function() {
+			if ($(this).find('Name').text() === featureName) {
+				var bbox = $(this).find('WGS84BoundingBox');
+				var lowerCorner = $(bbox).find('LowerCorner').text().split(' ');
+				var upperCorner = $(bbox).find('UpperCorner').text().split(' ');
+
+				var minx = lowerCorner[0];
+				var miny = lowerCorner[1];
+				var maxx = upperCorner[0];
+				var maxy = upperCorner[1];
+
+				result = new OpenLayers.Bounds(minx, miny, maxx, maxy);
+			}
+		});
+		return result;
+	}
+
     return {
         callWFS: _callWFS,
-        cachedGetCapabilities: _getCapabilities
+		getBoundsFromCache : _getBoundsFromCache,
+        cachedGetCapabilities: capabilitiesCache
     };
 }());
 
