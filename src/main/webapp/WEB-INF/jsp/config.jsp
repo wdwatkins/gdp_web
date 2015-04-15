@@ -24,7 +24,8 @@
 	"application" : {
 		"development" : "<%= development %>",
 		"endpoints" : {
-			"geoserver" : "geoserver"
+			"geoserver" : "geoserver",
+			"utilityWps" : "utilityWps"
 		}
 	},
 	"process" : {

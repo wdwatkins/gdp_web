@@ -23,16 +23,39 @@ var GDP = GDP || {};
 	selector: '#data-source-url',
 	$el: null
     };
+    var populateDatasetIdSelect = function(){
+	console.dir(arguments);
+	debugger;
+    };
     var changeUrl = function(ev){
 	var value = ev.target.value;
 
 	var variables = [];
-	
+	var wpsInputs = {
+		"catalog-url":[value],
+		"allow-cached-response":["true"]
+	};
+	var wpsOutput = ["result_as_json"];
 	//todo: url validation
+	this.wps.sendWpsExecuteRequest(
+		this.wpsEndpoint + '/WebProcessingService',
+		VARIABLE_WPS_PROCESS_ID,
+		wpsInputs,
+		wpsOutput,
+		false,
+		null,
+		true,
+		'json',
+		'application/json'
+	).done(function(){
+		console.dir(arguments);
+		debugger;
+	}).fail(function(){
+		console.dir(arguments);
+		debugger;
+	});
 	
-	//dummy calls for now
-	this.wps.sendWpsExecuteRequest(null, VARIABLE_WPS_PROCESS_ID);
-	this.wps.sendWpsExecuteRequest(null, DATE_RANGE_WPS_PROCESS_ID);
+	//this.wps.sendWpsExecuteRequest(null, DATE_RANGE_WPS_PROCESS_ID);
 	
 	if(!(_.isNull(value) || _.isUndefined(value) || _.isEmpty(value))){
 	    //todo: launch ajax call to retrieve variables
@@ -73,6 +96,7 @@ var GDP = GDP || {};
 	wps : null,
 	initialize: function(options) {
 	    this.wps = options.wps;
+	    this.wpsEndpoint = options.wpsEndpoint;
 	    //super
 	    GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 	},
