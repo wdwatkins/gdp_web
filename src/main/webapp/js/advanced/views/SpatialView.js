@@ -170,9 +170,6 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						});
 
 						this.attributeSelectMenuView.updateMenuOptions(optionValues);
-
-						//Get geom and set map extent to the geometry bounds
-
 					}, this)
 				);
 			}

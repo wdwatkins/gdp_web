@@ -43,7 +43,6 @@ GDP.util.mapUtils = (function() {
 
 	that.createMap = function(layers, controls) {
 		var maxExtent = that.transformWGS84ToMercator(new OpenLayers.Bounds(-179.0, 10.0, -42.0, 75.0));
-		var initialExtent = new OpenLayers.Bounds(GDP.config.get('map').extent.conus['3857']);
 
 		var defaultConfig = {
 			restrictedExtent : maxExtent,
