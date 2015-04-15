@@ -1,8 +1,13 @@
 // JSLint fixes
 /*jslint plusplus: true */
-/*global $ */
-/*global logger */
-var WPS = function () {
+/*global $,logger,_*/
+
+var GDP = GDP || {};
+(function(){
+    "use strict";
+GDP.OGC = GDP || {};
+
+GDP.OGC.WPS = function () {
     function createWpsExecuteXML(wpsAlgorithm, stringInputs, xmlInputs, outputs, async, rawOutput, mimeType) {
         var xml =
 			'<?xml version="1.0" encoding="UTF-8"?>' +
@@ -191,3 +196,4 @@ var WPS = function () {
         }
     };
 };
+}());

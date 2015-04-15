@@ -3,8 +3,8 @@
 var GDP = GDP || {};
 (function(_, $){
     "use strict";
-
-    GDP.view = GDP.view || {};
+    GDP.ADVANCED= GDP.ADVANCED || {};
+    GDP.ADVANCED.view = GDP.ADVANCED.view || {};
     var variablePicker  = {
 	selector : '#data-source-vars',
 	$el: null
@@ -23,7 +23,7 @@ var GDP = GDP || {};
 	selector: '#data-source-url',
 	$el: null
     };
-    var urlChanged = function(ev){
+    var changeUrl = function(ev){
 	var value = ev.target.value;
 
 	var variables = [];
@@ -42,7 +42,7 @@ var GDP = GDP || {};
 	this.model.get('dataSourceVariables').reset(variables);
 	this.render();
     };
-    var variableSelected = function(ev){
+    var selectVariables = function(ev){
 	
 	var variables = _.map(ev.target.options, function(option){
 	    return {
@@ -56,11 +56,14 @@ var GDP = GDP || {};
 	this.render();
     };
     
-    GDP.view.DataDetailsView = GDP.util.BaseView.extend({
+	var VARIABLE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.ListOpendapGrids';
+	var DATE_RANGE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.GetGridTimeRange';
+    
+    GDP.ADVANCED.view.DataDetailsView = GDP.util.BaseView.extend({
 	events : (function(){
 	    var ret = {};
-	    ret['change ' + variablePicker.selector] = variableSelected;
-	    ret['change ' + urlPicker.selector] = urlChanged;
+	    ret['change ' + variablePicker.selector] = selectVariables;
+	    ret['change ' + urlPicker.selector] = changeUrl;
 	    return ret;
 	}()),
 	initialize: function() {
@@ -81,8 +84,13 @@ var GDP = GDP || {};
 	    datePickers.start.$el.datepicker();
 	    datePickers.end.$el.datepicker();
 	    return this;
-	}
+	},
+	selectVariables: selectVariables,
+	changeUrl: changeUrl
     });
+
+GDP.ADVANCED.view.DataDetailsView.VARIABLE_WPS_PROCESS_ID = VARIABLE_WPS_PROCESS_ID;
+GDP.ADVANCED.view.DataDetailsView.DATE_RANGE_WPS_PROCESS_ID = DATE_RANGE_WPS_PROCESS_ID;
 
 }(_, jQuery));
 
