@@ -30,6 +30,10 @@ var GDP = GDP || {};
 	
 	//todo: url validation
 	
+	//dummy calls for now
+	this.wps.sendWpsExecuteRequest(null, VARIABLE_WPS_PROCESS_ID);
+	this.wps.sendWpsExecuteRequest(null, DATE_RANGE_WPS_PROCESS_ID);
+	
 	if(!(_.isNull(value) || _.isUndefined(value) || _.isEmpty(value))){
 	    //todo: launch ajax call to retrieve variables
 	    variables = [
@@ -66,8 +70,9 @@ var GDP = GDP || {};
 	    ret['change ' + urlPicker.selector] = changeUrl;
 	    return ret;
 	}()),
-	initialize: function() {
-
+	wps : null,
+	initialize: function(options) {
+	    this.wps = options.wps;
 	    //super
 	    GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 	},
