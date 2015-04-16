@@ -301,8 +301,7 @@
 						<source>webjars/bootstrap-datepicker.js</source>
 					</preloadSources>
 					<sourceIncludes>
-						<include>util/templateLoader.js</include>
-						<include>util/BaseView.js</include>
+						<include>util/**.js</include>
 						<include>models/Config.js</include>
 						<include>ogc/wfs.js</include>
 						<include>advanced/models/Process.js</include>
