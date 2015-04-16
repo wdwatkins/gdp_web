@@ -5,6 +5,7 @@
     <head>
 		<%@include file="/WEB-INF/jsp/head.jsp" %>
 		<link rel="stylesheet" type="text/css" href="webjars/openlayers/<%= versionOpenLayers%>/theme/default/style.css" />
+		<link rel="stylesheet" type="text/css" href="webjars/jasny-bootstrap/<%= versionJasnyBootstrap%>/css/jasny-bootstrap<%= development ? "" : ".min"%>.css" />
 		<jsp:include page="template/USGSHead.jsp">
 			<jsp:param name="relPath" value="" />
 			<jsp:param name="shortName" value="USGS Geo Data Portal" />
@@ -43,7 +44,8 @@
 		
 		<%@include file="/WEB-INF/jsp/scripts.jsp" %>
 		<script type="text/javascript" src="webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? "" : ".debug"%>.js"></script>
-
+		<script type="text/javascript" src="webjars/jasny-bootstrap/<%= versionJasnyBootstrap%>/js/jasny-bootstrap<%= development ? "" : ".min"%>.js"></script>
+		
 		<script type="text/javascript" src="js/util/templateLoader.js"></script>
 		<script type="text/javascript" src="js/util/BaseView.js"></script>
 		<script type="text/javascript" src="js/util/SelectMenuView.js"></script>

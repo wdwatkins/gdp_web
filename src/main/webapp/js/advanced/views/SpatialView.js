@@ -20,13 +20,16 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		events : {
 			'change #select-aoi' : 'changeName',
 			'change #select-attribute' : 'changeAttribute',
-			'change #select-values' : 'changeValues'
+			'change #select-values' : 'changeValues',
+			'click #upload-shapefile-button' : 'uploadShapefile'
 		},
 
 		render : function() {
 			GDP.util.BaseView.prototype.render.apply(this, arguments);
 			this.map.render('spatial-map');
 			this.map.zoomToExtent(new OpenLayers.Bounds(GDP.config.get('map').extent.conus['3857']), true);
+
+			$('.fileinput').fileinput();
 		},
 
 		initialize : function(options) {
@@ -249,6 +252,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				this.map.removeLayer(this.highlightLayer);
 				this.highlightLayer = null;
 			}
+		},
+
+		uploadShapefile : function(ev) {
+			ev.preventDefault();
+			GDP.logger.debug('Upload shapefile selected ' + $('#upload-shapefile-form input[name="qqfile"]').val());
 		}
 
 	});

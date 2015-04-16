@@ -25,6 +25,7 @@ String versionHandlebars = props.get("version.handlebars");
 String versionBackbone = props.get("version.backbone");
 String versionUnderscore = props.get("version.underscore");
 String versionBsDatePicker= props.get("version.bsDatePicker");
+String versionJasnyBootstrap = props.get("version.jasnyBootstrap");
 %>
 
 <link type="text/css" rel="stylesheet" href="webjars/bootstrap/<%= versionBootstrap%>/css/bootstrap<%= development ? "" : ".min"%>.css" />
