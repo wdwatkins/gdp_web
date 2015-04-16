@@ -26,13 +26,13 @@ var GDP = GDP || {};
 	
 	var getDateRange = function(catalogUrl, gridName){
 		var self = this,
+			deferred = $.Deferred(),
 			wpsInputs = {
 				"catalog-url": [catalogUrl],
 				"allow-cached-response": ["true"],
 				"grid": [gridName]
 			},
 			wpsOutput = ["result_as_json"];
-		//todo: url validation
 		
 		//delete current settings
 		_.each(['minDate', 'startDate', 'maxDate', 'endDate'], function(dateProp){
@@ -64,7 +64,9 @@ var GDP = GDP || {};
 			}
 			else {
 				//todo: anything better than 'alert'
-				alert("Could not determine date range for selected data source");
+				var message = "Could not determine date range for selected data source";
+				alert(message);
+				deferred.reject(message);
 			}
 			self.model.set('minDate', minDate);
 			self.model.set('startDate', minDate);
@@ -77,18 +79,21 @@ var GDP = GDP || {};
 			self.model.set('minDate', null);
 			self.model.set('maxDate', null);
 			self.model.set('invalidDataSourceUrl', true);
+			deferred.reject(message);
 		}).always(function () {
 			self.render();
 		});
+		return deferred.promise();
 	};
 	var getGrids = function (catalogUrl) {
 		var self = this,
-				wpsInputs = {
-					"catalog-url": [catalogUrl],
-					"allow-cached-response": ["true"]
-				},
-		wpsOutput = ["result_as_json"];
-		//todo: url validation
+			variables,
+			deferred = $.Deferred(),
+			wpsInputs = {
+				"catalog-url": [catalogUrl],
+				"allow-cached-response": ["true"]
+			},
+			wpsOutput = ["result_as_json"];
 
 		this.wps.sendWpsExecuteRequest(
 				this.wpsEndpoint + '/WebProcessingService',
@@ -101,47 +106,59 @@ var GDP = GDP || {};
 				'json',
 				'application/json'
 				).done(function (response, textStatus, message) {
-			var variables,
-					invalid = true;
-			if (response.datatypecollection && response.datatypecollection.types && response.datatypecollection.types.length > 0) {
-				variables = _.map(response.datatypecollection.types, function (type) {
-					var text = type.name + ' - ' + type.description + ' (' + type.unitsstring + ")";
-					var value = type.name;
-					return {
-						'text': text,
-						'value': value,
-						'selected': false
-					};
-				});
-				invalid = false;
-				self.getDateRange(catalogUrl, variables[0].value);
-			}
-			else {
-				//todo: anything better than 'alert'
-				alert("No variables were discovered at this data source url.");
-			}
-			self.model.get('dataSourceVariables').reset(variables);
-			self.model.set('invalidDataSourceUrl', invalid);
-		}).fail(function (jqxhr, textStatus, message) {
-			//todo: anything better than 'alert'
-			alert(message);
-			self.model.set('invalidDataSourceUrl', true);
-			self.model.get('dataSourceVariables').reset();
-		}).always(function () {
-			self.render();
-		});
+					var invalid = true;
+					if (response.datatypecollection && response.datatypecollection.types && response.datatypecollection.types.length > 0) {
+						variables = _.map(response.datatypecollection.types, function (type) {
+							var text = type.name + ' - ' + type.description + ' (' + type.unitsstring + ")";
+							var value = type.name;
+							return {
+								'text': text,
+								'value': value,
+								'selected': false
+							};
+						});
+						invalid = false;
+						deferred.resolve(catalogUrl, variables[0].value);
+					}
+					else {
+						//todo: anything better than 'alert'
+						var message = "No variables were discovered at this data source url.";
+						alert(message);
+						deferred.reject(message);
+					}
+					self.model.get('dataSourceVariables').reset(variables);
+					self.model.set('invalidDataSourceUrl', invalid);
+					}).fail(function (jqxhr, textStatus, message) {
+						//todo: anything better than 'alert'
+						alert(message);
+						self.model.set('invalidDataSourceUrl', true);
+						self.model.get('dataSourceVariables').reset();
+						deferred.reject(message);
+					}).always(function () {
+						self.render();
+					});
+					return deferred.promise();
 	};
 	var changeUrl = function (ev) {
-		var self = this;
-		var value = ev.target.value;
+		var self = this,
+		value = ev.target.value,
+		deferred = $.Deferred();
 		this.model.set('dataSourceUrl', value);
 		if (!(_.isNull(value) || _.isUndefined(value) || _.isEmpty(value))) {
-			this.getGrids(value);
-		}else{
-			self.model.set('invalidDataSourceUrl', true);
-			self.model.get('dataSourceVariables').reset();
-			this.render();
+			this.getGrids(value).done(function(catalogUrl, gridName){
+				var dateRangePromise = self.getDateRange(catalogUrl, gridName);
+				dateRangePromise.then(function(){
+					deferred.resolve();
+				}, function(){
+					deferred.reject();
+				});
+			});
+			
 		}
+		self.model.set('invalidDataSourceUrl', true);
+		self.model.get('dataSourceVariables').reset();
+		this.render();
+		return deferred.promise();
 	};
     var selectVariables = function(ev){
 	
@@ -251,4 +268,3 @@ GDP.ADVANCED.view.DataDetailsView.VARIABLE_WPS_PROCESS_ID = VARIABLE_WPS_PROCESS
 GDP.ADVANCED.view.DataDetailsView.DATE_RANGE_WPS_PROCESS_ID = DATE_RANGE_WPS_PROCESS_ID;
 
 }(_, jQuery));
-
