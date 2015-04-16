@@ -28,7 +28,7 @@
         <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
         <init-param>
             <param-name>forward-url-param</param-name>
-            <param-value>gdp.endpoint.geoserver</param-value>
+            <param-value>gdp.geoserver.endpoint</param-value>
         </init-param>
         <init-param>
             <param-name>readTimeout</param-name>

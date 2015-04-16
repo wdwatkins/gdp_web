@@ -29,7 +29,31 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.map.render('spatial-map');
 			this.map.zoomToExtent(new OpenLayers.Bounds(GDP.config.get('map').extent.conus['3857']), true);
 
+			var params = {
+				maxfilesize : 167772160,
+				'response.encoding' : 'xml',
+				'filename.param' : 'qqfile',
+				'use.crs.failover' : 'true',
+				'projection.policy' : 'reproject',
+			};
 			$('.fileinput').fileinput();
+
+			$('#upload-file-name-input').fileupload({
+				url : 'uploadhandler?' +  $.param(params),
+				type: 'POST',
+				dataType: 'xml',
+				send : function(e, data) {
+					var filename = $('#upload-file-name-input').val();
+					data.url = data.url + '&qqfile=' + 'all_coast_bas.zip' //filename.slice(filename.lastIndexOf());
+					GDP.logger.debug('In send');
+				},
+				done : function(e, data) {
+					GDP.logger.debug('File upload is done')
+				},
+				fail : function(e, data) {
+					GDP.logger.debug('File update failed');
+				}
+			});
 		},
 
 		initialize : function(options) {
@@ -256,7 +280,9 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 		uploadShapefile : function(ev) {
 			ev.preventDefault();
+
 			GDP.logger.debug('Upload shapefile selected ' + $('#upload-shapefile-form input[name="qqfile"]').val());
+
 		}
 
 	});

@@ -4,7 +4,7 @@
 	</div>
 </div>
 <div id="spatial-area-selection-div">
-	<form id="upload-shapefile-form">
+	<form id="upload-shapefile-form" method="POST" enctype="multipart/form-data">
 		<div class="form-group">
 			<label for="qq-file">Select Shapefile to Upload</label>
 			<div class="fileinput fileinput-new input-group" data-provides="fileinput">
@@ -14,7 +14,7 @@
 				<span class="input-group-addon btn btn-default btn-file">
 					<span class="fileinput-new">Select file</span>
 					<span class="fileinput-exists">Change</span>
-					<input type="file" name="qqfile">
+					<input id="upload-file-name-input" type="file" name="qqfile">
 				</span>
 				<a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
 				<a id="upload-shapefile-button" href="#" class="input-group-addon btn btn-primary fileinput-exists">Upload</a>
