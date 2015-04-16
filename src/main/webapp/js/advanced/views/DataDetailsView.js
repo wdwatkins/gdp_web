@@ -23,14 +23,24 @@ var GDP = GDP || {};
 	selector: '#data-source-url',
 	$el: null
     };
-	
-	var getDateRange = function(catalogUrl, gridName){
+	/**
+	 * Retrieves the date range for a given data source and variable. Updates
+	 * the model with the retrieved values.
+	 * 
+	 * @param {String} dataSourceUrl
+	 * @param {String} variableName
+	 * @returns {jQuery.Deferred.promise} The promise is resolved with no args
+	 * when the web service call completes successfully. The promise is rejected
+	 * with an error message if the web service calls fail or the responses
+	 * cannot be parsed.
+	 */
+	var getDateRange = function(dataSourceUrl, variableName){
 		var self = this,
 			deferred = $.Deferred(),
 			wpsInputs = {
-				"catalog-url": [catalogUrl],
+				"catalog-url": [dataSourceUrl],
 				"allow-cached-response": ["true"],
-				"grid": [gridName]
+				"grid": [variableName]
 			},
 			wpsOutput = ["result_as_json"];
 		
@@ -73,6 +83,7 @@ var GDP = GDP || {};
 			self.model.set('maxDate', maxDate);
 			self.model.set('endDate', maxDate);
 			self.model.set('invalidDataSourceUrl', invalid);
+			deferred.resolve();
 		}).fail(function (jqxhr, textStatus, message) {
 			//todo: anything better than 'alert'
 			alert(message);
@@ -85,12 +96,21 @@ var GDP = GDP || {};
 		});
 		return deferred.promise();
 	};
-	var getGrids = function (catalogUrl) {
+	/**
+	 * Gets the variables present in a url. 
+	 * 
+	 * @param {String} dataSourceUrl
+	 * @returns {jQuery.Deferred.promise} The promise is resolved with args 
+	 * ({String} data source url, {String} variable name) when the web service call 
+	 * succeeds. The promise is rejected with one arg ({String} error message) 
+	 * if the web service calls fail or their responses cannot be parsed.
+	 */
+	var getGrids = function (dataSourceUrl) {
 		var self = this,
 			variables,
 			deferred = $.Deferred(),
 			wpsInputs = {
-				"catalog-url": [catalogUrl],
+				"catalog-url": [dataSourceUrl],
 				"allow-cached-response": ["true"]
 			},
 			wpsOutput = ["result_as_json"];
@@ -118,7 +138,7 @@ var GDP = GDP || {};
 							};
 						});
 						invalid = false;
-						deferred.resolve(catalogUrl, variables[0].value);
+						deferred.resolve(dataSourceUrl, variables[0].value);
 					}
 					else {
 						//todo: anything better than 'alert'
@@ -139,6 +159,17 @@ var GDP = GDP || {};
 					});
 					return deferred.promise();
 	};
+	/**
+	 * Reacts to a change in url
+	 * 
+	 * @param {jQuery} ev a jQuery change event for the target field
+	 * expects url to be at ev.target.value
+	 * @returns {jQuery.Deferred.promise} The promise is resolved with no args 
+	 * if user cleared the url or if user submitted a url and all subesequent 
+	 * web service calls succeded. The promise is rejected with an error message
+	 * if any web service calls fail, or if the web service responses cannot be
+	 * parsed.
+	 */
 	var changeUrl = function (ev) {
 		var self = this,
 		value = ev.target.value,
@@ -148,12 +179,16 @@ var GDP = GDP || {};
 			this.getGrids(value).done(function(catalogUrl, gridName){
 				var dateRangePromise = self.getDateRange(catalogUrl, gridName);
 				dateRangePromise.then(function(){
-					deferred.resolve();
+					deferred.resolve.apply(this, arguments);
 				}, function(){
-					deferred.reject();
+					deferred.reject.apply(this, arguments);
 				});
+			}).fail(function(){
+				deferred.reject.apply(this, arguments);
 			});
-			
+		} else {
+			//user is just clearing the url, no need for web service calls
+			deferred.resolve();
 		}
 		self.model.set('invalidDataSourceUrl', true);
 		self.model.get('dataSourceVariables').reset();
