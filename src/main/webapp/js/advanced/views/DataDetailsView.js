@@ -156,7 +156,32 @@ var GDP = GDP || {};
 	this.model.get('dataSourceVariables').reset(variables);
 	this.render();
     };
-    
+	
+	var changeStartDate = function(event){
+		var newStartDate = event.date;
+		this.model.set('startDate', newStartDate);
+		
+		var endDatePicker = $(datePickers.end.selector).datepicker();
+		if(newStartDate){
+			endDatePicker.datepicker('setStartDate', newStartDate);
+		}else{
+			var minDate = this.model.get('minDate');
+			endDatePicker.datepicker('setStartDate', minDate);
+		}
+	};
+	
+	var changeEndDate = function(event){
+		var newEndDate = event.date;
+		this.model.set('endDate', newEndDate);
+		var startDatePicker = $(datePickers.start.selector).datepicker();
+		if(newEndDate){
+			startDatePicker.datepicker('setEndDate', newEndDate);
+		}else{
+			var maxDate = this.model.get('maxDate');
+			startDatePicker.datepicker('setEndDate', maxDate);
+		}
+	};
+
 	var VARIABLE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.ListOpendapGrids';
 	var DATE_RANGE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.GetGridTimeRange';
     
@@ -165,6 +190,8 @@ var GDP = GDP || {};
 	    var ret = {};
 	    ret['change ' + variablePicker.selector] = selectVariables;
 	    ret['change ' + urlPicker.selector] = changeUrl;
+		ret['changeDate ' + datePickers.start.selector] = changeStartDate;
+		ret['changeDate ' + datePickers.end.selector] = changeEndDate;
 	    return ret;
 	}()),
 	wps : null,
@@ -178,9 +205,7 @@ var GDP = GDP || {};
 	    this.$el.html(this.template({
 		url : this.model.get('dataSourceUrl'),
 		variables : this.model.get('dataSourceVariables'),
-		invalidUrl : this.model.get('invalidDataSourceUrl'),
-		minDate : this.model.get('minDate'),
-		maxDate : this.model.get('maxDate')
+		invalidUrl : this.model.get('invalidDataSourceUrl')
 	    }));
 		
 	    datePickers.start.$el = $(datePickers.start.selector);
@@ -188,12 +213,32 @@ var GDP = GDP || {};
 	    urlPicker.$el = $(urlPicker.selector);
 		variablePicker.$el = $(variablePicker.selector);
 		
-		var startDate = this.model.get('startDate');
-		var endDate = this.model.get('endDate');
+		//actual user selection
+		var userStartDate = this.model.get('startDate');
+		var userEndDate = this.model.get('endDate');
+		
+		//bounds on user selection
+		var minDate = this.model.get('minDate');
+		var maxDate = this.model.get('maxDate');
+		
 		var startDatePicker = datePickers.start.$el.datepicker();
-		startDatePicker.datepicker('setDate', startDate);
+		if(null === userStartDate){
+			startDatePicker.datepicker('clearDates');
+		}else{
+			startDatePicker.datepicker('setDate', userStartDate);
+			startDatePicker.datepicker('setStartDate', minDate);
+			startDatePicker.datepicker('setEndDate', userEndDate);
+		}
+
 		var endDatePicker = datePickers.end.$el.datepicker();
-		endDatePicker.datepicker('setDate', endDate);
+		if(null === userEndDate){
+			endDatePicker.datepicker('clearDates');
+		}
+		else{
+			endDatePicker.datepicker('setDate', userEndDate);
+			endDatePicker.datepicker('setStartDate', userStartDate);
+			endDatePicker.datepicker('setEndDate', maxDate);
+		}
 		return this;
 	},
 	selectVariables: selectVariables,
