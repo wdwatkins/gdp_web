@@ -13,6 +13,14 @@ var GDP = GDP || {};
 	    dataSourceUrl : null,
 		invalidDataSourceUrl : true,
 	    dataSourceVariables : new GDP.ADVANCED.model.DataSourceVariables(),
+		
+		//the earliest date the user can select
+		minDate: null,
+		
+		//the latest date the user can select
+		maxDate: null,
+		
+		//the dates the user actually selected
 	    startDate: null,
 	    endDate: null,
 
