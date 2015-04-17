@@ -14,7 +14,24 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 	
 	//no-op alert
 	window.alert = function(){};
-
+	
+	//mock promises for patching
+	var resolveWithResponse = function(response){
+		return function(){
+			var deferred = $.Deferred();
+			deferred.resolve(response);
+			return deferred.promise();
+		};
+	};
+	
+	var rejectWithErrorMessage = function(message){
+		return function(){
+			var deferred = $.Deferred();
+			deferred.reject(null, null, message);
+			return deferred.promise();
+		};
+	};
+	
 	beforeEach(function() {
 		server = sinon.fakeServer.create();
 		model = new GDP.ADVANCED.model.Job();
@@ -42,12 +59,12 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 	afterEach(function() {
 		server.restore();
 	});
-	it('Expects changeUrl to change the model\'s dataSourceUrl property', function() {
+	it('Expects changeUrl() to change the model\'s dataSourceUrl property', function() {
 		testView.changeUrl({ target : { value : url } });
 		expect(testView.model.get('dataSourceUrl')).toEqual(url);
 	});
 	
-	it('Expects selectVariables to change the model\'s dataSourceVariables property', function() {
+	it('Expects selectVariables() to change the model\'s dataSourceVariables property', function() {
 		var options = [
 			{
 			text: '',
@@ -79,20 +96,6 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 			});
 		});
 	});
-	var resolveWithResponse = function(response){
-		return function(){
-			var deferred = $.Deferred();
-			deferred.resolve(response);
-			return deferred.promise();
-		};
-	};
-	var rejectWithErrorMessage = function(message){
-		return function(){
-			var deferred = $.Deferred();
-			deferred.reject(null, null, message);
-			return deferred.promise();
-		};
-	};
 	it('should reject the getDateRange promise with an error message if the web service call fails', function(){
 		var expectedErrorMessage = 'error message';
 		testView.wps.sendWpsExecuteRequest = rejectWithErrorMessage(expectedErrorMessage);
@@ -172,7 +175,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 			expect(testView.isValidDateRangeResponse(unparseableResponse)).toBe(false);
 		});
 	});
-	it('should reject the getDateRange promise with an error message if the web service call succeeds, but delivers an unparseable response', function(){
+	it('expects the getDateRange() promise to be rejected with an error message if the web service call succeeds, but delivers an unparseable response', function(){
 		var promise, returnedMessage;
 		
 		//mocks
@@ -191,22 +194,42 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 			expect(returnedMessage).toBe(testView.failedToParseDateRangeResponseMessage);
 		});
 	});
-	
-	it('should resolve the getDateRange promise with no arguments if the web service call succeeds with a parseable response', function(){
-		
+	var assertDatesReset = function(testView){
+		var datesAreReset = _.every(_.map(testView.dateModelProperties, function(modelProp){
+				return testView.model.get(modelProp);
+		}), _.isNull);
+		expect(datesAreReset).toBe(true);
+	};
+	it('expects resetDates() to set all date relevant date fields on the model to null', function(){
+		assertDatesReset(testView);
+	});
+	var assertDataDetailFieldsReset = function(testView){
+		assertDatesReset(testView);
+		expect(testView.model.get('dataSourceVariables').isEmpty()).toBe(true);
+		expect(testView.model.get('invalidDataSourceUrl')).toBe(true);
+	};
+	it('expects changeUrl() to initially reset all relevant model fields', function(){
+		testView.getGrids = rejectWithErrorMessage('no-op');
+		var actualUrl = 'http://cida.usgs.gov';
+		testView.changeUrl({target: {value: actualUrl}});
+		assertDataDetailFieldsReset(testView);
+		expect(testView.model.get('dataSourceUrl')).toEqual(actualUrl);
+	});
+	it('expects the getDateRange() promise to be resolved with no arguments if the web service call succeeds with a parseable response', function(){
+		var starttime = {
+			year: 2001,
+			month: 1,
+			day: 1
+		};
+		var endtime = {
+			year: 2001,
+			month: 1,
+			day: 2
+		};
 		var parseableResponse = {
 			availabletimes: {
-				time : ['2001-01-01T12:00:00.000Z', '2001-01-02T12:00:00.000Z'],
-				starttime: {
-					year: 2001,
-					month: 1,
-					day: 1
-				},
-				endtime: {
-					year: 2001,
-					month: 1,
-					day: 2
-				}
+				starttime: starttime,
+				endtime: endtime
 			}
 		};
 		
@@ -223,6 +246,9 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 		});
 		runs(function(){
 			expect(returnedResponse).toBeUndefined();
+			_.each(testView.dateModelProperties, function(dateModelProperty){
+				expect(testView.model.get(dateModelProperty)).toBeDefined();
+			});
 		});
 	});
 });

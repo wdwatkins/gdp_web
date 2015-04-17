@@ -138,6 +138,7 @@ var GDP = GDP || {};
 		this.render();
 		return deferred.promise();
 	},
+	'failedToParseVariableResponseMessage' : "No variables were discovered at this data source url.",
 	/**
 	 * Gets the variables present in a url. 
 	 * 
@@ -184,7 +185,7 @@ var GDP = GDP || {};
 			}
 			else {
 				//todo: anything better than 'alert'
-				var message = "No variables were discovered at this data source url.";
+				var message = self.failedToParseVariableResponseMessage;
 				alert(message);
 				deferred.reject(message);
 			}
