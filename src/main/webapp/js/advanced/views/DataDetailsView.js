@@ -193,6 +193,7 @@ var GDP = GDP || {};
 		});
 		return deferred.promise();
 	},
+	'failedToParseDateRangeResponseMessage' : 'Could not determine date range for selected data source',
 	/**
 	 * Retrieves the date range for a given data source and variable. Updates
 	 * the model with the retrieved values.
@@ -218,7 +219,25 @@ var GDP = GDP || {};
 		_.each(['minDate', 'startDate', 'maxDate', 'endDate'], function(dateProp){
 			self.model.set(dateProp, null);
 		});
-		
+		var expectedProperties = ['year','month','day'];
+		var hasExpectedNumericProperties = function(obj, expectedProperties){
+			var hasExpectedNumericProperties = true;
+			if (_.isObject(obj)) {
+				var keys = _.allKeys(obj);
+				_.each(expectedProperties, function (expectedProperty) {
+					if (!_.contains(keys, expectedProperty)) {
+						hasExpectedNumericProperties = false;
+					}
+					else if (!_.isNumber(obj[expectedProperty])) {
+						hasExpectedNumericProperties = false;
+					}
+				});
+			}
+			else {
+				hasExpectedNumericProperties = false;
+			}
+			return hasExpectedNumericProperties;
+		};
 		this.wps.sendWpsExecuteRequest(
 			this.wpsEndpoint + '/WebProcessingService',
 			DATE_RANGE_WPS_PROCESS_ID,
@@ -233,18 +252,19 @@ var GDP = GDP || {};
 			var minDate,
 				maxDate,
 				invalid = true;
-			if (response.availabletimes && response.availabletimes.time && 2 === response.availabletimes.time.length) {
-				var minObj = response.availabletimes.starttime;
-				
+			if (response && response.availabletimes) {
+				if(response.availabletimes.startTime)
+				var minObj = response.availabletimes.starttime,
+					maxObj = response.availabletimes.endtime;
 				//service month index is 1-based. JS month index is 0-based
 				minDate = new Date(minObj.year, minObj.month - 1, minObj.day);
-				var maxObj = response.availabletimes.endtime;
+				
 				maxDate = new Date(maxObj.year, maxObj.month -1, maxObj.day);
 				invalid = false;
 			}
 			else {
 				//todo: anything better than 'alert'
-				var message = "Could not determine date range for selected data source";
+				var message = self.failedToParseDateRangeResponseMessage;
 				alert(message);
 				deferred.reject(message);
 			}
