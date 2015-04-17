@@ -43,9 +43,6 @@
 		</div>
 		
 		<%@include file="/WEB-INF/jsp/scripts.jsp" %>
-		<script type="text/javascript" src="webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? "" : ".debug"%>.js"></script>
-		<script type="text/javascript" src="webjars/jquery-ui/<%= versionJqueryUI%>/jquery-ui<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="webjars/jquery-file-upload/<%= versionJqueryFileUpload%>/js/jquery.fileupload.js"></script>
 		
 		<script type="text/javascript" src="js/util/templateLoader.js"></script>
 		<script type="text/javascript" src="js/util/BaseView.js"></script>
