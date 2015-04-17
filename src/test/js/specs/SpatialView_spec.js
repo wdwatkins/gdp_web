@@ -13,7 +13,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 		model = new Backbone.Model({
 			aoiName : '',
 			aoiAttribute : '',
-			aoiValues : []
+			aoiAttributeValues : []
 		});
 		GDP.config = new GDP.model.Config({
 			application : {

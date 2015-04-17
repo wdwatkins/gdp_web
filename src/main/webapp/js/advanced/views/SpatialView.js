@@ -20,13 +20,30 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		events : {
 			'change #select-aoi' : 'changeName',
 			'change #select-attribute' : 'changeAttribute',
-			'change #select-values' : 'changeValues'
+			'change #select-values' : 'changeValues',
 		},
 
 		render : function() {
 			GDP.util.BaseView.prototype.render.apply(this, arguments);
 			this.map.render('spatial-map');
 			this.map.zoomToExtent(new OpenLayers.Bounds(GDP.config.get('map').extent.conus['3857']), true);
+
+			// Create selection menus
+			this.nameSelectMenuView = new GDP.util.SelectMenuView({
+				el : '#select-aoi',
+				emptyPlaceholder : true,
+				sortOptions: true
+			});
+			this.attributeSelectMenuView = new GDP.util.SelectMenuView({
+				el : '#select-attribute',
+				emptyPlaceholder : true,
+				sortOptions: true
+			});
+			this.attributeValuesSelectMenuView = new GDP.util.SelectMenuView({
+				el : '#select-values',
+				emptyPlaceholder : true,
+				sortOptions: true
+			});
 		},
 
 		initialize : function(options) {
@@ -51,20 +68,65 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
-			this.nameSelectMenuView = new GDP.util.SelectMenuView({
-				el : '#select-aoi',
-				emptyPlaceholder : true,
-				sortOptions: true
+			this.alertView = new GDP.util.AlertView({
+				el : '#upload-messages-div'
 			});
-			this.attributeSelectMenuView = new GDP.util.SelectMenuView({
-				el : '#select-attribute',
-				emptyPlaceholder : true,
-				sortOptions: true
-			});
-			this.attributeValuesSelectMenuView = new GDP.util.SelectMenuView({
-				el : '#select-values',
-				emptyPlaceholder : true,
-				sortOptions: true
+
+			// Set up file uploader
+			var params = {
+				maxfilesize : 167772160,
+				'response.encoding' : 'xml',
+				'filename.param' : 'qqfile',
+				'use.crs.failover' : 'true',
+				'projection.policy' : 'reproject',
+			};
+
+			$('#upload-shapefile-input').fileupload({
+				url : 'uploadhandler?' +  $.param(params),
+				type: 'POST',
+				dataType: 'xml',
+				send : function(e, data) {
+					data.url = data.url + '&qqfile=' + data.files[0].name;
+					$('#upload-indicator').show();
+				},
+				done : _.bind(function(e, data) {
+					$('#upload-indicator').hide();
+
+					var $resp = $(data.result);
+					// Determine if the response indicated an error
+					var success = $resp.find('success').first().text();
+					if (success === 'true') {
+						var warning = $resp.find('warning').first().text();
+						var layer = $resp.find('name').first().text();
+
+						if (warning) {
+							this.alertView.show('alert-warning', 'Upload succeeded with warning' + warning);
+						}
+						else {
+							this.alertView.show('alert-success', 'Upload was successful.');
+						}
+
+						this.getAvailableFeatures().then(
+							_.bind(function() {
+								$('#select-aoi').val(layer);
+								this.model.set('aoiName', layer);
+							}, this),
+							_.bind(function() {
+								this.alertView('alert-error', 'Unable to read uploaded shapefile attributes.');
+							}, this)
+						);
+					}
+					else {
+						var error = $resp.find('error').first().text();
+						var exception = $resp.find('exception').first().text();
+						this.alertView.show('alert-danger', 'File Upload error: ' + error + '. ' + exception);
+					}
+
+				}, this),
+				fail : _.bind(function(e, data) {
+					$('#upload-indicator').hide();
+					this.alertView.show('alert-error', 'Upload failed');
+				}, this)
 			});
 
 			this.getAvailableFeatures().then(
@@ -75,11 +137,25 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					GDP.logger.error('GDP.view.SpatialView getAvailableFeatures failed');
 				}
 			);
-			this.updateAOILayer();
-			this.listenTo(this.model, 'change:aoiName', this.updateAttributes);
-			this.listenTo(this.model, 'change:aoiName', this.updateAOILayer);
-			this.listenTo(this.model, 'change:aoiAttribute', this.updateValues);
-			this.listenTo(this.model, 'change:aoiAttributeValues', this.highlightFeatures);
+
+			// Initialize DOM
+			var attribute = this.model.get('aoiAttribute');
+			var values = this.model.get('aoiAttributeValues');
+			this.updateSelectedAoiName();
+			// Need to reset the aoiAttribute because updateSelectedAoiName clears it.
+			if (attribute) {
+				this.model.set('aoiAttribute', attribute);// Need to
+				this.updateSelectedAoiAttribute();
+			}
+			// Need to reset the aoiAttributeValues because updateSelectedAOIAttribute clears it.
+			if (values.length !== 0) {
+				this.model.set('aoiAttributeValues', values);
+				this.updateSelectedAoiAttributeValues();
+			}
+
+			this.listenTo(this.model, 'change:aoiName', this.updateSelectedAoiName);
+			this.listenTo(this.model, 'change:aoiAttribute', this.updateSelectedAoiAttribute);
+			this.listenTo(this.model, 'change:aoiAttributeValues', this.updateSelectedAoiAttributeValues);
 		},
 
 		getAvailableFeatures : function() {
@@ -101,6 +177,29 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			);
 		},
 
+		updateSelectedAoiName : function() {
+			var name = this.model.get('aoiName');
+			$('#select-aoi').val(name);
+			this._updateAttributes(name);
+			this._updateAOILayer(name);
+		},
+
+		updateSelectedAoiAttribute : function() {
+			var name = this.model.get('aoiName');
+			var attribute = this.model.get('aoiAttribute');
+			$('#select-attribute').val(attribute);
+			this._updateValues(name, attribute);
+		},
+
+		updateSelectedAoiAttributeValues : function() {
+			var name = this.model.get('aoiName');
+			var attribute = this.model.get('aoiAttribute');
+			var values = this.model.get('aoiAttributeValues');
+
+			$('#select-values').val(values);
+			this._highlightFeatures(name, attribute, values);
+		},
+
 		changeName : function(ev) {
 			this.model.set('aoiName', ev.target.value);
 		},
@@ -114,7 +213,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.model.set('aoiAttributeValues', aoiAttributeValues);
 		},
 
-		updateAOILayer : function() {
+		_updateAOILayer : function(name) {
 			var name = this.model.get('aoiName');
 
 			if (name) {
@@ -149,9 +248,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			}
 		},
 
-		updateAttributes : function() {
-			var name = this.model.get('aoiName');
-
+		_updateAttributes : function(name) {
 			this.attributeSelectMenuView.$el.val(null);
 			this.attributeSelectMenuView.updateMenuOptions([]);
 			this.model.set('aoiAttribute', '');
@@ -175,10 +272,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			}
 		},
 
-		updateValues : function() {
-			var attribute = this.model.get('aoiAttribute');
-			var name = this.model.get('aoiName');
-
+		_updateValues : function(name, attribute) {
 			this.model.set('aoiAttributeValues', []);
 			this.attributeValuesSelectMenuView.$el.val(null);
 			this.attributeValuesSelectMenuView.updateMenuOptions([]);
@@ -209,14 +303,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			}
 		},
 
-		highlightFeatures : function() {
-			var name = this.model.get('aoiName');
-			var attribute = this.model.get('aoiAttribute');
-			var values = _.map(this.model.get('aoiAttributeValues'), function(v) {
-				return '\'' + v + '\'';
-			});
-
-			if ((name) && (attribute) && (values)) {
+		_highlightFeatures : function(name, attribute, values) {
+			if ((name) && (attribute) && (values.length !== 0)) {
+				values = _.map(values, function(v) {
+					return '\'' + v + '\'';
+				});
 				var filter = attribute + ' IN (' + values.join(',') + ')';
 				if (this.highlightLayer) {
 					this.highlightLayer.mergeNewParams({
@@ -250,7 +341,6 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				this.highlightLayer = null;
 			}
 		}
-
 	});
 }());
 
