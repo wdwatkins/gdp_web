@@ -4,24 +4,17 @@
 	</div>
 </div>
 <div id="spatial-area-selection-div">
-	<form id="upload-shapefile-form" method="POST" enctype="multipart/form-data">
-		<div class="form-group">
-			<label for="qq-file">Select Shapefile to Upload</label>
-			<div class="fileinput fileinput-new input-group" data-provides="fileinput">
-				<div class="form-control" data-trigger="fileinput">
-					<i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span>
-				</div>
-				<span class="input-group-addon btn btn-default btn-file">
-					<span class="fileinput-new">Select file</span>
-					<span class="fileinput-exists">Change</span>
-					<input id="upload-file-name-input" type="file" name="qqfile">
-				</span>
-				<a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
-				<a id="upload-shapefile-button" href="#" class="input-group-addon btn btn-primary fileinput-exists">Upload</a>
-
-			</div>
-		</div>
-	</form>
+	<div id="upload-container-div">
+		<span class="btn btn-primary fileinput-button">
+			<i class="glyphicon glyphicon-plus"></i>
+			<span>Select shapefile to upload...</span>
+			<!-- The file input field used as target for the file upload widget -->
+			<input id="upload-shapefile-input" type="file" name="qqfile" multiple>
+		</span>
+		<i id="upload-indicator" class="fa fa-3x fa-spinner fa-pulse"></i>
+	</div>
+	
+	
 	<form id="shapefile-selection-div">
 		<div class="form-group">
 			<label for="select-aoi">Select Area of Interest</label>

@@ -5,7 +5,7 @@
     <head>
 		<%@include file="/WEB-INF/jsp/head.jsp" %>
 		<link rel="stylesheet" type="text/css" href="webjars/openlayers/<%= versionOpenLayers%>/theme/default/style.css" />
-		<link rel="stylesheet" type="text/css" href="webjars/jasny-bootstrap/<%= versionJasnyBootstrap%>/css/jasny-bootstrap<%= development ? "" : ".min"%>.css" />
+		<link rel="stylesheet" type="text/css" href="webjars/jquery-file-upload/<%= versionJqueryFileUpload%>/css/jquery.fileupload.css">
 		<jsp:include page="template/USGSHead.jsp">
 			<jsp:param name="relPath" value="" />
 			<jsp:param name="shortName" value="USGS Geo Data Portal" />
@@ -45,7 +45,6 @@
 		<%@include file="/WEB-INF/jsp/scripts.jsp" %>
 		<script type="text/javascript" src="webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? "" : ".debug"%>.js"></script>
 		<script type="text/javascript" src="webjars/jquery-ui/<%= versionJqueryUI%>/jquery-ui<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="webjars/jasny-bootstrap/<%= versionJasnyBootstrap%>/js/jasny-bootstrap<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="webjars/jquery-file-upload/<%= versionJqueryFileUpload%>/js/jquery.fileupload.js"></script>
 		
 		<script type="text/javascript" src="js/util/templateLoader.js"></script>

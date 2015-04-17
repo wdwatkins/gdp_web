@@ -241,11 +241,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
-			<artifactId>jasny-bootstrap</artifactId>
-			<version>${version.jasnyBootstrap}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.webjars</groupId>
 			<artifactId>jquery-file-upload</artifactId>
 			<version>${version.jqueryFileUpload}</version>
 		</dependency>

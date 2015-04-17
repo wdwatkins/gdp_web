@@ -10,3 +10,7 @@
 #select-values {
 	height: 200px;
 }
+
+#upload-indicator {
+	display: none;
+}

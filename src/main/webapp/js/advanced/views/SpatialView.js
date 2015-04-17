@@ -36,22 +36,23 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				'use.crs.failover' : 'true',
 				'projection.policy' : 'reproject',
 			};
-			$('.fileinput').fileinput();
 
-			$('#upload-file-name-input').fileupload({
+			$('#upload-shapefile-input').fileupload({
 				url : 'uploadhandler?' +  $.param(params),
 				type: 'POST',
 				dataType: 'xml',
 				send : function(e, data) {
-					var filename = $('#upload-file-name-input').val();
-					data.url = data.url + '&qqfile=' + 'all_coast_bas.zip' //filename.slice(filename.lastIndexOf());
+					data.url = data.url + '&qqfile=' + data.files[0].name;
 					GDP.logger.debug('In send');
+					$('#upload-indicator').show();
 				},
 				done : function(e, data) {
-					GDP.logger.debug('File upload is done')
+					GDP.logger.debug('File upload is done');
+					$('#upload-indicator').hide();
 				},
 				fail : function(e, data) {
 					GDP.logger.debug('File update failed');
+					$('#upload-indicator').hide();
 				}
 			});
 		},
