@@ -29,32 +29,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.map.render('spatial-map');
 			this.map.zoomToExtent(new OpenLayers.Bounds(GDP.config.get('map').extent.conus['3857']), true);
 
-			var params = {
-				maxfilesize : 167772160,
-				'response.encoding' : 'xml',
-				'filename.param' : 'qqfile',
-				'use.crs.failover' : 'true',
-				'projection.policy' : 'reproject',
-			};
 
-			$('#upload-shapefile-input').fileupload({
-				url : 'uploadhandler?' +  $.param(params),
-				type: 'POST',
-				dataType: 'xml',
-				send : function(e, data) {
-					data.url = data.url + '&qqfile=' + data.files[0].name;
-					GDP.logger.debug('In send');
-					$('#upload-indicator').show();
-				},
-				done : function(e, data) {
-					GDP.logger.debug('File upload is done');
-					$('#upload-indicator').hide();
-				},
-				fail : function(e, data) {
-					GDP.logger.debug('File update failed');
-					$('#upload-indicator').hide();
-				}
-			});
 		},
 
 		initialize : function(options) {
@@ -78,6 +53,66 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.map = GDP.util.mapUtils.createMap(baseLayers, controls);
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+
+			this.alertView = new GDP.util.AlertView({
+				el : '#upload-messages-div'
+			});
+
+			var params = {
+				maxfilesize : 167772160,
+				'response.encoding' : 'xml',
+				'filename.param' : 'qqfile',
+				'use.crs.failover' : 'true',
+				'projection.policy' : 'reproject',
+			};
+
+			$('#upload-shapefile-input').fileupload({
+				url : 'uploadhandler?' +  $.param(params),
+				type: 'POST',
+				dataType: 'xml',
+				send : function(e, data) {
+					data.url = data.url + '&qqfile=' + data.files[0].name;
+					$('#upload-indicator').show();
+				},
+				done : _.bind(function(e, data) {
+					$('#upload-indicator').hide();
+
+					var $resp = $(data.result);
+					// Determine if the response indicated an error
+					var success = $resp.find('success').first().text();
+					if (success === 'true') {
+						var warning = $resp.find('warning').first().text();
+						var layer = $resp.find('name').first().text();
+
+						if (warning) {
+							this.alertView.show('alert-warning', 'Upload succeeded with warning' + warning);
+						}
+						else {
+							this.alertView.show('alert-success', 'Upload was successful.');
+						}
+
+						this.getAvailableFeatures().then(
+							_.bind(function() {
+								$('#select-aoi').val(layer);
+								this.model.set('aoiName', layer);
+							}, this),
+							_.bind(function() {
+								this.alertView('alert-error', 'Unable to read uploaded shapefile attributes.');
+							}, this)
+						)
+					}
+					else {
+						var error = $resp.find('error').first().text();
+						var exception = $resp.find('exception').first().text();
+						this.alertView.show('alert-danger', 'File Upload error: ' + error + '. ' + exception);
+					}
+
+				}, this),
+				fail : _.bind(function(e, data) {
+					$('#upload-indicator').hide();
+					this.alertView.show('alert-error', 'Upload failed');
+				}, this)
+			});
 
 			this.nameSelectMenuView = new GDP.util.SelectMenuView({
 				el : '#select-aoi',
