@@ -5,6 +5,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 	var server;
 	var testView;
 	var callWFSSpy;
+	var getBoundsSpy;
 	var wfsDeferred;
 
 	beforeEach(function() {
@@ -12,7 +13,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 		model = new Backbone.Model({
 			aoiName : '',
 			aoiAttribute : '',
-			aoiValues : []
+			aoiAttributeValues : []
 		});
 		GDP.config = new GDP.model.Config({
 			application : {
@@ -31,14 +32,17 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 
 		wfsDeferred = $.Deferred();
 
+		spyOn(OpenLayers.Layer, 'WMS');
 		templateSpy = jasmine.createSpy('templateSpy');
 		loggerSpy = jasmine.createSpyObj('logger', ['error']);
 		callWFSSpy = jasmine.createSpy('callWFSSpy').andReturn(wfsDeferred);
+		getBoundsSpy = jasmine.createSpy('getBoundsSpy').andReturn(new OpenLayers.Bounds(-100.0, 22.2, -80.5, 45.5));
 
 		GDP.logger = loggerSpy;
 		GDP.OGC = {
 			WFS : {
-				callWFS : callWFSSpy
+				callWFS : callWFSSpy,
+				getBoundsFromCache : getBoundsSpy
 			}
 		};
 
@@ -48,6 +52,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 			model : model,
 			template : templateSpy
 		});
+		spyOn(testView.map, 'addLayer');
 	});
 
 	afterEach(function() {
