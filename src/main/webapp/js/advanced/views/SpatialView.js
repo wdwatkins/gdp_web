@@ -114,7 +114,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 							_.bind(function() {
 								this.alertView('alert-error', 'Unable to read uploaded shapefile attributes.');
 							}, this)
-						)
+						);
 					}
 					else {
 						var error = $resp.find('error').first().text();

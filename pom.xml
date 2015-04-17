@@ -322,7 +322,8 @@
 						<source>webjars/backbone.js</source>
 						<source>webjars/handlebars.js</source>
 						<source>webjars/OpenLayers.js</source>
-						<source>webjars/jasny-bootstrap.js</source>
+						<source>webjars/jquery-ui.js</source>
+						<source>webjars/jquery.fileupload.js</source>
 					</preloadSources>
 					<sourceIncludes>
 						<include>advanced/models/Process.js</include>
