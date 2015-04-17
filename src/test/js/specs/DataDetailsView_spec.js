@@ -109,7 +109,40 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 			expect(actualErrorMessage).toBe(expectedErrorMessage);
 		});
 	});
-	it('should reject the getDateRange promise with an error message if the web service call succeeds, but delivers an unparseable response', function(){
+	it('hasExpectedNumericProperties should return true if an object has all expected properties and all the corresponding values are numeric, and false otherwise', function(){
+		var expectedProperties = ['a', 'b'];
+		var failingValues = [
+			//not an object
+			null,
+			
+			//empty object
+			{},
+			
+			//object with only a some of the expected properties
+			{
+				'a': null,
+				'c': null
+			},
+			//object with all expected properties, but no values are numeric
+			{
+				'a': 'not a num',
+				'b': [],
+				'c': {}
+			}
+		],
+		
+		//object with all expected properties and all numeric values
+		passingValue = {
+			'a': 42,
+			'b': 3.14159,
+			'c': {}
+		};
+		_.each(failingValues, function(failingValue){
+			expect(testView.hasExpectedNumericProperties(failingValue, expectedProperties)).toBe(false);
+		});
+		expect(testView.hasExpectedNumericProperties(passingValue, expectedProperties)).toBe(true);
+	});
+	it('isValidDateRangeResponse should return true if a response is a valid date range response, and false otherwise', function(){
 		var unparseableResponses = [
 			null,
 			undefined,
@@ -120,36 +153,42 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 			{availabletimes:null},
 			{
 				availabletimes:{
-					time: null
+					starttime: null
 				}
 			},
 			{
 				availabletimes:{
-					time: []
+					starttime: null,
+					endtime: null
 				}
 			},
 			{
 				availabletimes:{
-					time: [1]
+					endtime: null
 				}
 			}
 		];
 		_.each(unparseableResponses, function(unparseableResponse){
-			runs(function(){
-				var promise, returnedMessage;
-				testView.wps.sendWpsExecuteRequest = resolveWithResponse(unparseableResponse);
-				runs(function(){
-					promise = testView.getDateRange('mockUrl', 'mockVariableName').fail(function(myMessage){
-						returnedMessage = myMessage;
-					});
-				});
-				waitsFor(function(){
-					return 'pending' !== promise.state();
-				});
-				runs(function(){
-					expect(returnedMessage).toBe(testView.failedToParseDateRangeResponseMessage);
-				});
+			expect(testView.isValidDateRangeResponse(unparseableResponse)).toBe(false);
+		});
+	});
+	it('should reject the getDateRange promise with an error message if the web service call succeeds, but delivers an unparseable response', function(){
+		var promise, returnedMessage;
+		
+		//mocks
+		testView.isValidDateRangeResponse = function(){return false;};
+		testView.wps.sendWpsExecuteRequest = resolveWithResponse(null);
+		
+		runs(function(){
+			promise = testView.getDateRange('mockUrl', 'mockVariableName').fail(function(myMessage){
+				returnedMessage = myMessage;
 			});
+		});
+		waitsFor(function(){
+			return 'pending' !== promise.state();
+		});
+		runs(function(){
+			expect(returnedMessage).toBe(testView.failedToParseDateRangeResponseMessage);
 		});
 	});
 	
