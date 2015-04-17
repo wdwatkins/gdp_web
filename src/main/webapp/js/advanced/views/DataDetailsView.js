@@ -82,6 +82,13 @@ var GDP = GDP || {};
 		}
 		return this;
 	},
+	'dateModelProperties' : ['minDate', 'startDate', 'maxDate', 'endDate'],
+	'resetDates': function(){
+		var self = this;
+		_.each(this.dateModelProperties, function(dateProp){
+			self.model.set(dateProp, null);
+		});
+	},
 	'selectVariables': function (ev) {
 		var variables = _.map(ev.target.options, function (option) {
 			return {
@@ -127,6 +134,7 @@ var GDP = GDP || {};
 		}
 		self.model.set('invalidDataSourceUrl', true);
 		self.model.get('dataSourceVariables').reset();
+		self.resetDates();
 		this.render();
 		return deferred.promise();
 	},
@@ -249,10 +257,6 @@ var GDP = GDP || {};
 			},
 			wpsOutput = ["result_as_json"];
 		
-		//delete current settings
-		_.each(['minDate', 'startDate', 'maxDate', 'endDate'], function(dateProp){
-			self.model.set(dateProp, null);
-		});
 		this.wps.sendWpsExecuteRequest(
 			this.wpsEndpoint + '/WebProcessingService',
 			DATE_RANGE_WPS_PROCESS_ID,
