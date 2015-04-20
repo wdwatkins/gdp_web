@@ -28,12 +28,12 @@ var GDP = GDP || {};
     
     GDP.ADVANCED.view.DataDetailsView = GDP.util.BaseView.extend({
 	'events' : (function(){
-	    var ret = {};
-	    ret['change ' + variablePicker.selector] = 'selectVariables';
-	    ret['change ' + urlPicker.selector] = 'changeUrl';
+		var ret = {};
+		ret['change ' + variablePicker.selector] = 'selectVariables';
+		ret['change ' + urlPicker.selector] = 'changeUrl';
 		ret['changeDate ' + datePickers.start.selector] = 'changeStartDate';
 		ret['changeDate ' + datePickers.end.selector] = 'changeEndDate';
-	    return ret;
+		return ret;
 	}()),
 	'wps' : null,
 	'initialize': function(options) {
