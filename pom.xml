@@ -326,13 +326,21 @@
 						<source>webjars/backbone.js</source>
 						<source>webjars/handlebars.js</source>
 						<source>webjars/OpenLayers.js</source>
+						<source>webjars/bootstrap-datepicker.js</source>
 						<source>webjars/jquery-ui.js</source>
 						<source>webjars/jquery.fileupload.js</source>
 					</preloadSources>
 					<sourceIncludes>
+						<include>util/**.js</include>
+						<include>models/Config.js</include>
+						<include>ogc/wfs.js</include>
 						<include>advanced/models/Process.js</include>
-						<include>util/*.js</include>
-						<include>**/*.js</include>
+						<include>advanced/models/DataSourceModels.js</include>
+						<include>advanced/collections/Processes.js</include>
+						<include>advanced/models/JobModel.js</include>
+						<include>advanced/views/AlgorithmConfigView.js</include>
+						<include>advanced/views/*.js</include>
+						<include>advanced/controller/AdvancedRouter.js</include>
 					</sourceIncludes>
 					<sourceExcludes>
 						<include>advanced/init.js</include>

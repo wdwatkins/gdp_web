@@ -35,9 +35,11 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 	},
 
 	datadetail : function() {
-		this.showView(GDP.view.DataDetailsView, {
+		this.showView(GDP.ADVANCED.view.DataDetailsView, {
 			template : GDP.ADVANCED.templates.getTemplate('datadetail'),
-			model: this.jobModel
+			model: this.jobModel,
+			wps: GDP.OGC.WPS(GDP.logger),
+			wpsEndpoint: GDP.config.get('application').endpoints.utilityWps
 		});
 	},
 

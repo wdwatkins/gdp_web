@@ -1,8 +1,13 @@
 // JSLint fixes
 /*jslint plusplus: true */
-/*global $ */
-/*global logger */
-var WPS = function () {
+/*global $,logger,_*/
+
+var GDP = GDP || {};
+(function(){
+    "use strict";
+GDP.OGC = GDP || {};
+
+GDP.OGC.WPS = function (logger) {
     function createWpsExecuteXML(wpsAlgorithm, stringInputs, xmlInputs, outputs, async, rawOutput, mimeType) {
         var xml =
 			'<?xml version="1.0" encoding="UTF-8"?>' +
@@ -71,6 +76,65 @@ var WPS = function () {
 
         return xml;
     }
+    
+		/**
+		 * @param {String} responseText - the xml string
+		 * @returns {String|false} Parsed string error message if present, false otherwise
+		 */
+		function getWpsErrorMessage(responseText) {
+			var response = $(responseText);
+
+			var success = response.find('ows\\:ExecuteResponse'),
+					error,
+					message;
+
+			if (success.length > 0) {
+				return false;
+			} else {
+				error = response.find('ows\\:Exception');
+
+				if (error.length > 0) {
+					message = response.find('ows\\:Exception[exceptionCode="JAVA_RootCause"] > ows\\:ExceptionText:eq(0)').text();
+
+				}
+
+				logger.error(message);
+				return message;
+			}
+		}
+
+	/**
+	 * @param {Object} ajaxOptions - the options to pass to $.ajax
+	 * @returns a $.Deferred that behaves like the $.ajax deferred, except 
+	 * it parses the wps xml error messages and provides the human-readable
+	 * error message to the .fail handler. A user of this function will
+	 * be able to access the parsed WPS error message as the third argument
+	 * in their .fail handler.
+	 */
+	function wrapAjaxCallInErrorHandling(ajaxOptions){
+		var deferred = $.Deferred();
+		
+		$.ajax(ajaxOptions).done(function(){
+			deferred.resolve.apply(this, arguments);
+		}).fail(function(response){
+			try{
+				var errorMessage = getWpsErrorMessage(response.responseText);
+				if(errorMessage){
+					//use the first two arguments as-is, override 
+					//the third argument with the parsed error message
+					var newArgs = _.first(arguments, 2).concat(errorMessage);
+					deferred.reject.apply(this, newArgs);
+				}
+				else{
+					deferred.reject.apply(this, arguments);
+				}
+			} catch(e){
+				deferred.reject.apply(this, arguments);
+			}
+		});
+
+		return deferred;
+	};
 
     // Public members and methods
     return {
@@ -98,38 +162,35 @@ var WPS = function () {
         // Inputs should be an object with the key equaling the input identifier, and
         // the value equaling an array of data. Each value is required to be an array
         // so that all properties can be handled identically when creating the xml.
-        sendWpsExecuteRequest: function (wpsEndpoint, wpsAlgorithm, stringInputs, outputs, async, callback, xmlInputs, rawOutput, dataType, mimeType) {
+        sendWpsExecuteRequest: function (wpsEndpoint, wpsAlgorithm, stringInputs, outputs, async, xmlInputs, rawOutput, dataType, mimeType) {
 
-			var ajaxInputs = {
+	    var ajaxInputs = {
                 url : wpsEndpoint,
                 type : 'post',
                 data : createWpsExecuteXML(wpsAlgorithm, stringInputs, xmlInputs, outputs, async, rawOutput, mimeType),
                 processData : false,
                 dataType : dataType || 'xml',
-                contentType : 'text/xml',
-                success : function (data, textStatus, XMLHttpRequest) {
-                    callback(data);
-                }
+                contentType : 'text/xml'
             };
 
             logger.debug('GDP: Sending WPS Execute request for algorithm: ' + wpsAlgorithm);
-            $.ajax(ajaxInputs);
+            var deferred = wrapAjaxCallInErrorHandling(ajaxInputs);
+	    return deferred;
         },
 
-        sendWPSGetRequest: function (url, data, async, callback) {
+        sendWPSGetRequest: function (url, data, async) {
             logger.debug("GDP:wps.js::Sending WPS GET request to: " + url);
-            $.ajax({
+            
+	var deferred = wrapAjaxCallInErrorHandling({
                 url : url,
                 type : 'get',
                 data : data,
                 async : async,
-                contentType : 'text/xml',
-                success : function (data, textStatus, XMLHttpRequest) {
-                    callback(data);
-                }
+                contentType : 'text/xml'
             });
+	return deferred;
         },
-
+    
         // Creates the wps:Reference element which holds the WFS request
         createWfsWpsReference: function (wfsEndpoint, wfsXML) {
             var xml =
@@ -141,27 +202,7 @@ var WPS = function () {
 
             return xml;
         },
-        checkWpsResponse: function (response, message) {
-            var success = $(response).find('ns|ExecuteResponse'),
-				error,
-				cause;
-
-            if (success.length > 0) {
-                return true;
-            } else {
-                error = $(response).find('ns|Exception');
-
-                if (error.length > 0) {
-                    cause = $(response).find('ns|Exception[exceptionCode="JAVA_RootCause"] > ns|ExceptionText:eq(0)').text();
-                    message += ' Cause: ' + cause;
-                }
-
-                showErrorNotification(message);
-                hideThrobber();
-                logger.error("GDP: A WPS error was encountered: " + message);
-                return false;
-            }
-        },
+        checkWpsResponse: getWpsErrorMessage,
         createGeoserverBoundingBoxWPSRequest : function (wfsXML) {
             var wpsExecuteRequest = '';
             if (wfsXML) {
@@ -191,3 +232,4 @@ var WPS = function () {
         }
     };
 };
+}());
