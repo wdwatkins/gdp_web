@@ -9,11 +9,6 @@
     <div class="form-group">
 	<label for="data-source-vars">Variables</label>
 	<select id="data-source-vars" class="form-control" required {{#if invalidUrl}}disabled{{/if}} multiple size="10">
-		{{#each variables.models}}
-		    {{#with attributes}}
-			<option value="{{value}}" {{#if selected}}selected{{/if}}>{{text}}</option>
-		    {{/with}}
-		{{/each}}
 	</select>
     </div>
     <div class="form-horizontal">

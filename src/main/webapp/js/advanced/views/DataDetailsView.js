@@ -23,13 +23,14 @@ var GDP = GDP || {};
 	selector: '#data-source-url',
 	$el: null
     };
+
 	var VARIABLE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.ListOpendapGrids';
 	var DATE_RANGE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.GetGridTimeRange';
     
     GDP.ADVANCED.view.DataDetailsView = GDP.util.BaseView.extend({
 	'events' : (function(){
 		var ret = {};
-		ret['change ' + variablePicker.selector] = 'selectVariables';
+		ret['change ' + variablePicker.selector + ' option'] = 'selectVariables';
 		ret['change ' + urlPicker.selector] = 'changeUrl';
 		ret['changeDate ' + datePickers.start.selector] = 'changeStartDate';
 		ret['changeDate ' + datePickers.end.selector] = 'changeEndDate';
@@ -40,15 +41,22 @@ var GDP = GDP || {};
 	    this.wps = options.wps;
 	    this.wpsEndpoint = options.wpsEndpoint;
 	    //super
+		this.listenTo(this.model, 'change:availableVariables', function(){
+			this.updateAvailableVariables();
+		});
 	    GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 	},
+	selectMenuView : null,
 	'render' : function () {
 	    this.$el.html(this.template({
 		url : this.model.get('dataSourceUrl'),
-		variables : this.model.get('dataSourceVariables'),
 		invalidUrl : this.model.get('invalidDataSourceUrl')
 	    }));
-		
+		this.selectMenuView = new GDP.util.SelectMenuView({
+				el : variablePicker.selector,
+				emptyPlaceholder : true,
+				sortOptions: true
+		});
 	    datePickers.start.$el = $(datePickers.start.selector);
 	    datePickers.end.$el = $(datePickers.end.selector);
 	    urlPicker.$el = $(urlPicker.selector);
@@ -98,8 +106,17 @@ var GDP = GDP || {};
 			};
 		});
 
-		this.model.get('dataSourceVariables').reset(variables);
+		this.model.get('selectedVariables').reset(variables);
 		this.render();
+	},
+	/**
+	 * On model change, updates the dom to reflect the current data source's 
+	 * available variables in <option> elements in a <select>
+	 * @returns {undefined}
+	 */
+	'updateAvailableVariables' : function(){
+		var availableVars = this.model.get('availableVariables');
+		this.selectMenuView.updateMenuOptions(availableVars);
 	},
 	/**
 	 * Reacts to a change in url
@@ -133,7 +150,8 @@ var GDP = GDP || {};
 			deferred.resolve();
 		}
 		self.model.set('invalidDataSourceUrl', true);
-		self.model.get('dataSourceVariables').reset();
+		self.model.get('availableVariables').reset();
+		self.model.get('selectedVariables').reset();
 		self.resetDates();
 		this.render();
 		return deferred.promise();
@@ -189,13 +207,13 @@ var GDP = GDP || {};
 				alert(message);
 				deferred.reject(message);
 			}
-			self.model.get('dataSourceVariables').reset(variables);
+			self.model.get('availableVariables').reset(variables);
 			self.model.set('invalidDataSourceUrl', invalid);
 		}).fail(function (jqxhr, textStatus, message) {
 			//todo: anything better than 'alert'
 			alert(message);
 			self.model.set('invalidDataSourceUrl', true);
-			self.model.get('dataSourceVariables').reset();
+			self.model.get('availableVariables').reset();
 			deferred.reject(message);
 		}).always(function () {
 			self.render();
