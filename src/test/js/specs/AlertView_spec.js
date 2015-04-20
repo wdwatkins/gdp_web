@@ -12,9 +12,11 @@ describe('GDP.util.AlertView', function() {
 		var testView = new GDP.util.AlertView({
 			el : '#test-div'
 		});
+		spyOn(testView, 'render');
 
 		expect(testView.$el).toEqual($('#test-div'));
 		expect(testView.template).toBeDefined();
+		expect(testView.render).not.toHaveBeenCalled();
 	});
 
 	it('Expects that show set the alert class and message and renders the template', function() {
@@ -31,7 +33,7 @@ describe('GDP.util.AlertView', function() {
 		expect($('#test-div .alert').length).toBe(1);
 	});
 
-	it('Expects that a second invocation of show removes the first alert and replaces with the seconde', function() {
+	it('Expects that a second invocation of show removes the first alert and replaces with the second', function() {
 		var testView = new GDP.util.AlertView({
 			el : '#test-div'
 		});
