@@ -38,26 +38,21 @@ var GDP = GDP || {};
 	    this.wpsEndpoint = options.wpsEndpoint;
 	    //super
 		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
-		var availableVariables = _.clone(this.model.get('availableVariables'));
-		var startDate = this.model.get('startDate');
-		var endDate = this.model.get('endDate');
-		var self = this;
+		$(urlPicker.selector).val(this.model.get('dataSourceUrl'));
+		this.listenTo(this.model, 'change:dataSourceUrl', this.changeUrl);
+		this.listenTo(this.model.get('availableVariables'), 'reset', this.changeAvailableVariables);
+		this.listenTo(this.model, 'change:invalidDataSourceUrl', this.changeInvalidUrl);
+		this.listenTo(this.model, 'change:minDate', this.changeMinDate);
+		this.listenTo(this.model, 'change:maxDate', this.changeMaxDate);
+		this.listenTo(this.model, 'change:startDate', this.changeStartDate);
+		this.listenTo(this.model, 'change:endDate', this.changeEndDate);
 		
-		this.changeUrl(this.model, this.model.get('dataSourceUrl')).done(function(){
-			self.listenTo(self.model, 'change:dataSourceUrl', self.changeUrl);
-			self.listenTo(self.model.get('availableVariables'), 'reset', self.changeAvailableVariables);
-			self.listenTo(self.model, 'change:invalidDataSourceUrl', self.changeInvalidUrl);
-			self.listenTo(self.model, 'change:minDate', self.changeMinDate);
-			self.listenTo(self.model, 'change:maxDate', self.changeMaxDate);
-			self.listenTo(self.model, 'change:startDate', self.changeStartDate);
-			self.listenTo(self.model, 'change:endDate', self.changeEndDate);
-			self.model.set('availableVariables', availableVariables);
-			self.model.set('startDate', startDate);
-			self.model.set('endDate', endDate);
-		});
-		
-
-		
+		this.changeAvailableVariables();
+		this.changeInvalidUrl();
+		this.changeMinDate();
+		this.changeMaxDate();
+		this.changeStartDate();
+		this.changeEndDate();
 	},
 	'setEndDate' : function(ev){
 		this.model.set('endDate', ev.target.value);
@@ -122,17 +117,17 @@ var GDP = GDP || {};
 		});
 	},
 	'setSelectedVariables' : function (ev) {
-		var variables = _.chain(ev.target.options).map(function (option) {
+		var variables = _.map(ev.target.options, function (option) {
 				return {
 					'text': option.text,
 					'value': option.value,
 					'selected': option.selected
 				};
-			}).value();
+			});
 			
 		var availableVariables = this.model.get('availableVariables');
 		
-		availableVariables.set(variables);;
+		availableVariables.set(variables);
 	},
 	/**
 	 * On model change, updates the dom to reflect the current data source's 
@@ -187,7 +182,6 @@ var GDP = GDP || {};
 		}
 		self.model.set('invalidDataSourceUrl', true);
 		self.model.get('availableVariables').reset();
-		self.model.get('selectedVariables').reset();
 		self.resetDates();
 		return deferred.promise();
 	},
