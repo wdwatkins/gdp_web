@@ -174,6 +174,21 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 		_.each(unparseableResponses, function(unparseableResponse){
 			expect(testView.isValidDateRangeResponse(unparseableResponse)).toBe(false);
 		});
+		var validResponse = {
+			availabletimes:{
+				starttime: {
+					year: 2001,
+					month: 1,
+					day: 1
+				},
+				endtime:{
+					year: 2002,
+					month: 2,
+					day: 2
+				}
+			}
+		};
+		expect(testView.isValidDateRangeResponse(validResponse)).toBe(true);
 	});
 	it('expects the getDateRange() promise to be rejected with an error message if the web service call succeeds, but delivers an unparseable response', function(){
 		var promise, returnedMessage;
