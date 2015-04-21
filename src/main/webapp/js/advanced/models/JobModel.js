@@ -9,7 +9,7 @@ var GDP = GDP || {};
 
     var Job = Backbone.Model.extend({
 	defaults: {
-	    //data detailsL
+	    //data details
 	    dataSourceUrl : null,
 		invalidDataSourceUrl : true,
 		availableVariables : new GDP.ADVANCED.model.DataSourceVariables(),

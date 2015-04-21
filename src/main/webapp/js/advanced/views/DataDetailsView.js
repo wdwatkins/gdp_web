@@ -27,9 +27,9 @@ var GDP = GDP || {};
 	'events' : (function(){
 		var ret = {};
 		ret['change ' + variablePicker.selector + ' option'] = 'selectVariables';
-		ret['change ' + urlPicker.selector] = 'changeUrl';
-		ret['changeDate ' + datePickers.start.selector] = 'changeStartDate';
-		ret['changeDate ' + datePickers.end.selector] = 'changeEndDate';
+		ret['change ' + urlPicker.selector] = 'setUrl';
+		ret['changeDate ' + datePickers.start.selector] = 'setStartDate';
+		ret['changeDate ' + datePickers.end.selector] = 'setEndDate';
 		return ret;
 	}()),
 	'wps' : null,
@@ -38,20 +38,40 @@ var GDP = GDP || {};
 	    this.wpsEndpoint = options.wpsEndpoint;
 	    //super
 		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
-
-		this.listenTo(this.model, 'change:availableVariables', this.updateAvailableVariables);
+		this.listenTo(this.model, 'change:dataSourceUrl', this.changeUrl);
+		this.listenTo(this.model.get('availableVariables'), 'add', this.changeAvailableVariables);
+		this.listenTo(this.model.get('availableVariables'), 'remove', this.changeAvailableVariables);
+		this.listenTo(this.model.get('availableVariables'), 'reset', this.changeAvailableVariables);
 		this.listenTo(this.model, 'change:invalidDataSourceUrl', this.changeInvalidUrl);
 		this.listenTo(this.model, 'change:minDate', this.changeMinDate);
 		this.listenTo(this.model, 'change:maxDate', this.changeMaxDate);
 		this.listenTo(this.model, 'change:startDate', this.changeStartDate);
 	},
-	'changeMinDate' : function(jobModel, minDate){
+	'setEndDate' : function(ev){
+		this.model.set('endDate', ev.target.value);
+	},
+	'setStartDate' : function(ev){
+		this.model.set('startDate', ev.target.value);
+	},
+	'setMaxDate' : function(ev){
+		this.model.set('maxDate', ev.target.value);
+	},
+	'setMinDate' : function(ev){
+		this.model.set('minDate', ev.target.value);
+	},
+	'setUrl' : function(ev){
+		this.model.set('dataSourceUrl', ev.target.value);
+	},
+	'changeMinDate' : function(jobModel){
+		var minDate = this.model.get('minDate');
 		$(datePickers.start.selector).datepicker('setStartDate', minDate);
 	},
-	'changeMaxDate' : function(jobModel, maxDate){
+	'changeMaxDate' : function(jobModel){
+		var maxDate = this.model.get('maxDate');
 		$(datePickers.end.selector).datepicker('setEndDate', maxDate);
 	},
-	'changeStartDate' : function(jobModel, startDate){
+	'changeStartDate' : function(jobModel){
+		var startDate = this.model.get('startDate');
 		if(null === startDate){
 			$(datePickers.start.selector).datepicker('clearDates');
 		}
@@ -60,7 +80,8 @@ var GDP = GDP || {};
 			$(datePickers.end.selector).datepicker('setStartDate', startDate);
 		}
 	},
-	'changeEndDate' : function(jobModel, endDate){
+	'changeEndDate' : function(jobModel){
+		var endDate = this.model.get('endDate');
 		if(null === endDate){
 			$(datePickers.end.selector).datepicker('clearDates');
 		}
@@ -105,10 +126,13 @@ var GDP = GDP || {};
 	 * available variables in <option> elements in a <select>
 	 * @returns {undefined}
 	 */
-	'updateAvailableVariables' : function(jobModel, availableVariables){
-		this.selectMenuView.updateMenuOptions(availableVariables);
+	'changeAvailableVariables' : function(jobModel){
+		var availableVariables = this.model.get('availableVariables');
+		var plainObjects = _.pluck(availableVariables.models, 'attributes');
+		this.selectMenuView.updateMenuOptions(plainObjects);
 	},
-	'changeInvalidUrl' : function(jobModel, invalidUrl){
+	'changeInvalidUrl' : function(jobModel){
+		var invalidUrl = this.model.get('invalidDataSourceUrl');
 		var selectorsToToggleDisabled = [
 			datePickers.start.selector,
 			datePickers.end.selector,
@@ -122,21 +146,20 @@ var GDP = GDP || {};
 	/**
 	 * Reacts to a change in url
 	 * 
-	 * @param {jQuery} ev a jQuery change event for the target field
-	 * expects url to be at ev.target.value
+	 * @param {GDP.ADVANCED.model.JobModel} 
+	 * @param {String} url 
 	 * @returns {jQuery.Deferred.promise} The promise is resolved with no args 
 	 * if user cleared the url or if user submitted a url and all subesequent 
 	 * web service calls succeded. The promise is rejected with an error message
 	 * if any web service calls fail, or if the web service responses cannot be
 	 * parsed.
 	 */
-	'changeUrl': function (ev) {
+	'changeUrl': function (jobModel, url) {
 		var self = this,
-		value = ev.target.value,
 		deferred = $.Deferred();
-		this.model.set('dataSourceUrl', value);
-		if (!(_.isNull(value) || _.isUndefined(value) || _.isEmpty(value))) {
-			this.getGrids(value).done(function(catalogUrl, gridName){
+		this.model.set('dataSourceUrl', url);
+		if (!(_.isNull(url) || _.isUndefined(url) || _.isEmpty(url))) {
+			this.getGrids(url).done(function(catalogUrl, gridName){
 				var dateRangePromise = self.getDateRange(catalogUrl, gridName);
 				dateRangePromise.then(function(){
 					deferred.resolve.apply(this, arguments);
@@ -154,7 +177,6 @@ var GDP = GDP || {};
 		self.model.get('availableVariables').reset();
 		self.model.get('selectedVariables').reset();
 		self.resetDates();
-//		this.render();
 		return deferred.promise();
 	},
 	'failedToParseVariableResponseMessage' : "No variables were discovered at this data source url.",
@@ -169,7 +191,7 @@ var GDP = GDP || {};
 	 */
 	'getGrids': function (dataSourceUrl) {
 		var self = this,
-				variables,
+				variables =[],
 				deferred = $.Deferred(),
 				wpsInputs = {
 					"catalog-url": [dataSourceUrl],
@@ -217,7 +239,6 @@ var GDP = GDP || {};
 			self.model.get('availableVariables').reset();
 			deferred.reject(message);
 		}).always(function () {
-//			self.render();
 		});
 		return deferred.promise();
 	},
@@ -319,7 +340,6 @@ var GDP = GDP || {};
 			self.model.set('invalidDataSourceUrl', true);
 			deferred.reject(message);
 		}).always(function () {
-//			self.render();
 		});
 		return deferred.promise();
 	},
