@@ -28,7 +28,7 @@ GDP.util.SelectMenuView = Backbone.View.extend({
 		this.menuOptions = options.menuOptions ? options.menuOptions : [];
 
 		this.$el = $(options.el);
-		this.template = Handlebars.compile('{{#each options}}<option value={{value}}>{{text}}</option>{{/each}}');
+		this.template = Handlebars.compile('{{#each options}}<option value={{value}} {{#if selected}}selected{{/if}}>{{text}}</option>{{/each}}');
 		this.updateMenuOptions(this.menuOptions);
 	},
 
