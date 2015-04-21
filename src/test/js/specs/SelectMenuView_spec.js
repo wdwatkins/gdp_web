@@ -21,7 +21,7 @@ describe('GDP.util.SelectMenuView', function() {
 		it('Expects a select menu view to contain the options specified', function() {
 			var testView = new GDP.util.SelectMenuView({
 				el : '#test-select',
-				menuOptions: [{value: 'smith', text: 'Smith', selected: false},{value: 'jones', text: 'Jones', selected: false},{value: 'olsen', text: 'Olsen', selected: false}]
+				menuOptions: [{value: 'smith', text: 'Smith', selected: true},{value: 'jones', text: 'Jones', selected: false},{value: 'olsen', text: 'Olsen', selected: true}]
 			});
 			var $options = $('#test-select option');
 			expect($options.length).toBe(3);
@@ -32,6 +32,10 @@ describe('GDP.util.SelectMenuView', function() {
 			expect($('#test-select option:nth-child(1)').html()).toEqual('Smith');
 			expect($('#test-select option:nth-child(2)').html()).toEqual('Jones');
 			expect($('#test-select option:nth-child(3)').html()).toEqual('Olsen');
+			
+			expect($('#test-select option:nth-child(1)').prop('defaultSelected')).toEqual(true);
+			expect($('#test-select option:nth-child(2)').prop('defaultSelected')).toEqual(false);
+			expect($('#test-select option:nth-child(3)').prop('defaultSelected')).toEqual(true);
 		});
 
 		it('Expects a menu to be sorted by text if sortBy is set to "text"', function() {
