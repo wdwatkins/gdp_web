@@ -348,30 +348,7 @@ var GDP = GDP || {};
 		}).always(function () {
 		});
 		return deferred.promise();
-	},
-//	'changeEndDate': function(event){
-//		var newEndDate = event.date;
-//		this.model.set('endDate', newEndDate);
-//		var startDatePicker = $(datePickers.start.selector).datepicker();
-//		if(newEndDate){
-//			startDatePicker.datepicker('setEndDate', newEndDate);
-//		}else{
-//			var maxDate = this.model.get('maxDate');
-//			startDatePicker.datepicker('setEndDate', maxDate);
-//		}
-//	},
-//	'changeStartDate': function(event){
-//		var newStartDate = event.date;
-//		this.model.set('startDate', newStartDate);
-//		
-//		var endDatePicker = $(datePickers.end.selector).datepicker();
-//		if(newStartDate){
-//			endDatePicker.datepicker('setStartDate', newStartDate);
-//		}else{
-//			var minDate = this.model.get('minDate');
-//			endDatePicker.datepicker('setStartDate', minDate);
-//		}
-//	}
+	}
 });
 
 }(_, jQuery));
