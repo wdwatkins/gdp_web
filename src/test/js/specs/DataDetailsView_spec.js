@@ -59,8 +59,8 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 	afterEach(function() {
 		server.restore();
 	});
-	it('Expects changeUrl() to change the model\'s dataSourceUrl property', function() {
-		testView.changeUrl({ target : { value : url } });
+	it('Expects setUrl() to change the model\'s dataSourceUrl property', function() {
+		testView.setUrl({ target : { value : url } });
 		expect(testView.model.get('dataSourceUrl')).toEqual(url);
 	});
 	
