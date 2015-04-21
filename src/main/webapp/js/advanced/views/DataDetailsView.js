@@ -41,17 +41,16 @@ var GDP = GDP || {};
 	    this.wps = options.wps;
 	    this.wpsEndpoint = options.wpsEndpoint;
 	    //super
-		this.listenTo(this.model, 'change:availableVariables', function(){
-			this.updateAvailableVariables();
-		});
-	    GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+
+		this.listenTo(this.model, 'change:availableVariables', this.updateAvailableVariables);
+		this.listenTo(this.model, 'change:invalidDataSourceUrl', this.changeInvalidUrl);
 	},
 	selectMenuView : null,
 	'render' : function () {
-	    this.$el.html(this.template({
-		url : this.model.get('dataSourceUrl'),
-		invalidUrl : this.model.get('invalidDataSourceUrl')
-	    }));
+		this.$el.html(this.template({
+			url : this.model.get('dataSourceUrl')
+		}));
 		this.selectMenuView = new GDP.util.SelectMenuView({
 				el : variablePicker.selector,
 				emptyPlaceholder : true,
@@ -107,7 +106,6 @@ var GDP = GDP || {};
 		});
 
 		this.model.get('selectedVariables').reset(variables);
-		this.render();
 	},
 	/**
 	 * On model change, updates the dom to reflect the current data source's 
@@ -117,6 +115,17 @@ var GDP = GDP || {};
 	'updateAvailableVariables' : function(){
 		var availableVars = this.model.get('availableVariables');
 		this.selectMenuView.updateMenuOptions(availableVars);
+	},
+	'changeInvalidUrl' : function(jobModel, invalidUrl){
+		var selectorsToToggleDisabled = [
+			datePickers.start.selector,
+			datePickers.end.selector,
+			variablePicker.selector
+		];
+		
+		_.each(selectorsToToggleDisabled, function(selector){
+			$(selector).prop('disabled', invalidUrl);
+		});
 	},
 	/**
 	 * Reacts to a change in url
@@ -153,7 +162,7 @@ var GDP = GDP || {};
 		self.model.get('availableVariables').reset();
 		self.model.get('selectedVariables').reset();
 		self.resetDates();
-		this.render();
+//		this.render();
 		return deferred.promise();
 	},
 	'failedToParseVariableResponseMessage' : "No variables were discovered at this data source url.",
@@ -216,7 +225,7 @@ var GDP = GDP || {};
 			self.model.get('availableVariables').reset();
 			deferred.reject(message);
 		}).always(function () {
-			self.render();
+//			self.render();
 		});
 		return deferred.promise();
 	},
@@ -318,7 +327,7 @@ var GDP = GDP || {};
 			self.model.set('invalidDataSourceUrl', true);
 			deferred.reject(message);
 		}).always(function () {
-			self.render();
+//			self.render();
 		});
 		return deferred.promise();
 	},

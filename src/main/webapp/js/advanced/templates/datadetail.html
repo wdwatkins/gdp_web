@@ -4,30 +4,23 @@
 <form class="panel-body" action="#/">
     <div class="form-group">
 	<label for="data-source-url">Data Source URL</label>
-	<input id="data-source-url" class="form-control" type="url" required value="{{url}}"/>
+	<input id="data-source-url" class="form-control" type="url" required/>
     </div>
     <div class="form-group">
 	<label for="data-source-vars">Variables</label>
-	<select id="data-source-vars" class="form-control" required {{#if invalidUrl}}disabled{{/if}} multiple size="10">
+	<select id="data-source-vars" class="form-control" required disabled multiple size="10">
 	</select>
     </div>
     <div class="form-horizontal">
     <div class="form-group input-daterange">
 	<label for="start-date" class="col-xs-12 col-sm-4 text-center">Date Range</label>
-	<input id="start-date" class="col-xs-12 col-sm-3" type="text" required {{#if invalidUrl}}disabled{{/if}}
-		   />
+	<input id="start-date" class="col-xs-12 col-sm-3" type="text" required disabled/>
 	<label for="end-date" class="col-xs-12 col-sm-1" >to</label>
-	<input id="end-date" class="col-xs-12 col-sm-3" type="text" required {{#if invalidUrl}}disabled{{/if}}
-		   />
+	<input id="end-date" class="col-xs-12 col-sm-3" type="text" required disabled/>
     </div>
     </div>
     <div class="row center-block">
-		
-	<button class="btn btn-default center-block form-control"
-			{{#if invalidUrl}}
-				disabled
-			{{/if}}
-			>Done</button>
+		<button class="btn btn-default center-block form-control">Done</button>
     </div>
 </form>
 </div>
