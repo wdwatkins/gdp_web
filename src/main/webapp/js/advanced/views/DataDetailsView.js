@@ -46,6 +46,7 @@ var GDP = GDP || {};
 		this.listenTo(this.model, 'change:minDate', this.changeMinDate);
 		this.listenTo(this.model, 'change:maxDate', this.changeMaxDate);
 		this.listenTo(this.model, 'change:startDate', this.changeStartDate);
+		this.listenTo(this.model, 'change:endDate', this.changeEndDate);
 	},
 	'setEndDate' : function(ev){
 		this.model.set('endDate', ev.target.value);
@@ -62,15 +63,15 @@ var GDP = GDP || {};
 	'setUrl' : function(ev){
 		this.model.set('dataSourceUrl', ev.target.value);
 	},
-	'changeMinDate' : function(jobModel){
+	'changeMinDate' : function(){
 		var minDate = this.model.get('minDate');
 		$(datePickers.start.selector).datepicker('setStartDate', minDate);
 	},
-	'changeMaxDate' : function(jobModel){
+	'changeMaxDate' : function(){
 		var maxDate = this.model.get('maxDate');
 		$(datePickers.end.selector).datepicker('setEndDate', maxDate);
 	},
-	'changeStartDate' : function(jobModel){
+	'changeStartDate' : function(){
 		var startDate = this.model.get('startDate');
 		if(null === startDate){
 			$(datePickers.start.selector).datepicker('clearDates');
@@ -80,7 +81,7 @@ var GDP = GDP || {};
 			$(datePickers.end.selector).datepicker('setStartDate', startDate);
 		}
 	},
-	'changeEndDate' : function(jobModel){
+	'changeEndDate' : function(){
 		var endDate = this.model.get('endDate');
 		if(null === endDate){
 			$(datePickers.end.selector).datepicker('clearDates');
@@ -95,7 +96,7 @@ var GDP = GDP || {};
 		this.$el.html(this.template());
 		this.selectMenuView = new GDP.util.SelectMenuView({
 				el : variablePicker.selector,
-				emptyPlaceholder : true,
+				emptyPlaceholder : false,
 				sortOptions: true
 		});
 		$(datePickers.start.selector).datepicker();
@@ -157,7 +158,6 @@ var GDP = GDP || {};
 	'changeUrl': function (jobModel, url) {
 		var self = this,
 		deferred = $.Deferred();
-		this.model.set('dataSourceUrl', url);
 		if (!(_.isNull(url) || _.isUndefined(url) || _.isEmpty(url))) {
 			this.getGrids(url).done(function(catalogUrl, gridName){
 				var dateRangePromise = self.getDateRange(catalogUrl, gridName);
