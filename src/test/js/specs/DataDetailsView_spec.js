@@ -211,9 +211,9 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 	it('expects changeUrl() to initially reset all relevant model fields', function(){
 		testView.getGrids = rejectWithErrorMessage('no-op');
 		var actualUrl = 'http://cida.usgs.gov';
-		testView.changeUrl({target: {value: actualUrl}});
+		var mockModel = {};
+		testView.changeUrl(mockModel, actualUrl);
 		assertDataDetailFieldsReset(testView);
-		expect(testView.model.get('dataSourceUrl')).toEqual(actualUrl);
 	});
 	it('expects the getDateRange() promise to be resolved with no arguments if the web service call succeeds with a parseable response', function(){
 		var starttime = {
