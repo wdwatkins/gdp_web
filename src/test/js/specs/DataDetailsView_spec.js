@@ -64,7 +64,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 		expect(testView.model.get('dataSourceUrl')).toEqual(url);
 	});
 	
-	it('Expects selectVariables() to change the model\'s dataSourceVariables property', function() {
+	it('Expects setSelectedVariables() to change the model\'s dataSourceVariables property', function() {
 		var options = [
 			{
 			text: '',
@@ -86,7 +86,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 		//call the function with 0, 1, 2, and 3 options.
 		_.each(_.range(options.length), function(numberOfOptions){
 			var optionsToUse = _.first(options, numberOfOptions);
-			testView.selectVariables({ target : {options: optionsToUse }});
+			testView.setSelectedVariables({ target : {options: optionsToUse }});
 			var selectedOptions= testView.model.get('dataSourceVariables');
 			var expectedToActualPairs = _.zip(optionsToUse, selectedOptions.models);
 			_.each(expectedToActualPairs, function(expectedToActual){
