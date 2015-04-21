@@ -227,7 +227,8 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 		testView.getGrids = rejectWithErrorMessage('no-op');
 		var actualUrl = 'http://cida.usgs.gov';
 		var mockModel = {};
-		testView.changeUrl(mockModel, actualUrl);
+		testView.model.attributes.dataSourceUrl = actualUrl;
+		testView.changeUrl();
 		assertDataDetailFieldsReset(testView);
 	});
 	it('expects the getDateRange() promise to be resolved with no arguments if the web service call succeeds with a parseable response', function(){

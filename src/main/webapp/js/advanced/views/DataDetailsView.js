@@ -154,16 +154,15 @@ var GDP = GDP || {};
 	/**
 	 * Reacts to a change in url
 	 * 
-	 * @param {GDP.ADVANCED.model.JobModel} 
-	 * @param {String} url 
 	 * @returns {jQuery.Deferred.promise} The promise is resolved with no args 
 	 * if user cleared the url or if user submitted a url and all subesequent 
 	 * web service calls succeded. The promise is rejected with an error message
 	 * if any web service calls fail, or if the web service responses cannot be
 	 * parsed.
 	 */
-	'changeUrl': function (jobModel, url) {
+	'changeUrl': function () {
 		var self = this,
+		url = this.model.get('dataSourceUrl'),
 		deferred = $.Deferred();
 		if (!(_.isNull(url) || _.isUndefined(url) || _.isEmpty(url))) {
 			this.getGrids(url).done(function(catalogUrl, gridName){
