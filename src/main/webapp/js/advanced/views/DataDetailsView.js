@@ -40,7 +40,7 @@ var GDP = GDP || {};
 		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 		$(urlPicker.selector).val(this.model.get('dataSourceUrl'));
 		this.listenTo(this.model, 'change:dataSourceUrl', this.changeUrl);
-		this.listenTo(this.model.get('availableVariables'), 'reset', this.changeAvailableVariables);
+		this.listenTo(this.model.get('dataSourceVariables'), 'reset', this.changeAvailableVariables);
 		this.listenTo(this.model, 'change:invalidDataSourceUrl', this.changeInvalidUrl);
 		this.listenTo(this.model, 'change:minDate', this.changeMinDate);
 		this.listenTo(this.model, 'change:maxDate', this.changeMaxDate);
@@ -125,9 +125,9 @@ var GDP = GDP || {};
 				};
 			});
 			
-		var availableVariables = this.model.get('availableVariables');
+		var dataSourceVariables = this.model.get('dataSourceVariables');
 		
-		availableVariables.set(variables);
+		dataSourceVariables.set(variables);
 	},
 	/**
 	 * On model change, updates the dom to reflect the current data source's 
@@ -135,8 +135,8 @@ var GDP = GDP || {};
 	 * @returns {undefined}
 	 */
 	'changeAvailableVariables' : function(){
-		var availableVariables = this.model.get('availableVariables');
-		var plainObjects = _.pluck(availableVariables.models, 'attributes');
+		var dataSourceVariables = this.model.get('dataSourceVariables');
+		var plainObjects = _.pluck(dataSourceVariables.models, 'attributes');
 		this.selectMenuView.updateMenuOptions(plainObjects);
 	},
 	'changeInvalidUrl' : function(){
@@ -181,7 +181,7 @@ var GDP = GDP || {};
 			deferred.resolve();
 		}
 		self.model.set('invalidDataSourceUrl', true);
-		self.model.get('availableVariables').reset();
+		self.model.get('dataSourceVariables').reset();
 		self.resetDates();
 		return deferred.promise();
 	},
@@ -236,13 +236,13 @@ var GDP = GDP || {};
 				alert(message);
 				deferred.reject(message);
 			}
-			self.model.get('availableVariables').reset(variables);
+			self.model.get('dataSourceVariables').reset(variables);
 			self.model.set('invalidDataSourceUrl', invalid);
 		}).fail(function (jqxhr, textStatus, message) {
 			//todo: anything better than 'alert'
 			alert(message);
 			self.model.set('invalidDataSourceUrl', true);
-			self.model.get('availableVariables').reset();
+			self.model.get('dataSourceVariables').reset();
 			deferred.reject(message);
 		}).always(function () {
 		});
