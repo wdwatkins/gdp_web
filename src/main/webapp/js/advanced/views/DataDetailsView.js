@@ -5,24 +5,20 @@ var GDP = GDP || {};
     "use strict";
     GDP.ADVANCED= GDP.ADVANCED || {};
     GDP.ADVANCED.view = GDP.ADVANCED.view || {};
-    var variablePicker  = {
-	selector : '#data-source-vars',
-	$el: null
+	var variablePicker  = {
+		selector : '#data-source-vars'
     };
-    var datePickers = {
-	start : {
-	    selector:'#start-date',
-	    $el: null
-	},
-	end : {
-	    selector: '#end-date',
-	    $el: null
-	}
-    };
-    var urlPicker = {
-	selector: '#data-source-url',
-	$el: null
-    };
+	var datePickers = {
+		start : {
+			selector:'#start-date'
+		},
+		end : {
+			selector: '#end-date'
+		}
+	};
+	var urlPicker = {
+		selector: '#data-source-url'
+	};
 
 	var VARIABLE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.ListOpendapGrids';
 	var DATE_RANGE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.GetGridTimeRange';
@@ -45,48 +41,45 @@ var GDP = GDP || {};
 
 		this.listenTo(this.model, 'change:availableVariables', this.updateAvailableVariables);
 		this.listenTo(this.model, 'change:invalidDataSourceUrl', this.changeInvalidUrl);
+		this.listenTo(this.model, 'change:minDate', this.changeMinDate);
+		this.listenTo(this.model, 'change:maxDate', this.changeMaxDate);
+		this.listenTo(this.model, 'change:startDate', this.changeStartDate);
+	},
+	'changeMinDate' : function(jobModel, minDate){
+		$(datePickers.start.selector).datepicker('setStartDate', minDate);
+	},
+	'changeMaxDate' : function(jobModel, maxDate){
+		$(datePickers.end.selector).datepicker('setEndDate', maxDate);
+	},
+	'changeStartDate' : function(jobModel, startDate){
+		if(null === startDate){
+			$(datePickers.start.selector).datepicker('clearDates');
+		}
+		else{
+			$(datePickers.start.selector).datepicker('setDate', startDate);
+			$(datePickers.end.selector).datepicker('setStartDate', startDate);
+		}
+	},
+	'changeEndDate' : function(jobModel, endDate){
+		if(null === endDate){
+			$(datePickers.end.selector).datepicker('clearDates');
+		}
+		else{
+			$(datePickers.end.selector).datepicker('setDate', endDate);
+			$(datePickers.start.selector).datepicker('setEndDate', endDate);
+		}
 	},
 	selectMenuView : null,
 	'render' : function () {
-		this.$el.html(this.template({
-			url : this.model.get('dataSourceUrl')
-		}));
+		this.$el.html(this.template());
 		this.selectMenuView = new GDP.util.SelectMenuView({
 				el : variablePicker.selector,
 				emptyPlaceholder : true,
 				sortOptions: true
 		});
-	    datePickers.start.$el = $(datePickers.start.selector);
-	    datePickers.end.$el = $(datePickers.end.selector);
-	    urlPicker.$el = $(urlPicker.selector);
-		variablePicker.$el = $(variablePicker.selector);
-		
-		//actual user selection
-		var userStartDate = this.model.get('startDate');
-		var userEndDate = this.model.get('endDate');
-		
-		//bounds on user selection
-		var minDate = this.model.get('minDate');
-		var maxDate = this.model.get('maxDate');
-		
-		var startDatePicker = datePickers.start.$el.datepicker();
-		if(null === userStartDate){
-			startDatePicker.datepicker('clearDates');
-		}else{
-			startDatePicker.datepicker('setDate', userStartDate);
-			startDatePicker.datepicker('setStartDate', minDate);
-			startDatePicker.datepicker('setEndDate', userEndDate);
-		}
+		$(datePickers.start.selector).datepicker();
+		$(datePickers.end.selector).datepicker();
 
-		var endDatePicker = datePickers.end.$el.datepicker();
-		if(null === userEndDate){
-			endDatePicker.datepicker('clearDates');
-		}
-		else{
-			endDatePicker.datepicker('setDate', userEndDate);
-			endDatePicker.datepicker('setStartDate', userStartDate);
-			endDatePicker.datepicker('setEndDate', maxDate);
-		}
 		return this;
 	},
 	'dateModelProperties' : ['minDate', 'startDate', 'maxDate', 'endDate'],
@@ -112,9 +105,8 @@ var GDP = GDP || {};
 	 * available variables in <option> elements in a <select>
 	 * @returns {undefined}
 	 */
-	'updateAvailableVariables' : function(){
-		var availableVars = this.model.get('availableVariables');
-		this.selectMenuView.updateMenuOptions(availableVars);
+	'updateAvailableVariables' : function(jobModel, availableVariables){
+		this.selectMenuView.updateMenuOptions(availableVariables);
 	},
 	'changeInvalidUrl' : function(jobModel, invalidUrl){
 		var selectorsToToggleDisabled = [
@@ -331,29 +323,29 @@ var GDP = GDP || {};
 		});
 		return deferred.promise();
 	},
-	'changeEndDate': function(event){
-		var newEndDate = event.date;
-		this.model.set('endDate', newEndDate);
-		var startDatePicker = $(datePickers.start.selector).datepicker();
-		if(newEndDate){
-			startDatePicker.datepicker('setEndDate', newEndDate);
-		}else{
-			var maxDate = this.model.get('maxDate');
-			startDatePicker.datepicker('setEndDate', maxDate);
-		}
-	},
-	'changeStartDate': function(event){
-		var newStartDate = event.date;
-		this.model.set('startDate', newStartDate);
-		
-		var endDatePicker = $(datePickers.end.selector).datepicker();
-		if(newStartDate){
-			endDatePicker.datepicker('setStartDate', newStartDate);
-		}else{
-			var minDate = this.model.get('minDate');
-			endDatePicker.datepicker('setStartDate', minDate);
-		}
-	}
+//	'changeEndDate': function(event){
+//		var newEndDate = event.date;
+//		this.model.set('endDate', newEndDate);
+//		var startDatePicker = $(datePickers.start.selector).datepicker();
+//		if(newEndDate){
+//			startDatePicker.datepicker('setEndDate', newEndDate);
+//		}else{
+//			var maxDate = this.model.get('maxDate');
+//			startDatePicker.datepicker('setEndDate', maxDate);
+//		}
+//	},
+//	'changeStartDate': function(event){
+//		var newStartDate = event.date;
+//		this.model.set('startDate', newStartDate);
+//		
+//		var endDatePicker = $(datePickers.end.selector).datepicker();
+//		if(newStartDate){
+//			endDatePicker.datepicker('setStartDate', newStartDate);
+//		}else{
+//			var minDate = this.model.get('minDate');
+//			endDatePicker.datepicker('setStartDate', minDate);
+//		}
+//	}
 });
 
 }(_, jQuery));
