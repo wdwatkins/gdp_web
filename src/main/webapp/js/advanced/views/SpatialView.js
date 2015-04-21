@@ -100,7 +100,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						var layer = $resp.find('name').first().text();
 
 						if (warning) {
-							this.alertView.show('alert-warning', 'Upload succeeded with warning' + warning);
+							this.alertView.show('alert-warning', 'Upload succeeded with warning ' + warning);
 						}
 						else {
 							this.alertView.show('alert-success', 'Upload was successful.');

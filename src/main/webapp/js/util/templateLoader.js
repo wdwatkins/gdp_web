@@ -36,14 +36,14 @@ GDP.util.templateLoader = function(templateDir) {
 				context : names[i]
 			}));
 		}
-		
+
 		return $.when.apply(null, loadingDeferreds);
 	};
-	
+
 	self.registerHelpers = function () {
 		Handlebars.registerHelper({
 			'ifAlgorithmInputTypeIsLiteral' : function (type, options) {
-				if (type === 'literal') {	
+				if (type === 'literal') {
 					return options.fn(this);
 				}
 				return options.inverse(this);
@@ -66,8 +66,8 @@ GDP.util.templateLoader = function(templateDir) {
 				}
 				return options.inverse(this);
 			},
-			'defaultChecked' : function (bool) {
-				if (bool) {
+			'defaultChecked' : function (boolStr) {
+				if (boolStr === 'true') {
 					return 'checked="checked"';
 				}
 				return '';
@@ -75,6 +75,12 @@ GDP.util.templateLoader = function(templateDir) {
 			'defaultSelected' : function (curr, def) {
 				if (curr === def) {
 					return 'selected="selected"';
+				}
+				return '';
+			},
+			'isMultiple' : function (maxOccurs) {
+				if (maxOccurs !== '1') {
+					return 'multiple="multiple"';
 				}
 				return '';
 			}

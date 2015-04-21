@@ -21,13 +21,16 @@ $(document).ready(function() {
 	var PARTIALS = [];
 
 	GDP.ADVANCED.templates = GDP.util.templateLoader('js/advanced/templates/');
-	
+
 	var loadConfigModel = $.when($.ajax('config', {
 			success: function (data) {
 				GDP.config = new GDP.model.Config(data);
+			},
+			error : function (jqXHR, textStatus) {
+				console.log('Can not read config ' + textStatus);
 			}
 		}));
-	
+
 	// I need to load up my config model since one of the views I load depends on it
 	// Load up the process collection based on incoming model definitions from the config object
 
@@ -38,7 +41,7 @@ $(document).ready(function() {
 		initializeLogging({
 			LOG4JS_LOG_THRESHOLD: GDP.config.get('application').development === 'true' ? 'debug' : 'info'
 		});
-		
+
 		GDP.ADVANCED.templates.registerHelpers();
 		GDP.logger = log4javascript.getLogger();
 		var jobModel = new GDP.ADVANCED.model.Job();

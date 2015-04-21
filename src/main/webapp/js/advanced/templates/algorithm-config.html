@@ -15,27 +15,24 @@
 				
 				{{!-- Strings --}}
 				{{#ifAlgorithmDataTypeIsString data-type}}
-				
-				{{#if options}}
-					{{!-- Select Box --}}
-					<select class="form-control">
-						{{#each options}}
-						<option value="{{this}}" {{defaultSelected this ../default}}>{{this}}</option>
-						{{/each}}
-					</select>
-				{{else}}
-					{{!-- Text Box --}}
 					<div class="form-group">
 						<label for="input-{{identifier}}">{{title}}</label>
-						<input type="text" class="form-control" id="input-{{identifier}}" />
-					</div>
-				{{/if}}
-				
-				{{/ifAlgorithmDataTypeIsString}}
-				
-				
-				
+						{{#if options}}
+							{{!-- Select Box --}}
+							<select id="input-{{identifier}}" {{isMultiple maxOccurs }} class="form-control">
+								{{#each options}}
+									<option value="{{this}}" {{defaultSelected this ../default}}>{{this}}</option>
+								{{/each}}
+							</select>
+						{{else}}
+							{{!-- Text Box --}}
+							<input type="text" class="form-control" id="input-{{identifier}}" />
+
+						{{/if}}
+					</div>				
+				{{/ifAlgorithmDataTypeIsString}}				
 			{{/ifAlgorithmInputTypeIsLiteral}}
+			
 			{{#ifAlgorithmInputTypeIsComplex input-type}}
 				<div class="form-group">
 					<label for="input-{{identifier}}">{{title}} (complex)</label>
