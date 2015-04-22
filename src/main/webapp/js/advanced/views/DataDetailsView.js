@@ -185,6 +185,17 @@ var GDP = GDP || {};
 		return deferred.promise();
 	},
 	'failedToParseVariableResponseMessage' : "No variables were discovered at this data source url.",
+	'isValidGridResponse' : function(response){
+		var isValid = false;
+		//if response.datatypecollection.types is present
+		if(response && response.datatypecollection && response.datatypecollection.types){
+			//and if response.datatypecollection.types is an object or a non-zero-length array
+			if(response.datatypecollection.types.length || $.isPlainObject(response.datatypecollection.types)){
+				isValid = true;
+			}
+		}
+		return isValid;
+	},
 	/**
 	 * Gets the variables present in a url. 
 	 * 
@@ -215,8 +226,11 @@ var GDP = GDP || {};
 				'json',
 				'application/json'
 				).done(function (response, textStatus, message) {
-			var invalid = true;
-			if (response.datatypecollection && response.datatypecollection.types && response.datatypecollection.types.length > 0) {
+			var invalidUrl = true;
+			if (self.isValidGridResponse(response)) {
+				if(!response.datatypecollection.types.length){
+					response.datatypecollection.types = [response.datatypecollection.types];
+				}
 				variables = _.map(response.datatypecollection.types, function (type) {
 					var text = type.name + ' - ' + type.description + ' (' + type.unitsstring + ")";
 					var value = type.name;
@@ -226,7 +240,7 @@ var GDP = GDP || {};
 						'selected': false
 					};
 				});
-				invalid = false;
+				invalidUrl = false;
 				deferred.resolve(dataSourceUrl, variables[0].value);
 			}
 			else {
@@ -236,7 +250,7 @@ var GDP = GDP || {};
 				deferred.reject(message);
 			}
 			self.model.get('dataSourceVariables').reset(variables);
-			self.model.set('invalidDataSourceUrl', invalid);
+			self.model.set('invalidDataSourceUrl', invalidUrl);
 		}).fail(function (jqxhr, textStatus, message) {
 			//todo: anything better than 'alert'
 			alert(message);
