@@ -9,7 +9,8 @@ GDP.view.ProcessView = GDP.util.BaseView.extend({
 	algorithmConfigView : null,
 
 	events : {
-		"click .menu-dropdown-select-process" : "selectProcess"
+		"click .menu-dropdown-select-process" : "selectProcess",
+		"click #done-btn" : "goToHub"
 	},
 
 	render : function () {
@@ -68,5 +69,10 @@ GDP.view.ProcessView = GDP.util.BaseView.extend({
 		this.displayAlgorithmDescription(algorithmName);
 		this.algorithmConfigView.render();
 		this.algorithmConfigView.delegateEvents();
+	},
+
+	goToHub : function(evt) {
+		"use strict";
+		this.router.navigate("/", {trigger : true});
 	}
 });
