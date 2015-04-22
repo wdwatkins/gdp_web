@@ -231,6 +231,67 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 		testView.changeUrl();
 		assertDataDetailFieldsReset(testView);
 	});
+	it('expects isValidGridResponse() to return "false" for invalid responses, and "true" for valid responses', function(){
+		var invalidResponses = [
+			undefined,
+			null,
+			false,
+			42,
+			'',
+			'blah',
+			{},
+			{datatypecollection:null},
+			{
+				datatypecollection:
+					{
+						
+					}
+			},
+			{
+				datatypecollection:
+					{
+						types : null
+					}
+			},
+			{
+				datatypecollection:
+					{
+						//it should fail on an empty array:
+						types : []
+					}
+			}
+		];
+		
+		_.each(invalidResponses, function(invalidResponse){
+			expect(testView.isValidGridResponse(invalidResponse)).toBe(false);
+		});
+		
+		var validResponses = [
+			{
+				datatypecollection:
+					{
+						//types may have one object, or a non-zero-length array of objects
+						types : {}
+					}
+			},
+			{
+				datatypecollection:
+					{
+						types : [{}]
+					}
+			},
+						{
+				datatypecollection:
+					{
+						types : [{},{}]
+					}
+			}
+		];
+		
+		_.each(validResponses, function(validResponse){
+			expect(testView.isValidGridResponse(validResponse)).toBe(true);
+		});
+	});
 	it('expects the getDateRange() promise to be resolved with no arguments if the web service call succeeds with a parseable response', function(){
 		var starttime = {
 			year: 2001,
