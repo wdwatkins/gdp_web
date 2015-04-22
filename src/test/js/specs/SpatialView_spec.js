@@ -46,7 +46,10 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 			}
 		};
 
-		$('body').append('<div id="spatial-map"></div>')
+		spyOn($.fn, 'fileupload');
+
+		$('body').append('<div id="test-div"><div id="spatial-map"></div><input id="upload-shapefile-input" type="file" name="qqfile"></div>')
+
 
 		testView = new GDP.ADVANCED.view.SpatialView({
 			model : model,
@@ -56,7 +59,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 	});
 
 	afterEach(function() {
-		$('#spatial-map').remove();
+		$('#test-div').remove();
 		server.restore();
 	});
 
@@ -72,6 +75,54 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 		expect(loggerSpy.error).not.toHaveBeenCalled();
 		wfsDeferred.reject();
 		expect(loggerSpy.error).toHaveBeenCalled();
+	});
+
+	it('Expects the file upload widget to be initialized', function() {
+		expect($.fn.fileupload).toHaveBeenCalled();
+		var arg = $.fn.fileupload.mostRecentCall.args[0];
+		expect(arg.url).toMatch('uploadhandler');
+	});
+
+	// Couldn't figure out how to trigger a change event or set the file property, so testing the send and done
+	// callbacks by grabbing them from the spy and executing.
+	it('Expects the file upload send function to update the url with the selected file name', function() {
+		var sendCallback = $.fn.fileupload.mostRecentCall.args[0].send;
+		var data = {
+			url : 'http://testfileuploader',
+			files : [{
+				name : 'test_file.zip'
+			}]
+		};
+		sendCallback({}, data);
+		expect(data.url).toMatch('&qqfile=test_file.zip');
+	});
+
+	it('Expects a successful fileupload to update the AOI feature list and to set the aoiName attribute', function() {
+		var data = {
+			result: $.parseXML('<Response><store>test_layer</store><workspace>upload</workspace><name>upload:test_layer</name><success>true</success></Response>')
+		};
+		var getDeferred = $.Deferred();
+		spyOn(testView, 'getAvailableFeatures').andReturn(getDeferred);
+		var doneCallback = $.fn.fileupload.mostRecentCall.args[0].done;
+
+		doneCallback({}, data);
+		expect(testView.getAvailableFeatures).toHaveBeenCalled();
+		getDeferred.resolve();
+		expect(testView.model.get('aoiName')).toEqual('upload:test_layer');
+	});
+
+	it('Expects a failed fileupload to show an alert with the error message', function() {
+		var data = {
+			result : $.parseXML('<Response><error>Process failed during execution Target layer upload:test_layer already exists in the catalog</error><success>false</success></Response>')
+		}
+		var getDeferred = $.Deferred();
+		spyOn(testView, 'getAvailableFeatures').andReturn(getDeferred);
+		spyOn(testView.alertView, 'show');
+		var doneCallback = $.fn.fileupload.mostRecentCall.args[0].done;
+
+		doneCallback({}, data);
+		expect(testView.alertView.show).toHaveBeenCalled();
+		expect(testView.alertView.show.mostRecentCall.args[1]).toMatch('Target layer upload:test_layer');
 	});
 
 	it('Expects a change to aoiName to callWFS to make a DescribeFeatureType request', function() {
@@ -97,7 +148,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 	});
 
 	//TODO: Add tests to build DOM correctly from GetFeature response when aoiAttribute is changed
-
+	
 	it('Expects changeName to change the model\'s aoiName property', function() {
 		testView.changeName({ target : { value : 'thisFeature' } });
 		expect(testView.model.get('aoiName')).toEqual('thisFeature');

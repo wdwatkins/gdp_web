@@ -1,6 +1,7 @@
 /*jslint browser: true*/
 /*global _*/
 /*global $*/
+/*global OpenLayers*/
 /*global GDP.util.BaseView*/
 /*global GDP.util.SelectMenuView*/
 /*global GDP.util.mapUtils*/
@@ -20,7 +21,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		events : {
 			'change #select-aoi' : 'changeName',
 			'change #select-attribute' : 'changeAttribute',
-			'change #select-values' : 'changeValues',
+			'change #select-values' : 'changeValues'
 		},
 
 		render : function() {
@@ -78,7 +79,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				'response.encoding' : 'xml',
 				'filename.param' : 'qqfile',
 				'use.crs.failover' : 'true',
-				'projection.policy' : 'reproject',
+				'projection.policy' : 'reproject'
 			};
 
 			$('#upload-shapefile-input').fileupload({
