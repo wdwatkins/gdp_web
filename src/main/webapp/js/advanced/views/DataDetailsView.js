@@ -5,34 +5,31 @@ var GDP = GDP || {};
     "use strict";
     GDP.ADVANCED= GDP.ADVANCED || {};
     GDP.ADVANCED.view = GDP.ADVANCED.view || {};
-    var variablePicker  = {
-	selector : '#data-source-vars',
-	$el: null
+	var variablePicker  = {
+		selector : '#data-source-vars'
     };
-    var datePickers = {
-	start : {
-	    selector:'#start-date',
-	    $el: null
-	},
-	end : {
-	    selector: '#end-date',
-	    $el: null
-	}
-    };
-    var urlPicker = {
-	selector: '#data-source-url',
-	$el: null
-    };
+	var datePickers = {
+		start : {
+			selector:'#start-date'
+		},
+		end : {
+			selector: '#end-date'
+		}
+	};
+	var urlPicker = {
+		selector: '#data-source-url'
+	};
+
 	var VARIABLE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.ListOpendapGrids';
 	var DATE_RANGE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.GetGridTimeRange';
     
     GDP.ADVANCED.view.DataDetailsView = GDP.util.BaseView.extend({
 	'events' : (function(){
 		var ret = {};
-		ret['change ' + variablePicker.selector] = 'selectVariables';
-		ret['change ' + urlPicker.selector] = 'changeUrl';
-		ret['changeDate ' + datePickers.start.selector] = 'changeStartDate';
-		ret['changeDate ' + datePickers.end.selector] = 'changeEndDate';
+		ret['change ' + variablePicker.selector] = 'setSelectedVariables';
+		ret['change ' + urlPicker.selector] = 'setUrl';
+		ret['changeDate ' + datePickers.start.selector] = 'setStartDate';
+		ret['changeDate ' + datePickers.end.selector] = 'setEndDate';
 		return ret;
 	}()),
 	'wps' : null,
@@ -40,46 +37,76 @@ var GDP = GDP || {};
 	    this.wps = options.wps;
 	    this.wpsEndpoint = options.wpsEndpoint;
 	    //super
-	    GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+		$(urlPicker.selector).val(this.model.get('dataSourceUrl'));
+		this.listenTo(this.model, 'change:dataSourceUrl', this.changeUrl);
+		this.listenTo(this.model.get('dataSourceVariables'), 'reset', this.changeAvailableVariables);
+		this.listenTo(this.model, 'change:invalidDataSourceUrl', this.changeInvalidUrl);
+		this.listenTo(this.model, 'change:minDate', this.changeMinDate);
+		this.listenTo(this.model, 'change:maxDate', this.changeMaxDate);
+		this.listenTo(this.model, 'change:startDate', this.changeStartDate);
+		this.listenTo(this.model, 'change:endDate', this.changeEndDate);
+		
+		this.changeAvailableVariables();
+		this.changeInvalidUrl();
+		this.changeMinDate();
+		this.changeMaxDate();
+		this.changeStartDate();
+		this.changeEndDate();
 	},
-	'render' : function () {
-	    this.$el.html(this.template({
-		url : this.model.get('dataSourceUrl'),
-		variables : this.model.get('dataSourceVariables'),
-		invalidUrl : this.model.get('invalidDataSourceUrl')
-	    }));
-		
-	    datePickers.start.$el = $(datePickers.start.selector);
-	    datePickers.end.$el = $(datePickers.end.selector);
-	    urlPicker.$el = $(urlPicker.selector);
-		variablePicker.$el = $(variablePicker.selector);
-		
-		//actual user selection
-		var userStartDate = this.model.get('startDate');
-		var userEndDate = this.model.get('endDate');
-		
-		//bounds on user selection
+	'setEndDate' : function(ev){
+		this.model.set('endDate', ev.target.value);
+	},
+	'setStartDate' : function(ev){
+		this.model.set('startDate', ev.target.value);
+	},
+	'setMaxDate' : function(ev){
+		this.model.set('maxDate', ev.target.value);
+	},
+	'setMinDate' : function(ev){
+		this.model.set('minDate', ev.target.value);
+	},
+	'setUrl' : function(ev){
+		this.model.set('dataSourceUrl', ev.target.value);
+	},
+	'changeMinDate' : function(){
 		var minDate = this.model.get('minDate');
+		$(datePickers.start.selector).datepicker('setStartDate', minDate);
+	},
+	'changeMaxDate' : function(){
 		var maxDate = this.model.get('maxDate');
-		
-		var startDatePicker = datePickers.start.$el.datepicker();
-		if(null === userStartDate){
-			startDatePicker.datepicker('clearDates');
-		}else{
-			startDatePicker.datepicker('setDate', userStartDate);
-			startDatePicker.datepicker('setStartDate', minDate);
-			startDatePicker.datepicker('setEndDate', userEndDate);
-		}
-
-		var endDatePicker = datePickers.end.$el.datepicker();
-		if(null === userEndDate){
-			endDatePicker.datepicker('clearDates');
+		$(datePickers.end.selector).datepicker('setEndDate', maxDate);
+	},
+	'changeStartDate' : function(){
+		var startDate = this.model.get('startDate');
+		if(null === startDate){
+			$(datePickers.start.selector).datepicker('clearDates');
 		}
 		else{
-			endDatePicker.datepicker('setDate', userEndDate);
-			endDatePicker.datepicker('setStartDate', userStartDate);
-			endDatePicker.datepicker('setEndDate', maxDate);
+			$(datePickers.start.selector).datepicker('setDate', startDate);
+			$(datePickers.end.selector).datepicker('setStartDate', startDate);
 		}
+	},
+	'changeEndDate' : function(){
+		var endDate = this.model.get('endDate');
+		if(null === endDate){
+			$(datePickers.end.selector).datepicker('clearDates');
+		}
+		else{
+			$(datePickers.end.selector).datepicker('setDate', endDate);
+			$(datePickers.start.selector).datepicker('setEndDate', endDate);
+		}
+	},
+	'selectMenuView' : null,
+	'render' : function () {
+		this.$el.html(this.template());
+		this.selectMenuView = new GDP.util.SelectMenuView({
+				el : variablePicker.selector,
+				emptyPlaceholder : false,
+				sortOptions: false
+		});
+		$(datePickers.start.selector).datepicker();
+		$(datePickers.end.selector).datepicker();
 		return this;
 	},
 	'dateModelProperties' : ['minDate', 'startDate', 'maxDate', 'endDate'],
@@ -89,36 +116,56 @@ var GDP = GDP || {};
 			self.model.set(dateProp, null);
 		});
 	},
-	'selectVariables': function (ev) {
+	'setSelectedVariables' : function (ev) {
 		var variables = _.map(ev.target.options, function (option) {
-			return {
-				'text': option.text,
-				'value': option.value,
-				'selected': option.selected
-			};
+				return {
+					'text': option.text,
+					'value': option.value,
+					'selected': option.selected
+				};
+			});
+			
+		var dataSourceVariables = this.model.get('dataSourceVariables');
+		
+		dataSourceVariables.set(variables);
+	},
+	/**
+	 * On model change, updates the dom to reflect the current data source's 
+	 * available variables in <option> elements in a <select>
+	 * @returns {undefined}
+	 */
+	'changeAvailableVariables' : function(){
+		var dataSourceVariables = this.model.get('dataSourceVariables');
+		var plainObjects = _.pluck(dataSourceVariables.models, 'attributes');
+		this.selectMenuView.updateMenuOptions(plainObjects);
+	},
+	'changeInvalidUrl' : function(){
+		var invalidUrl = this.model.get('invalidDataSourceUrl');
+		var selectorsToToggleDisabled = [
+			datePickers.start.selector,
+			datePickers.end.selector,
+			variablePicker.selector
+		];
+		
+		_.each(selectorsToToggleDisabled, function(selector){
+			$(selector).prop('disabled', invalidUrl);
 		});
-
-		this.model.get('dataSourceVariables').reset(variables);
-		this.render();
 	},
 	/**
 	 * Reacts to a change in url
 	 * 
-	 * @param {jQuery} ev a jQuery change event for the target field
-	 * expects url to be at ev.target.value
 	 * @returns {jQuery.Deferred.promise} The promise is resolved with no args 
 	 * if user cleared the url or if user submitted a url and all subesequent 
 	 * web service calls succeded. The promise is rejected with an error message
 	 * if any web service calls fail, or if the web service responses cannot be
 	 * parsed.
 	 */
-	'changeUrl': function (ev) {
+	'changeUrl': function () {
 		var self = this,
-		value = ev.target.value,
+		url = this.model.get('dataSourceUrl'),
 		deferred = $.Deferred();
-		this.model.set('dataSourceUrl', value);
-		if (!(_.isNull(value) || _.isUndefined(value) || _.isEmpty(value))) {
-			this.getGrids(value).done(function(catalogUrl, gridName){
+		if (!(_.isNull(url) || _.isUndefined(url) || _.isEmpty(url))) {
+			this.getGrids(url).done(function(catalogUrl, gridName){
 				var dateRangePromise = self.getDateRange(catalogUrl, gridName);
 				dateRangePromise.then(function(){
 					deferred.resolve.apply(this, arguments);
@@ -135,7 +182,6 @@ var GDP = GDP || {};
 		self.model.set('invalidDataSourceUrl', true);
 		self.model.get('dataSourceVariables').reset();
 		self.resetDates();
-		this.render();
 		return deferred.promise();
 	},
 	'failedToParseVariableResponseMessage' : "No variables were discovered at this data source url.",
@@ -150,7 +196,7 @@ var GDP = GDP || {};
 	 */
 	'getGrids': function (dataSourceUrl) {
 		var self = this,
-				variables,
+				variables =[],
 				deferred = $.Deferred(),
 				wpsInputs = {
 					"catalog-url": [dataSourceUrl],
@@ -198,7 +244,6 @@ var GDP = GDP || {};
 			self.model.get('dataSourceVariables').reset();
 			deferred.reject(message);
 		}).always(function () {
-			self.render();
 		});
 		return deferred.promise();
 	},
@@ -300,32 +345,8 @@ var GDP = GDP || {};
 			self.model.set('invalidDataSourceUrl', true);
 			deferred.reject(message);
 		}).always(function () {
-			self.render();
 		});
 		return deferred.promise();
-	},
-	'changeEndDate': function(event){
-		var newEndDate = event.date;
-		this.model.set('endDate', newEndDate);
-		var startDatePicker = $(datePickers.start.selector).datepicker();
-		if(newEndDate){
-			startDatePicker.datepicker('setEndDate', newEndDate);
-		}else{
-			var maxDate = this.model.get('maxDate');
-			startDatePicker.datepicker('setEndDate', maxDate);
-		}
-	},
-	'changeStartDate': function(event){
-		var newStartDate = event.date;
-		this.model.set('startDate', newStartDate);
-		
-		var endDatePicker = $(datePickers.end.selector).datepicker();
-		if(newStartDate){
-			endDatePicker.datepicker('setStartDate', newStartDate);
-		}else{
-			var minDate = this.model.get('minDate');
-			endDatePicker.datepicker('setStartDate', minDate);
-		}
 	}
 });
 

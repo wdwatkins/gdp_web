@@ -33,17 +33,17 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.nameSelectMenuView = new GDP.util.SelectMenuView({
 				el : '#select-aoi',
 				emptyPlaceholder : true,
-				sortOptions: true
+				sortBy : 'text'
 			});
 			this.attributeSelectMenuView = new GDP.util.SelectMenuView({
 				el : '#select-attribute',
 				emptyPlaceholder : true,
-				sortOptions: true
+				sortBy : 'text'
 			});
 			this.attributeValuesSelectMenuView = new GDP.util.SelectMenuView({
 				el : '#select-values',
 				emptyPlaceholder : true,
-				sortOptions: true
+				sortBy : 'text'
 			});
 		},
 
@@ -163,7 +163,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var populateFeatureTypesSelectBox = _.bind(function(data) {
 				this.nameSelectMenuView.$el.val(null);
 				var optionValues = _.map($(data).find('FeatureType'), function(el) {
-					return $(el).find('Name').text();
+					var text = $(el).find('Name').text();
+					return {
+						text : text,
+						value : text
+					};
 				});
 
 				this.nameSelectMenuView.updateMenuOptions(optionValues);
@@ -264,7 +268,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					_.bind(function(data) {
 						var $elements = $(data).find('complexContent').find('element[name!="the_geom"]');
 						var optionValues = _.map($elements, function(el) {
-							return $(el).attr('name');
+							var name = $(el).attr('name');
+							return {
+								text : name,
+								value: name
+							};
 						});
 
 						this.attributeSelectMenuView.updateMenuOptions(optionValues);
@@ -289,16 +297,20 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					false,
 
 					_.bind(function(data) {
-						var optionValues = [];
+						// Don't repeat values in the list
+						var optionValues = _.uniq(
+							_.map($(data).find(attribute), function(datum) {
+								return $(datum).text();
+							})
+						);
 
-						$(data).find(attribute).each(function() {
-							// Don't repeat values in the list
-							var value = $(this).text();
-							if (_.indexOf(optionValues, value) === -1) {
-								optionValues.push(value);
-							}
+						var optionObjects = _.map(optionValues, function(optionValue){
+							return {
+								text: optionValue,
+								value: optionValue
+							};
 						});
-						this.attributeValuesSelectMenuView.updateMenuOptions(optionValues);
+						this.attributeValuesSelectMenuView.updateMenuOptions(optionObjects);
 					}, this)
 				);
 			}
