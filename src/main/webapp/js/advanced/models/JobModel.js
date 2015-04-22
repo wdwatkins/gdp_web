@@ -9,10 +9,10 @@ var GDP = GDP || {};
 
     var Job = Backbone.Model.extend({
 	defaults: {
-	    //data detailsL
+	    //data details
 	    dataSourceUrl : null,
 		invalidDataSourceUrl : true,
-	    dataSourceVariables : new GDP.ADVANCED.model.DataSourceVariables(),
+		dataSourceVariables : new GDP.ADVANCED.model.DataSourceVariables(),
 		
 		//the earliest date the user can select
 		minDate: null,

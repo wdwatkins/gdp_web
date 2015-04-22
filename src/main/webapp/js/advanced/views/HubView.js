@@ -11,5 +11,3 @@ GDP.view.HubView = GDP.util.BaseView.extend({
 	$('#summary-var-count').text(numVars);
     }
 });
-
-
