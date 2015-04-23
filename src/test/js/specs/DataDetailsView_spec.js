@@ -59,12 +59,12 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 	afterEach(function() {
 		server.restore();
 	});
-	it('Expects changeUrl() to change the model\'s dataSourceUrl property', function() {
-		testView.changeUrl({ target : { value : url } });
+	it('Expects setUrl() to change the model\'s dataSourceUrl property', function() {
+		testView.setUrl({ target : { value : url } });
 		expect(testView.model.get('dataSourceUrl')).toEqual(url);
 	});
 	
-	it('Expects selectVariables() to change the model\'s dataSourceVariables property', function() {
+	it('Expects setSelectedVariables() to change the model\'s dataSourceVariables property', function() {
 		var options = [
 			{
 			text: '',
@@ -86,7 +86,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 		//call the function with 0, 1, 2, and 3 options.
 		_.each(_.range(options.length), function(numberOfOptions){
 			var optionsToUse = _.first(options, numberOfOptions);
-			testView.selectVariables({ target : {options: optionsToUse }});
+			testView.setSelectedVariables({ target : {options: optionsToUse }});
 			var selectedOptions= testView.model.get('dataSourceVariables');
 			var expectedToActualPairs = _.zip(optionsToUse, selectedOptions.models);
 			_.each(expectedToActualPairs, function(expectedToActual){
@@ -174,6 +174,21 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 		_.each(unparseableResponses, function(unparseableResponse){
 			expect(testView.isValidDateRangeResponse(unparseableResponse)).toBe(false);
 		});
+		var validResponse = {
+			availabletimes:{
+				starttime: {
+					year: 2001,
+					month: 1,
+					day: 1
+				},
+				endtime:{
+					year: 2002,
+					month: 2,
+					day: 2
+				}
+			}
+		};
+		expect(testView.isValidDateRangeResponse(validResponse)).toBe(true);
 	});
 	it('expects the getDateRange() promise to be rejected with an error message if the web service call succeeds, but delivers an unparseable response', function(){
 		var promise, returnedMessage;
@@ -211,9 +226,71 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 	it('expects changeUrl() to initially reset all relevant model fields', function(){
 		testView.getGrids = rejectWithErrorMessage('no-op');
 		var actualUrl = 'http://cida.usgs.gov';
-		testView.changeUrl({target: {value: actualUrl}});
+		var mockModel = {};
+		testView.model.attributes.dataSourceUrl = actualUrl;
+		testView.changeUrl();
 		assertDataDetailFieldsReset(testView);
-		expect(testView.model.get('dataSourceUrl')).toEqual(actualUrl);
+	});
+	it('expects isValidGridResponse() to return "false" for invalid responses, and "true" for valid responses', function(){
+		var invalidResponses = [
+			undefined,
+			null,
+			false,
+			42,
+			'',
+			'blah',
+			{},
+			{datatypecollection:null},
+			{
+				datatypecollection:
+					{
+						
+					}
+			},
+			{
+				datatypecollection:
+					{
+						types : null
+					}
+			},
+			{
+				datatypecollection:
+					{
+						//it should fail on an empty array:
+						types : []
+					}
+			}
+		];
+		
+		_.each(invalidResponses, function(invalidResponse){
+			expect(testView.isValidGridResponse(invalidResponse)).toBe(false);
+		});
+		
+		var validResponses = [
+			{
+				datatypecollection:
+					{
+						//types may have one object, or a non-zero-length array of objects
+						types : {}
+					}
+			},
+			{
+				datatypecollection:
+					{
+						types : [{}]
+					}
+			},
+						{
+				datatypecollection:
+					{
+						types : [{},{}]
+					}
+			}
+		];
+		
+		_.each(validResponses, function(validResponse){
+			expect(testView.isValidGridResponse(validResponse)).toBe(true);
+		});
 	});
 	it('expects the getDateRange() promise to be resolved with no arguments if the web service call succeeds with a parseable response', function(){
 		var starttime = {

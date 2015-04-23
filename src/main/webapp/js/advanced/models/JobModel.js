@@ -35,7 +35,6 @@ var GDP = GDP || {};
 
 			processVariables : new GDP.ADVANCED.model.ProcessVariablesModel() // These will vary depending on the process algorithm selected
 		}
-
     });
     GDP.ADVANCED.model.Job = Job;
 }());
