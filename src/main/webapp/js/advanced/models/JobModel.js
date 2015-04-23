@@ -33,7 +33,10 @@ var GDP = GDP || {};
 			processes: new GDP.ADVANCED.collection.Processes(),
 			algorithmId: null,
 
-			processVariables : new GDP.ADVANCED.model.ProcessVariablesModel() // These will vary depending on the process algorithm selected
+			processVariables : new GDP.ADVANCED.model.ProcessVariablesModel(), // These will vary depending on the process algorithm selected
+
+			email : '',
+			filename : ''
 		}
     });
     GDP.ADVANCED.model.Job = Job;
