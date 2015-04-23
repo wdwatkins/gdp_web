@@ -78,7 +78,7 @@ GDP.ADVANCED.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 	changeBooleanProcessVariable : function(ev) {
 		var key = ev.target.id.replace('input-', '');
 		var processVariables = this.model.get('processVariables');
-		var newVal = {}
+		var newVal = {};
 		newVal[key] = ev.target.checked ? 'true' : 'false';
 		processVariables.set(newVal, key);
 	},

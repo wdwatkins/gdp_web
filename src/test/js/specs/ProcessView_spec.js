@@ -170,7 +170,7 @@ describe('GDP.ADVANCED.view.ProcessView', function() {
 		});
 		jobModel.get('processes').reset(PROCESSES);
 
-		$('body').append('<div id="container-process-description"></div>')
+		$('body').append('<div id="container-process-description"></div>');
 	    $('#container-process-description').append('<div id="process-description-FeatureCoverageIntersectionAlgorithm"></div>');
 		$('#container-process-description').append('<div id="process-description-FeatureWeightedGridStatisticsAlgorithm"></div>');
 
@@ -184,7 +184,7 @@ describe('GDP.ADVANCED.view.ProcessView', function() {
 
 	afterEach(function() {
 		$('#container-process-description').remove();
-	})
+	});
 
 	it('Expects the template to be rendered using the model passed in at initialization', function() {
 		expect(templateSpy).toHaveBeenCalledWith(jobModel.attributes);
