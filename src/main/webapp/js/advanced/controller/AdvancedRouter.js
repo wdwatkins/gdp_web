@@ -44,8 +44,9 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 	},
 
 	process : function() {
-		this.showView(GDP.view.ProcessView, {
+		this.showView(GDP.ADVANCED.view.ProcessView, {
 			template : GDP.ADVANCED.templates.getTemplate('process'),
+			algorithmTemplate : GDP.ADVANCED.templates.getTemplate('algorithm-config'),
 			model: this.jobModel
 		});
 	},
