@@ -16,7 +16,7 @@
 %>
 <%
 Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));
-String versionProject = props.get("version.project");
+String versionProject = props.get("version");
 String versionJquery = props.get("version.jquery");
 String versionBootstrap = props.get("version.bootstrap");
 String versionFontAwesome = props.get("version.fontawesome");
