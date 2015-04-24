@@ -15,8 +15,8 @@
 	}
 %>
 <%
-	Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));
-String versionProject = props.get("version.project");
+Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));
+String versionProject = props.get("version");
 String versionJquery = props.get("version.jquery");
 String versionBootstrap = props.get("version.bootstrap");
 String versionFontAwesome = props.get("version.fontawesome");
@@ -27,6 +27,7 @@ String versionUnderscore = props.get("version.underscore");
 String versionBsDatePicker= props.get("version.bsDatePicker");
 String versionJqueryFileUpload = props.get("version.jqueryFileUpload");
 String versionJqueryUI = props.get("version.jqueryUI");
+String resourceSuffix = development ? "" : "-" + versionProject + "-min";
 %>
 
 <link type="text/css" rel="stylesheet" href="webjars/bootstrap/<%= versionBootstrap%>/css/bootstrap<%= development ? "" : ".min"%>.css" />

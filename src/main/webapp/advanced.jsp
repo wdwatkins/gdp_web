@@ -48,25 +48,25 @@
 		<script type="text/javascript" src="webjars/jquery-ui/<%= versionJqueryUI%>/jquery-ui<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="webjars/jquery-file-upload/<%= versionJqueryFileUpload%>/js/jquery.fileupload.js"></script>
 		<script type="text/javascript" src="webjars/bootstrap-datepicker/<%= versionBsDatePicker%>/js/bootstrap-datepicker<%= development ? "" : ".min"%>.js"></script>
-		<script type="text/javascript" src="js/util/templateLoader.js"></script>
-		<script type="text/javascript" src="js/util/BaseView.js"></script>
-		<script type="text/javascript" src="js/util/SelectMenuView.js"></script>
-		<script type="text/javascript" src="js/util/AlertView.js"></script>
-		<script type="text/javascript" src="js/models/Config.js"></script>
-		<script type="text/javascript" src="js/util/mapUtils.js"></script>
-		<script type="text/javascript" src="js/ogc/wfs.js"></script>
-		<script type="text/javascript" src="js/ogc/wps.js"></script>
-		<script type="text/javascript" src="js/advanced/models/Process.js"></script>
-		<script type="text/javascript" src="js/advanced/models/DataSourceModels.js"></script>
-		<script type="text/javascript" src="js/advanced/collections/Processes.js"></script>
-		<script type="text/javascript" src="js/advanced/models/ProcessVariablesModel.js"></script>
-		<script type="text/javascript" src="js/advanced/models/JobModel.js"></script>
-		<script type="text/javascript" src="js/advanced/views/HubView.js"></script>
-		<script type="text/javascript" src="js/advanced/views/SpatialView.js"></script>
-		<script type="text/javascript" src="js/advanced/views/AlgorithmConfigView.js"></script>
-		<script type="text/javascript" src="js/advanced/views/ProcessView.js"></script>
-		<script type="text/javascript" src="js/advanced/views/DataDetailsView.js"></script>
-		<script type="text/javascript" src="js/advanced/controller/AdvancedRouter.js"></script>
-		<script type="text/javascript" src="js/advanced/init.js"></script>
+		<script type="text/javascript" src="js/util/templateLoader<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/util/BaseView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/util/SelectMenuView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/util/AlertView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/models/Config<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/util/mapUtils<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/ogc/wfs<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/ogc/wps<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/models/Process<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/models/DataSourceModels<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/collections/Processes<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/models/ProcessVariablesModel<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/models/JobModel<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/views/HubView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/views/SpatialView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/views/AlgorithmConfigView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/views/ProcessView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/views/DataDetailsView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/controller/AdvancedRouter<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/init<%= resourceSuffix %>.js"></script>
     </body>
 </html>
