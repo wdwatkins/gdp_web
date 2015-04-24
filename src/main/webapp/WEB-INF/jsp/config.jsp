@@ -296,13 +296,333 @@
 				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm",
 				"name" : "FeatureWeightedGridStatisticsAlgorithm",
 				"title" : "Area Grid Statistics (weighted)",
-				"abstract" : "This algorithm generates area weighted statistics of a gridded dataset for a set of vector polygon features. Using the bounding-box that encloses the feature data and the time range, if provided, a subset of the gridded dataset is requested from the remote gridded data server. Polygon representations are generated for cells in the retrieved grid. The polygon grid-cell representations are then projected to the feature data coordinate reference system. The grid-cells are used to calculate per grid-cell feature coverage fractions. Area-weighted statistics are then calculated for each feature using the grid values and fractions as weights. If the gridded dataset has a time range the last step is repeated for each time step within the time range or all time steps if a time range was not supplied."
+				"abstract" : "This algorithm generates area weighted statistics of a gridded dataset for a set of vector polygon features. Using the bounding-box that encloses the feature data and the time range, if provided, a subset of the gridded dataset is requested from the remote gridded data server. Polygon representations are generated for cells in the retrieved grid. The polygon grid-cell representations are then projected to the feature data coordinate reference system. The grid-cells are used to calculate per grid-cell feature coverage fractions. Area-weighted statistics are then calculated for each feature using the grid values and fractions as weights. If the gridded dataset has a time range the last step is repeated for each time step within the time range or all time steps if a time range was not supplied.",
+				"inputs" : [
+					{
+						"identifier" : "FEATURE_ATTRIBUTE_NAME",
+						"title" : "Feature Attribute Name",
+						"abstract" : "The attribute that will be used to label column headers in processing output.",
+						"input-type" : "literal",
+						"data-type" : "attribute_name",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "REQUIRE_FULL_COVERAGE",
+						"title" : "Require Full Coverage",
+						"abstract" : "If turned on, the service will require that the dataset of interest fully cover the polygon analysis zone data.",
+						"input-type" : "literal",
+						"data-type" : "boolean",
+						"default" : "true",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "FEATURE_COLLECTION",
+						"title" : "Feature Collection",
+						"abstract" : "A feature collection encoded as a WFS request or one of the supported GML profiles.",
+						"input-type" : "complex",
+						"minOccurs" : "1",
+						"maxOccurs" : "1",
+						"data-type" : [
+							{
+								"format" : {
+									"mime-type" : "text/xml",
+									"schema" : "http://schemas.opengis.net/gml/2.0.0/feature.xsd"
+								}
+							},
+							{
+								"format" : {
+									"mime-type" : "text/xml",
+									"schema" : "http://schemas.opengis.net/gml/2.1.1/feature.xsd<"
+								}
+							}
+						],
+						"default" : {
+							"format" : {
+								"mime-type" : "text/xml",
+								"schema" : "http://schemas.opengis.net/gml/2.0.0/feature.xsd"
+							}
+						}
+					},
+					{
+						"identifier" : "DATASET_URI",
+						"title" : "Dataset URI",
+						"abstract" : "The base data web service URI for the dataset of interest. The data web service must adhere to the Web Coverage Service standard.",
+						"input-type" : "literal",
+						"data-type" : "uri",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "DATASET_ID",
+						"title" : "Dataset Identifier",
+						"abstract" : "The unique identifier for the data type or variable of interest.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"minOccurs" : "1",
+						"maxOccurs" : "2147483647"
+					},
+					{	
+						"identifier" : "DELIMITER",
+						"title" : "Delimiter",
+						"abstract" : "The delimiter that will be used to separate columns in the processing output.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"options" : [
+							"COMMA",
+							"TAB",
+							"SPACE"
+						],
+						"default" : "COMMA",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"			
+					},
+					{
+						"identifier" : "TIME_START",
+						"title" : "Time Start",
+						"abstract" : "The date to begin analysis.",
+						"input-type" : "literal",
+						"data-type" : "dateTime",
+						"minOccurs" : "0",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "TIME_END",
+						"title" : "Time End",
+						"abstract" : "The date to end analysis.",
+						"input-type" : "literal",
+						"data-type" : "dateTime",
+						"minOccurs" : "0",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "SUMMARIZE_TIMESTEP",
+						"title" : "Summarize Timestep",
+						"abstract" : "If selected, processing output will include columns with summarized statistics for all feature attribute values for each timestep",
+						"input-type" : "literal",
+						"data-type" : "boolean",
+						"default" : "false",
+						"minOccurs" : "0",
+						"maxOccurs" : "1"
+					},
+					{	
+						"identifier" : "GROUP_BY",
+						"title" : "Group By",
+						"abstract" : "If multiple features and statistics are selected, this will change whether the processing output columns are sorted according to statistics or feature attributes.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"options" : [
+							"STATISTIC",
+							"FEATURE_ATTRIBUTE"
+						],
+						"minOccurs" : "1",
+						"maxOccurs" : "1"			
+					},
+					{	
+						"identifier" : "STATISTICS",
+						"title" : "Statistics",
+						"abstract" : "Statistics that will be returned for each feature in the processing output.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"options" : [
+							"MEAN",
+							"MINIMUM",
+							"MAXIMUM",
+							"VARIANCE",
+							"STD_DEV",
+							"SUM",
+							"COUNT"
+						],
+						"minOccurs" : "1",
+						"maxOccurs" : "7"			
+					},
+					{
+						"identifier" : "SUMMARIZE_FEATURE_ATTRIBUTE",
+						"title" : "Summarize Feature Attribute",
+						"abstract" : "If selected, processing output will include a final row of statistics summarizing all timesteps for each feature attribute value",
+						"input-type" : "literal",
+						"data-type" : "boolean",
+						"default" : "false",
+						"minOccurs" : "0",
+						"maxOccurs" : "1"
+					}
+				],
+				"outputs" : [
+					{
+						"identifier" : "OUTPUT",
+						"title" : "Output File",
+						"abstract" : "A delimited text file containing requested process output.",
+						"output-type" : "complex",
+						"format" : "text/csv"
+					}
+				]
 			},
 			{ 
 				"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm",
 				"name" : "FeatureGridStatisticsAlgorithm",
 				"title" : "Area Grid Statistics (unweighted)",
-				"abstract" : "This algorithm generates unweighted statistics of a gridded dataset for a set of vector polygon features. Using the bounding-box that encloses the feature data and the time range, if provided, a subset of the gridded dataset is requested from the remote gridded data server. Polygon representations are generated for cells in the retrieved grid. The polygon grid-cell representations are then projected to the feature data coordinate reference system. The grid-cells are used to calculate per grid-cell feature coverage fractions. Area-weighted statistics are then calculated for each feature using the grid values and fractions as weights. If the gridded dataset has a time range the last step is repeated for each time step within the time range or all time steps if a time range was not supplied."
+				"abstract" : "This algorithm generates unweighted statistics of a gridded dataset for a set of vector polygon features. Using the bounding-box that encloses the feature data and the time range, if provided, a subset of the gridded dataset is requested from the remote gridded data server. Polygon representations are generated for cells in the retrieved grid. The polygon grid-cell representations are then projected to the feature data coordinate reference system. The grid-cells are used to calculate per grid-cell feature coverage fractions. Area-weighted statistics are then calculated for each feature using the grid values and fractions as weights. If the gridded dataset has a time range the last step is repeated for each time step within the time range or all time steps if a time range was not supplied.",
+				"inputs" : [
+					{
+						"identifier" : "FEATURE_ATTRIBUTE_NAME",
+						"title" : "Feature Attribute Name",
+						"abstract" : "The attribute that will be used to label column headers in processing output.",
+						"input-type" : "literal",
+						"data-type" : "attribute_name",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "REQUIRE_FULL_COVERAGE",
+						"title" : "Require Full Coverage",
+						"abstract" : "If turned on, the service will require that the dataset of interest fully cover the polygon analysis zone data.",
+						"input-type" : "literal",
+						"data-type" : "boolean",
+						"default" : "true",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "FEATURE_COLLECTION",
+						"title" : "Feature Collection",
+						"abstract" : "A feature collection encoded as a WFS request or one of the supported GML profiles.",
+						"input-type" : "complex",
+						"minOccurs" : "1",
+						"maxOccurs" : "1",
+						"data-type" : [
+							{
+								"format" : {
+									"mime-type" : "text/xml",
+									"schema" : "http://schemas.opengis.net/gml/2.0.0/feature.xsd"
+								}
+							},
+							{
+								"format" : {
+									"mime-type" : "text/xml",
+									"schema" : "http://schemas.opengis.net/gml/2.1.1/feature.xsd<"
+								}
+							}
+						],
+						"default" : {
+							"format" : {
+								"mime-type" : "text/xml",
+								"schema" : "http://schemas.opengis.net/gml/2.0.0/feature.xsd"
+							}
+						}
+					},
+					{
+						"identifier" : "DATASET_URI",
+						"title" : "Dataset URI",
+						"abstract" : "The base data web service URI for the dataset of interest. The data web service must adhere to the Web Coverage Service standard.",
+						"input-type" : "literal",
+						"data-type" : "uri",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "DATASET_ID",
+						"title" : "Dataset Identifier",
+						"abstract" : "The unique identifier for the data type or variable of interest.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"minOccurs" : "1",
+						"maxOccurs" : "2147483647"
+					},
+					{	
+						"identifier" : "DELIMITER",
+						"title" : "Delimiter",
+						"abstract" : "The delimiter that will be used to separate columns in the processing output.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"options" : [
+							"COMMA",
+							"TAB",
+							"SPACE"
+						],
+						"default" : "COMMA",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"			
+					},
+					{
+						"identifier" : "TIME_START",
+						"title" : "Time Start",
+						"abstract" : "The date to begin analysis.",
+						"input-type" : "literal",
+						"data-type" : "dateTime",
+						"minOccurs" : "0",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "TIME_END",
+						"title" : "Time End",
+						"abstract" : "The date to end analysis.",
+						"input-type" : "literal",
+						"data-type" : "dateTime",
+						"minOccurs" : "0",
+						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "SUMMARIZE_TIMESTEP",
+						"title" : "Summarize Timestep",
+						"abstract" : "If selected, processing output will include columns with summarized statistics for all feature attribute values for each timestep",
+						"input-type" : "literal",
+						"data-type" : "boolean",
+						"default" : "false",
+						"minOccurs" : "0",
+						"maxOccurs" : "1"
+					},
+					{	
+						"identifier" : "GROUP_BY",
+						"title" : "Group By",
+						"abstract" : "If multiple features and statistics are selected, this will change whether the processing output columns are sorted according to statistics or feature attributes.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"options" : [
+							"STATISTIC",
+							"FEATURE_ATTRIBUTE"
+						],
+						"minOccurs" : "1",
+						"maxOccurs" : "1"			
+					},
+					{	
+						"identifier" : "STATISTICS",
+						"title" : "Statistics",
+						"abstract" : "Statistics that will be returned for each feature in the processing output.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"options" : [
+							"MEAN",
+							"MINIMUM",
+							"MAXIMUM",
+							"VARIANCE",
+							"STD_DEV",
+							"SUM",
+							"COUNT"
+						],
+						"minOccurs" : "1",
+						"maxOccurs" : "7"			
+					},
+					{
+						"identifier" : "SUMMARIZE_FEATURE_ATTRIBUTE",
+						"title" : "Summarize Feature Attribute",
+						"abstract" : "If selected, processing output will include a final row of statistics summarizing all timesteps for each feature attribute value",
+						"input-type" : "literal",
+						"data-type" : "boolean",
+						"default" : "false",
+						"minOccurs" : "0",
+						"maxOccurs" : "1"
+					}
+				],
+				"outputs" : [
+					{
+						"identifier" : "OUTPUT",
+						"title" : "Output File",
+						"abstract" : "A delimited text file containing requested process output.",
+						"output-type" : "complex",
+						"format" : "text/csv"
+					}
+				]
 			}
 		]
 	},
