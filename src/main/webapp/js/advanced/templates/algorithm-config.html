@@ -10,6 +10,7 @@
 					<label for="input-{{identifier}}">
 					    <input type="checkbox" {{defaultChecked default}} id="input-{{identifier}}"/>{{title}}
 					</label>
+					<div class="text-muted"><small>{{abstract}}</small></div>
 				</div>
 				{{/ifAlgorithmDataTypeIsBoolean}}
 				
@@ -17,6 +18,7 @@
 				{{#ifAlgorithmDataTypeIsString data-type}}
 					<div class="form-group">
 						<label for="input-{{identifier}}">{{title}}</label>
+						<div class="text-muted"><small>{{abstract}}</small></div>
 						{{#if options}}
 							{{!-- Select Box --}}
 							<select id="input-{{identifier}}" {{isMultiple maxOccurs }} class="form-control">
@@ -36,6 +38,7 @@
 			{{#ifAlgorithmInputTypeIsComplex input-type}}
 				<div class="form-group">
 					<label for="input-{{identifier}}">{{title}} (complex)</label>
+					<div class="text-muted"><small>{{abstract}}</small></div>
 					<input type="text" class="form-control" id="input-{{identifier}}" />
 				</div>
 			{{/ifAlgorithmInputTypeIsComplex}}
