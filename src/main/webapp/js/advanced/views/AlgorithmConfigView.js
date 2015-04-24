@@ -62,13 +62,17 @@ GDP.ADVANCED.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 		return this;
 	},
 
+	_getKeyFromId : function(id) {
+		return id.replace('input-', '');
+	},
+
 	/*
 	 * Hook for updating text process variable
 	 * @param {Jquery event } ev
 	 */
 	changeTextProcessVariable : function(ev) {
 		"use strict";
-		var key = ev.target.id.replace('input-', '');
+		var key = this._getKeyFromId(ev.target.id);
 		var processVariables = this.model.get('processVariables');
 		var newVal = {};
 
@@ -82,7 +86,7 @@ GDP.ADVANCED.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 	 */
 	changeBooleanProcessVariable : function(ev) {
 		"use strict";
-		var key = ev.target.id.replace('input-', '');
+		var key = this._getKeyFromId(ev.target.id);
 		var processVariables = this.model.get('processVariables');
 		var newVal = {};
 		newVal[key] = ev.target.checked ? 'true' : 'false';
