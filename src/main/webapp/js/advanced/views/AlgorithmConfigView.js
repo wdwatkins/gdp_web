@@ -56,7 +56,9 @@ GDP.ADVANCED.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 		if (algorithm) {
 			this.$el.html(this.template({
 				"job" : this.model.attributes,
-				"inputs" : algorithm.get('inputs')
+				"inputs" : _.reject(algorithm.get('inputs'), function(input) {
+					return (['FEATURE_COLLECTION', 'DATASET_URI', 'DATASET_ID', 'TIME_START', 'TIME_END'].indexOf(input.identifier) !== -1);
+				})
 			}));
 		}
 		return this;
