@@ -185,9 +185,7 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 			jobModel.set('algorithmId', 'gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm');
 			jobModel.get('processVariables').set({
 				'STATISTICS' : ['MINIMUM', 'MAXIMUM'],
-				'SUMMARIZE_TIMESTEP' : 'false',
-				'DATASET_ID' : 'abc'
-
+				'SUMMARIZE_TIMESTEP' : 'false'
 			});
 
 			testView = new GDP.ADVANCED.view.AlgorithmConfigView({
@@ -198,25 +196,78 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 		});
 
 		it('Expects the template to be rendered', function() {
+			var expectedResult = [
+				{
+					"identifier" : "REQUIRE_FULL_COVERAGE",
+					"title" : "Require Full Coverage",
+					"abstract" : "If turned on, the service will require that the dataset of interest fully cover the polygon analysis zone data.",
+					"input-type" : "literal",
+					"data-type" : "boolean",
+					"default" : "true",
+					"minOccurs" : "1",
+					"maxOccurs" : "1"
+				},
+				{
+					"identifier" : "DELIMITER",
+					"title" : "Delimiter",
+					"abstract" : "The delimiter that will be used to separate columns in the processing output.",
+					"input-type" : "literal",
+					"data-type" : "string",
+					"options" : [
+						"COMMA",
+						"TAB",
+						"SPACE"
+					],
+					"default" : "COMMA",
+					"minOccurs" : "1",
+					"maxOccurs" : "1"
+				},
+				{
+					"identifier" : "SUMMARIZE_TIMESTEP",
+					"title" : "Summarize Timestep",
+					"abstract" : "If selected, processing output will include columns with summarized statistics for all feature attribute values for each timestep",
+					"input-type" : "literal",
+					"data-type" : "boolean",
+					"default" : "false",
+					"minOccurs" : "0",
+					"maxOccurs" : "1"
+				},
+				{
+					"identifier" : "STATISTICS",
+					"title" : "Statistics",
+					"abstract" : "Statistics that will be returned for each feature in the processing output.",
+					"input-type" : "literal",
+					"data-type" : "string",
+					"options" : [
+						"MEAN",
+						"MINIMUM",
+						"MAXIMUM",
+						"VARIANCE",
+						"STD_DEV",
+						"SUM",
+						"COUNT"
+					],
+					"minOccurs" : "1",
+					"maxOccurs" : "7"
+				}
+			];
 			expect(templateSpy).toHaveBeenCalledWith({
 				job : jobModel.attributes,
-				inputs : PROCESSES[1].inputs
+				inputs : expectedResult
 			});
 		});
 
 		it('Expects that updateProcessVariables will be called with each defined process variable in jobModel', function() {
-			expect(GDP.ADVANCED.view.AlgorithmConfigView.prototype.updateProcessVariable.calls.length).toBe(3);
+			expect(GDP.ADVANCED.view.AlgorithmConfigView.prototype.updateProcessVariable.calls.length).toBe(2);
 			expect(GDP.ADVANCED.view.AlgorithmConfigView.prototype.updateProcessVariable).toHaveBeenCalledWith(
 				jobModel.get('processVariables'), 'STATISTICS');
 			expect(GDP.ADVANCED.view.AlgorithmConfigView.prototype.updateProcessVariable).toHaveBeenCalledWith(
 				jobModel.get('processVariables'), 'SUMMARIZE_TIMESTEP');
-			expect(GDP.ADVANCED.view.AlgorithmConfigView.prototype.updateProcessVariable).toHaveBeenCalledWith(
-				jobModel.get('processVariables'), 'DATASET_ID');
 		});
 	});
 
 	describe('Tests for updating process variables', function() {
-		var testView
+		var testView;
 		beforeEach(function() {
 			jobModel.set('algorithmId', 'gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm');
 			jobModel.get('processVariables').set({
@@ -226,7 +277,7 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 
 			});
 
-			$('body').append('<div id="test-div"><input type="text" id="input-DATASET_ID"><input type="checkbox" id="input-SUMMARIZE_TIMESTEP" /></div>')
+			$('body').append('<div id="test-div"><input type="text" id="input-DATASET_ID"><input type="checkbox" id="input-SUMMARIZE_TIMESTEP" /></div>');
 
 			testView = new GDP.ADVANCED.view.AlgorithmConfigView({
 				template : templateSpy,
@@ -237,7 +288,7 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 
 		afterEach(function() {
 			$('#test-div').remove();
-		})
+		});
 
 		it('Expects that if the variable represents boolean data that the checked property is updated', function() {
 			var processVariables = jobModel.get('processVariables');
@@ -327,7 +378,7 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 					id : 'input-DATASET_ID',
 					value : 'this'
 				}
-			}
+			};
 			testView.changeTextProcessVariable(ev);
 			expect(processVariables.get('DATASET_ID')).toEqual('this');
 
