@@ -30,14 +30,14 @@ GDP.ADVANCED.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 		var processVariables;
 		var varKeys;
 
-		this.$el = $(options.el);
+		$(options.el).append('<div id="algorithm-view-container"></div>');
+		this.$el = $('#algorithm-view-container');
 
 		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
 		// Set up model listeners
 		processVariables = this.model.get('processVariables');
-			this.listenTo(processVariables, 'change', this.updateProcessVariable);
-			this.listenTo(this.model, 'change:algorithmId', this.render);
+		this.listenTo(processVariables, 'change', this.updateProcessVariable);
 
 		// Initialize view
 		varKeys = _.keys(processVariables.attributes);
@@ -49,16 +49,12 @@ GDP.ADVANCED.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 	render : function () {
 		"use strict";
 
-		var algorithmId = this.model.get('algorithmId');
-		var processes = this.model.get('processes');
-		var algorithm = processes.findWhere({'id' : algorithmId});
+		var processInputs = this.model.getProcessInputs();
 
-		if (algorithm) {
+		if (processInputs) {
 			this.$el.html(this.template({
 				"job" : this.model.attributes,
-				"inputs" : _.reject(algorithm.get('inputs'), function(input) {
-					return (['FEATURE_COLLECTION', 'DATASET_URI', 'DATASET_ID', 'TIME_START', 'TIME_END'].indexOf(input.identifier) !== -1);
-				})
+				"inputs" : processInputs
 			}));
 		}
 		return this;

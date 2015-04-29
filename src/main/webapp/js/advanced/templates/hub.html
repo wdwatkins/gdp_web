@@ -1,14 +1,77 @@
-<div id="hub-content">
-	<div>
-		<a href="#/spatial" class="btn btn-default">Spatial</a>
+<div class="col-md-6 hub-tile" id="spatial-wrapper">
+	 <div class="panel panel-default"  >
+        <div class="panel-heading">Spatial</div>
+
+		<div class="panel-body">
+			<h5>Selected Area of Interest</h5>
+			<div class="selected-option">
+				{{jobModel.aoiName}}&nbsp;
+			</div>
+			<div id="hub-spatial-inset-map"></div>
+			<h5>Selected Attribute</h5>
+			<div class="selected-option">
+				{{jobModel.aoiAttribute}}&nbsp;
+			</div>
+			<h5>Number of Selected Values</h5>
+			<div class="selected-option">
+				{{jobModel.aoiAttributeValues.length}}
+			</div>
+			<div class="hub-tile-button-div">
+				<button id="edit-spatial-btn" class="btn btn-primary">Edit Spatial</button>
+			</div>
+		</div>
 	</div>
-	<div>
-		<a href="#/datadetail" class="btn btn-default">Data Detail</a>
-		<span>Data Source URL: "</span><a id="summary-link" href=""></a><span>"</span>
-		<span>Number of variables selected:</span><span id="summary-var-count"></span>
+</div><!--content-wrapper-->
+
+<div class="col-md-6 hub-tile" id="data-detail-wrapper">
+	<div class="panel panel-default">
+		<div class="panel-heading">Data Detail</div>
+		<div class="panel-body">
+			<h5>Data Source URL</h5>
+			<div class="selected-option">
+				{{jobModel.dataSourceUrl}}&nbsp;
+			</div>
+			<h5>Number of Selected Variables</h5>
+			<div class="selected-option">
+				{{jobModel.dataSourceVariables.length}}
+			</div>
+			<h5>Date Range</h5>
+			<div class="selected-option">
+				{{#if jobModel.startDate}}
+					{{#if jobModel.endDate }}
+						{{jobModel.startDate}} - {{jobModel.endDate}}
+					{{/if}}
+				{{/if}}
+				&nbsp;
+			</div>
+			<div class="hub-tile-button-div">
+				<button id="edit-detail-btn" class="btn btn-primary">Edit Data Detail</button>
+			</div>
+		</div>
 	</div>
-	<div>
-		<a href="#/process" class="btn btn-default">Process</a>
+</div>
+<div class="clearfix visible-md-block visible-lg-block"></div>
+
+<div class="col-md-6 hub-tile" id="process-wrapper">
+	<div class="panel panel-default">
+		<div class="panel-heading">Algorithm Selected</div>
+		<div class="panel-body">
+			<h5>Algorithm Selected</h5>
+			<div class="selected-option">
+				{{selectedProcess.title}}&nbsp;
+			</div>
+			{{#each jobModel.processVariables.attributes}}
+				{{#ifBoolean this}}
+					<h5>{{variableTitle @key ../../selectedProcess}} is {{this}}</h5>
+				{{/ifBoolean}}
+				{{#ifNotBoolean this }}
+					<h5>{{variableTitle @key ../../selectedProcess}}</h5>
+					<div class="selected-option">{{formatProcessText this}}&nbsp;</div>
+				{{/ifNotBoolean}}
+			{{/each}}
+			<div class="hub-tile-button-div">
+				<button id="edit-process-btn" class="btn btn-primary">Edit Process</button>
+			</div>
+		</div>
 	</div>
-	
 </div>

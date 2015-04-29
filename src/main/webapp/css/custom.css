@@ -1,19 +1,4 @@
-#spatial-map-container {
-	margin-bottom : 15px;
-}
+/*
+This gets included before bootstrap
+*/
 
-#spatial-map {
-	height: 400px;
-	border: 1px solid black;
-}
-
-#select-values {
-	height: 200px;
-}
-
-#upload-indicator {
-	display: none;
-}
-.checkbox label {
-	font-weight: bold;
-}
