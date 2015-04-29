@@ -5,6 +5,7 @@ GDP.ADVANCED = GDP.ADVANCED || {};
 GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 (function() {
+	"use strict";
 	GDP.ADVANCED.view.HubView = GDP.util.BaseView.extend({
 
 		events: {
