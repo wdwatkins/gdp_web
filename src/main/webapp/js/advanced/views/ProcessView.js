@@ -88,8 +88,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			// initialize processVariables from the defaults in the selected process.
 			var selectedProcessInputs = this.model.getProcessInputs();
 			var processVars = {};
-			_.each(selectedProcessInputs, function(input) {
-				processVars[input.identifier] = input.default;
+			_.each(selectedProcessInputs, function(i) {
+				processVars[i.identifier] = i["default'"];
 			});
 			this.model.get('processVariables').set(processVars);
 
