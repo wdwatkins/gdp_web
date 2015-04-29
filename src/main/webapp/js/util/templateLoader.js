@@ -88,7 +88,7 @@ GDP.util.templateLoader = function(templateDir) {
 				}
 				return '';
 			},
-			'defaultSelected' : function (curr, def, index) {
+			'defaultSelected' : function (curr, def) {
 				if (curr === def) {
 					return 'selected="selected"';
 				}
