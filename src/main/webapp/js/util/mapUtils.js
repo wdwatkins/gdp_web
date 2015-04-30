@@ -1,5 +1,6 @@
 /*jslint browser: true*/
 /*global OpenLayers*/
+/*global _*/
 
 var GDP = GDP || {};
 
@@ -53,6 +54,79 @@ GDP.util.mapUtils = (function() {
 		defaultConfig.controls = controls;
 
 		return new OpenLayers.Map(defaultConfig);
+	};
+
+	/*
+	 * @param {String} name - WMS layer name
+	 * @param {Object} params (optional) - params to be added to the default params in the layer creation call
+	 * @param {Object} options (optional) - params to be added to the default options in the layer creation call.
+	 * @return {OpenLayers.Layer.WMS}
+	 */
+	that.createAOILayer = function(name, params, options) {
+		var layerParams = {
+			transparent : true
+		};
+		var layerOptions = {
+			opacity: 0.6,
+			displayInLayerSwitcher : false,
+			visibility : true,
+			isBaseLayer : false
+		};
+		_.extend(layerParams, params, {layers : name});
+		_.extend(layerOptions, options);
+
+		return new OpenLayers.Layer.WMS(
+			'Area of Interest',
+			GDP.config.get('application').endpoints.geoserver + '/wms?',
+			layerParams,
+			layerOptions
+		);
+	};
+
+	/*
+	 * @param {String} attribute
+	 * @param {Array of String} values - values to include in filter
+	 * @return String that can be used as a CQL filter
+	 */
+	that.createAOICQLFilter = function(attribute, values) {
+		var escValues = _.map(values, function(v) {
+			return '\'' + v + '\'';
+		});
+		return attribute + ' IN (' + escValues.join(',') + ')';
+	};
+
+	/*
+	 * @param {String} name - layer name
+	 * @param {String} filter - CQL filter which will be set in the params
+	 * @param {Object} params (optional) - params to add to the default params. Note filter will override any filter setting in params
+	 * @param {Object} options (optional) - params to add to the default options.
+	 * @return OpenLayers.Layer.WMS
+	 */
+	that.createAOIFeaturesLayer = function(name, filter, params, options) {
+		var layerParams = {
+			transparent : true,
+			styles : 'highlight'
+		};
+		var layerOptions = {
+			opacity : 0.6,
+			displayInLayerSwitcher : false,
+			visibility : true,
+			isBaseLayer : false,
+			singleTile : true
+		};
+
+		_.extend(layerParams, params, {
+			layers : name,
+			cql_filter : filter
+		});
+		_.extend(layerOptions, options);
+
+		return new OpenLayers.Layer.WMS(
+			'Selected AOI',
+			GDP.config.get('application').endpoints.geoserver + '/wms?',
+			layerParams,
+			layerOptions
+		);
 	};
 
 	return that;

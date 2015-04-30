@@ -50,6 +50,7 @@
 		<script type="text/javascript" src="js/advanced/collections/Processes<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/advanced/models/ProcessVariablesModel<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/advanced/models/JobModel<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/views/HubSpatialMapView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/advanced/views/HubView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/advanced/views/SpatialView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/advanced/views/AlgorithmConfigView<%= resourceSuffix %>.js"></script>

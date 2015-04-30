@@ -27,6 +27,7 @@ var GDP = GDP || {};
 
 			//spatial details:
 			aoiName : '',
+			aoiExtent : null, // will be the extent of the layer aoiName
 			aoiAttribute : '',
 			aoiAttributeValues : [],
 

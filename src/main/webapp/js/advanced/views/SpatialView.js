@@ -206,6 +206,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		changeName : function(ev) {
+			this.model.set('aoiExtent', GDP.util.mapUtils.transformWGS84ToMercator(GDP.OGC.WFS.getBoundsFromCache(ev.target.value)));
 			this.model.set('aoiName', ev.target.value);
 		},
 
@@ -228,24 +229,12 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					});
 				}
 				else {
-					this.aoiLayer = new OpenLayers.Layer.WMS(
-						"Area of Interest",
-						GDP.config.get('application').endpoints.geoserver + '/wms?',
-						{
-							layers : name,
-							transparent : true
-						},
-						{
-							opacity: 0.6,
-							displayInLayerSwitcher : false,
-							visibility : true,
-							isBaseLayer : false
-						}
-					);
+					this.aoiLayer = GDP.util.mapUtils.createAOILayer(name);
 					this.map.addLayer(this.aoiLayer);
 				}
+
 				// zoom map to extent of the feature.
-				this.map.zoomToExtent(GDP.util.mapUtils.transformWGS84ToMercator(GDP.OGC.WFS.getBoundsFromCache(name)), true);
+				this.map.zoomToExtent(this.model.get('aoiExtent'), true);
 			}
 			else if (this.aoiLayer) {
 				this.map.removeLayer(this.aoiLayer);
@@ -318,10 +307,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 		_highlightFeatures : function(name, attribute, values) {
 			if ((name) && (attribute) && (values.length !== 0)) {
-				values = _.map(values, function(v) {
-					return '\'' + v + '\'';
-				});
-				var filter = attribute + ' IN (' + values.join(',') + ')';
+				var filter = GDP.util.mapUtils.createAOICQLFilter(attribute, values);
 				if (this.highlightLayer) {
 					this.highlightLayer.mergeNewParams({
 						layers : name,
@@ -329,23 +315,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					});
 				}
 				else {
-					this.highlightLayer = new OpenLayers.Layer.WMS(
-						"Selected AOI",
-						GDP.config.get('application').endpoints.geoserver + '/wms?',
-						{
-							layers : name,
-							transparent : true,
-							styles : 'highlight',
-							cql_filter : filter
-						},
-						{
-							opacity: 0.6,
-							displayInLayerSwitcher : false,
-							visibility : true,
-							isBaseLayer : false,
-							singleTile : true
-						}
-					);
+					this.highlightLayer = GDP.util.mapUtils.createAOIFeaturesLayer(name, filter);
 					this.map.addLayer(this.highlightLayer);
 				}
 			}

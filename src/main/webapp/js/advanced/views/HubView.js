@@ -23,6 +23,19 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			}));
 		},
 
+		initialize : function(options) {
+			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+			this.spatialMapView = new GDP.ADVANCED.view.HubSpatialMapView({
+				model : this.model,
+				mapDiv : 'hub-spatial-inset-map'
+			});
+		},
+
+		remove : function() {
+			this.spatialMapView.remove();
+			GDP.util.BaseView.prototype.remove.apply(this, arguments);
+		},
+
 		goToSpatialPage : function() {
 			this.router.navigate('/spatial', {trigger : true});
 		},
