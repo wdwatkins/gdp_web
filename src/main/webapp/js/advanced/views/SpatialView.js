@@ -43,7 +43,6 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			});
 			this.attributeValuesSelectMenuView = new GDP.util.SelectMenuView({
 				el : '#select-values',
-				emptyPlaceholder : true,
 				sortBy : 'text'
 			});
 		},
