@@ -10,7 +10,7 @@
 	</head>
     <body>
 		<div class="container">
-			<header>
+			<header class="row">
 				<jsp:include page="template/USGSHeader.jsp">
 					<jsp:param name="relPath" value="" />
 					<jsp:param name="header-class" value="" />
@@ -21,7 +21,7 @@
 			<div class="row"id="advanced-page-content">
 			</div>
 			
-			<footer>
+			<footer class="row">
 				<jsp:include page="template/USGSFooter.jsp">
 					<jsp:param name="relPath" value="" />
 					<jsp:param name="header-class" value="" />

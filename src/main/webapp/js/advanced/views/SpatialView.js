@@ -21,7 +21,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		events : {
 			'change #select-aoi' : 'changeName',
 			'change #select-attribute' : 'changeAttribute',
-			'change #select-values' : 'changeValues'
+			'change #select-values' : 'changeValues',
+			'click #done-btn' : 'goToHub'
 		},
 
 		render : function() {
@@ -219,6 +220,15 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.model.set('aoiAttributeValues', aoiAttributeValues);
 		},
 
+		/**
+		 * Navigates to the hub page.
+		 * @param {Jquery event} evt
+		 * @returns {undefined}
+		 */
+		goToHub : function(evt) {
+			this.router.navigate("/", {trigger : true});
+		},
+
 		_updateAOILayer : function(name) {
 			var name = this.model.get('aoiName');
 
@@ -300,6 +310,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 							};
 						});
 						this.attributeValuesSelectMenuView.updateMenuOptions(optionObjects);
+						this.model.set('aoiAttributeValues', optionValues);
+						this.attributeValuesSelectMenuView.$el.val(optionValues);
 					}, this)
 				);
 			}
