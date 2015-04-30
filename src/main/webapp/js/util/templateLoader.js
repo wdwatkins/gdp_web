@@ -100,6 +100,19 @@ GDP.util.templateLoader = function(templateDir) {
 				}
 				return '';
 			},
+			'isRequired' : function(minOccurs) {
+				if (minOccurs > 0) {
+					return 'required'
+				}
+				return '';
+			},
+			'selectedVariables' : function(variables) {
+				var selectedVars = _.filter(variables, function(value) {
+					return value.attributes.selected;
+				});
+				return selectedVars.length;
+
+			},
 			'variableTitle' : function(identifier, process) {
 				if (process) {
 					return _.find(process.inputs, function(v) {

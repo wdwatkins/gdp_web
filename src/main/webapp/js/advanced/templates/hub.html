@@ -1,8 +1,10 @@
 <div class="col-md-6 hub-tile" id="spatial-wrapper">
 	 <div class="panel panel-default"  >
         <div class="panel-heading">Spatial</div>
-
 		<div class="panel-body">
+			{{#each messages.spatial}}
+				<div class="bg-danger">{{this}}</div>
+			{{/each}}
 			<h5>Selected Area of Interest</h5>
 			<div class="selected-option">
 				{{jobModel.aoiName}}&nbsp;
@@ -27,13 +29,16 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">Data Detail</div>
 		<div class="panel-body">
+			{{#each messages.dataDetails}}
+				<div class="bg-danger">{{this}}</div>
+			{{/each}}
 			<h5>Data Source URL</h5>
 			<div class="selected-option">
 				{{jobModel.dataSourceUrl}}&nbsp;
 			</div>
 			<h5>Number of Selected Variables</h5>
 			<div class="selected-option">
-				{{jobModel.dataSourceVariables.length}}
+				{{selectedVariables jobModel.dataSourceVariables.models}}
 			</div>
 			<h5>Date Range</h5>
 			<div class="selected-option">
@@ -56,6 +61,9 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">Algorithm Selected</div>
 		<div class="panel-body">
+			{{#each messages.algorithm}}
+				<div class="bg-danger">{{this}}</div>
+			{{/each}}
 			<h5>Algorithm Selected</h5>
 			<div class="selected-option">
 				{{selectedProcess.title}}&nbsp;
@@ -71,11 +79,11 @@
 			{{/each}}
 			<h5>Email</h5>
 			<div class="selected-option">
-				{{email}}
+				{{email}}&nbsp;
 			</div>
 			<h5>Filename</h5>
 			<div class="selected-option">
-				{{filename}}
+				{{filename}}&nbsp;
 			</div>
 			<div class="hub-tile-button-div">
 				<button id="edit-process-btn" class="btn btn-primary">Edit Process</button>

@@ -12,8 +12,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		algorithmConfigView : null,
 
 		events : {
-			"click .menu-dropdown-select-process" : "selectProcess",
-			"click #done-btn" : "goToHub"
+			"click .menu-dropdown-select-process" : "selectProcess"
 		},
 
 		/*
@@ -98,15 +97,6 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				model : this.model,
 				el : '#container-process-configuration'
 			});
-		},
-
-		/**
-		 * Navigates to the hub page.
-		 * @param {Jquery event} evt
-		 * @returns {undefined}
-		 */
-		goToHub : function(evt) {
-			this.router.navigate("/", {trigger : true});
 		},
 
 		remove : function() {

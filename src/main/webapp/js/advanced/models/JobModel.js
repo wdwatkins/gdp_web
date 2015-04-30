@@ -55,6 +55,74 @@ var GDP = GDP || {};
 			else {
 				return null;
 			}
+		},
+
+		/*
+		 * @returns array of error messages. An empty array is returned if the data is fully specified for spatial.
+		 */
+		spatialReadyForProcessing : function() {
+			var result = [];
+			if (!(this.get('aoiName'))) {
+				result.push('Select or upload an area of interest and select features.');
+
+
+			}
+			else if (!(this.get('aoiAttribute')) || !(this.get('aoiAttributeValues'))) {
+				result.push('Select a feature within the area of interest.');
+			}
+			return result;
+		},
+
+		/*
+		 * @returns array of error messages. An empty array is returned if the data is fully specified for data details.
+		 */
+		dataDetailsReadyForProcessing : function() {
+			var result = [];
+			if (this.get('invalidDataSourceUrl')) {
+				result.push('Enter a valid data source url and select variables.');
+			}
+			else {
+				var selectedVars = _.filter(this.get('dataSourceVariables').models, function(dataVar) {
+					return dataVar.get('selected');
+				});
+				if (selectedVars.length === 0) {
+					result.push('Select at least one variable');
+				}
+				if (!this.get('startDate') && !this.get('endDate')) {
+					result.push('Set a start and end date.');
+				}
+			}
+			return result;
+		},
+
+		/*
+		 * @returns array of error messages. An empty array is returned if the data is fully specified for algorithm.
+		 */
+		algorithmReadyForProcessing : function() {
+			var result = [];
+			if (!this.get('algorithmId')) {
+				result.push('Select an algorithm to process the data.');
+			}
+			var processVariables = this.get('processVariables').attributes;
+			_.each(processVariables, function(value, key) {
+				if (!value) {
+					result.push(key + ' must have a value.');
+				};
+			});
+			return result;
+		},
+
+		/*
+		 * @return {Object} with property for each page in hub. Each property's value will be an array of error messages.
+		 * If no errors for that page the array will be empty.
+		 */
+		readyForProcessing : function() {
+			var result = {
+				spatial : this.spatialReadyForProcessing(),
+				dataDetails : this.dataDetailsReadyForProcessing(),
+				algorithm : this.algorithmReadyForProcessing()
+			};
+			return result;
 		}
     });
     GDP.ADVANCED.model.Job = Job;

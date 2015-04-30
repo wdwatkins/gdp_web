@@ -16,27 +16,27 @@
 	</div>
 	
 	
-	<form class="row" id="shapefile-selection-div">
+	<form action="#/" class="row" id="shapefile-selection-div">
 		<div class="form-group">
 			<label for="select-aoi">Select Area of Interest</label>
-			<select class="form-control" id="select-aoi">
+			<select required class="form-control" id="select-aoi">
 				<option></option>
 			</select>
 		</div>
 		<div class="form-group">
 			<label for="select-attribute">Select Attribute</label>
-			<select class="form-control" id="select-attribute">
+			<select required class="form-control" id="select-attribute">
 				<option></option>	
 			</select>
 		</div>
 		<div class="form-group">
 			<label for="select-values">Select Value(s)</label>
-			<select class="form-control" multiple id="select-values">
+			<select required class="form-control" multiple id="select-values">
 			</select>
 		</div>
-
+		<div>
+			<button type="submit" id="done-btn" class="btn btn-default">Done</button>
+		</div>
 	</form>
-	<div class="row">
-		<button id="done-btn" class="btn btn-default">Done</button>
-	</div>
+	
 </div>

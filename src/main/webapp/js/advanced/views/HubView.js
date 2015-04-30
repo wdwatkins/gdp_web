@@ -19,7 +19,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.$el.html(this.template({
 				jobModel: this.model.attributes,
 				selectedProcess : (process) ? process.attributes : '',
-				processInputs : this.model.getProcessInputs()
+				processInputs : this.model.getProcessInputs(),
+				messages : this.model.readyForProcessing()
 			}));
 		},
 
