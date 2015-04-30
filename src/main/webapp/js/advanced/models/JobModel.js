@@ -2,7 +2,7 @@
 /*global Backbone*/
 var GDP = GDP || {};
 (function(){
-	"use strict;"
+	"use strict;";
 
     GDP.ADVANCED = GDP.ADVANCED || {};
 

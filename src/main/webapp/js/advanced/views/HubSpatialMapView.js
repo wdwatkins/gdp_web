@@ -8,7 +8,7 @@ GDP.ADVANCED = GDP.ADVANCED || {};
 GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 (function() {
-	"use strict;"
+	"use strict";
 
 	GDP.ADVANCED.view.HubSpatialMapView = Backbone.View.extend({
 

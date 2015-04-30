@@ -89,7 +89,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var selectedProcessInputs = this.model.getProcessInputs();
 			var processVars = {};
 			_.each(selectedProcessInputs, function(i) {
-				processVars[i.identifier] = i["default'"];
+				processVars[i.identifier] = i['default'];
 			});
 			this.model.get('processVariables').set(processVars);
 
