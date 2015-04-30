@@ -36,6 +36,10 @@
 .checkbox label {
 	font-weight: bold;
 }
+
+#job-processing-div {
+	margin-bottom: 15px;
+}
 .hub-tile h5 {
 	font-weight: bold;
 }

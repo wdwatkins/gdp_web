@@ -16,11 +16,14 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 		render: function () {
 			var process = this.model.getSelectedAlgorithmProcess();
+			var messages = this.model.readyForProcessing();
+			var invalidJob = (messages.spatial.length !== 0) || (messages.dataDetails.length !== 0) || (messages.algorithm.length !== 0);
 			this.$el.html(this.template({
 				jobModel: this.model.attributes,
 				selectedProcess : (process) ? process.attributes : '',
 				processInputs : this.model.getProcessInputs(),
-				messages : this.model.readyForProcessing()
+				messages : messages,
+				invalidJob : invalidJob
 			}));
 		},
 
