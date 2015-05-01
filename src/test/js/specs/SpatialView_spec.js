@@ -126,6 +126,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 	});
 
 	it('Expects a change to aoiName to callWFS to make a DescribeFeatureType request', function() {
+		wfsDeferred.resolve();
 		testView.model.set('aoiName', 'featureName');
 		expect(callWFSSpy.calls.length).toBe(2);
 		var callWfsArgs = callWFSSpy.mostRecentCall.args;
@@ -136,6 +137,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 	//TODO: Add tests to build DOM correctly from DescribeFeaturetype response when aoiName is changed
 
 	it('Expects a change to aoiAttribute to callWFS to make GetFeature request', function() {
+		wfsDeferred.resolve();
 		testView.model.set('aoiName', 'featureName');
 		testView.model.set('aoiAttribute', 'attr1');
 
@@ -148,7 +150,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 	});
 
 	//TODO: Add tests to build DOM correctly from GetFeature response when aoiAttribute is changed
-	
+
 	it('Expects changeName to change the model\'s aoiName property', function() {
 		testView.changeName({ target : { value : 'thisFeature' } });
 		expect(testView.model.get('aoiName')).toEqual('thisFeature');

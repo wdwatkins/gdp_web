@@ -57,6 +57,26 @@ var GDP = GDP || {};
 			}
 		},
 
+		getWPSStringInputs : function() {
+			var result = {};
+			return result;
+		},
+
+		/*
+		 *
+		 * @returns {jquery.Deferred}. If successful it will return an Array containing the feature Ids.
+		 */
+		getSelectedFeatureIds : function() {
+			var deferred = $.Deferred();
+
+			return deferred;
+		},
+
+		getWPSXMLInputs : function() {
+			result = '';
+			return result;
+		},
+
 		/*
 		 * @returns array of error messages. An empty array is returned if the data is fully specified for spatial.
 		 */

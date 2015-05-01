@@ -44,7 +44,7 @@ GDP.OGC.WPS = function (logger) {
 			if (xmlInputs.hasOwnProperty(xmlProp)) {
 				for (xmlInputIdx = 0; xmlInputIdx < xmlInputs[xmlProp].length; xmlInputIdx++) {
 					xml +=
-						'<wps:Input>' + 
+						'<wps:Input>' +
 						'<ows:Identifier>' + xmlProp + '</ows:Identifier>' +
 						xmlInputs[xmlProp][xmlInputIdx] +
 						'</wps:Input>';
@@ -76,7 +76,7 @@ GDP.OGC.WPS = function (logger) {
 
         return xml;
     }
-    
+
 		/**
 		 * @param {String} responseText - the xml string
 		 * @returns {String|false} Parsed string error message if present, false otherwise
@@ -105,7 +105,7 @@ GDP.OGC.WPS = function (logger) {
 
 	/**
 	 * @param {Object} ajaxOptions - the options to pass to $.ajax
-	 * @returns a $.Deferred that behaves like the $.ajax deferred, except 
+	 * @returns a $.Deferred that behaves like the $.ajax deferred, except
 	 * it parses the wps xml error messages and provides the human-readable
 	 * error message to the .fail handler. A user of this function will
 	 * be able to access the parsed WPS error message as the third argument
@@ -113,14 +113,14 @@ GDP.OGC.WPS = function (logger) {
 	 */
 	function wrapAjaxCallInErrorHandling(ajaxOptions){
 		var deferred = $.Deferred();
-		
+
 		$.ajax(ajaxOptions).done(function(){
 			deferred.resolve.apply(this, arguments);
 		}).fail(function(response){
 			try{
 				var errorMessage = getWpsErrorMessage(response.responseText);
 				if(errorMessage){
-					//use the first two arguments as-is, override 
+					//use the first two arguments as-is, override
 					//the third argument with the parsed error message
 					var newArgs = _.first(arguments, 2).concat(errorMessage);
 					deferred.reject.apply(this, newArgs);
@@ -139,7 +139,7 @@ GDP.OGC.WPS = function (logger) {
     // Public members and methods
     return {
         init: _.memoize(function(wpsURL) {
-            // Warm up the OGC proxy by making a getting the GetCaps from the process 
+            // Warm up the OGC proxy by making a getting the GetCaps from the process
             // wps server
             WPS.sendWPSGetRequest(wpsURL, WPS.getCapabilitiesParams, false, function() {
             });
@@ -164,7 +164,7 @@ GDP.OGC.WPS = function (logger) {
         // so that all properties can be handled identically when creating the xml.
         sendWpsExecuteRequest: function (wpsEndpoint, wpsAlgorithm, stringInputs, outputs, async, xmlInputs, rawOutput, dataType, mimeType) {
 
-	    var ajaxInputs = {
+			var ajaxInputs = {
                 url : wpsEndpoint,
                 type : 'post',
                 data : createWpsExecuteXML(wpsAlgorithm, stringInputs, xmlInputs, outputs, async, rawOutput, mimeType),
@@ -175,22 +175,22 @@ GDP.OGC.WPS = function (logger) {
 
             logger.debug('GDP: Sending WPS Execute request for algorithm: ' + wpsAlgorithm);
             var deferred = wrapAjaxCallInErrorHandling(ajaxInputs);
-	    return deferred;
+			return deferred;
         },
 
         sendWPSGetRequest: function (url, data, async) {
             logger.debug("GDP:wps.js::Sending WPS GET request to: " + url);
-            
-	var deferred = wrapAjaxCallInErrorHandling({
+
+			var deferred = wrapAjaxCallInErrorHandling({
                 url : url,
                 type : 'get',
                 data : data,
                 async : async,
                 contentType : 'text/xml'
             });
-	return deferred;
+			return deferred;
         },
-    
+
         // Creates the wps:Reference element which holds the WFS request
         createWfsWpsReference: function (wfsEndpoint, wfsXML) {
             var xml =
