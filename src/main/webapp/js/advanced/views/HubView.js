@@ -11,7 +11,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		events: {
 			'click #edit-spatial-btn' : 'goToSpatialPage',
 			'click #edit-detail-btn' : 'goToDataDetailsPage',
-			'click #edit-process-btn' : 'goToProcessPage'
+			'click #edit-process-btn' : 'goToProcessPage',
+			'click #job-processing-div button' : 'submitProcessingRequest'
 		},
 
 		render: function () {
@@ -50,6 +51,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 		goToProcessPage : function() {
 			this.router.navigate('/process', {trigger: true});
+		},
+
+		submitProcessingRequest : function() {
+			GDP.logger.debug("Starting submission process");
+			GDP.OGC.WPS.sendWpsExecuteRequest
 		}
 });
 
