@@ -66,6 +66,22 @@ GDP.util.templateLoader = function(templateDir) {
 				}
 				return options.inverse(this);
 			},
+			'ifBoolean' : function(obj, options) {
+				if (obj === 'true' || obj === 'false') {
+					return options.fn(this);
+				}
+				else {
+					return options.inverse(this);
+				}
+			},
+			'ifNotBoolean' : function(obj, options) {
+				if (obj === 'true' || obj === 'false') {
+					return options.inverse(this);
+				}
+				else {
+					return options.fn(this);
+				}
+			},
 			'defaultChecked' : function (boolStr) {
 				if (boolStr === 'true') {
 					return 'checked="checked"';
@@ -83,6 +99,29 @@ GDP.util.templateLoader = function(templateDir) {
 					return 'multiple="multiple"';
 				}
 				return '';
+			},
+			'variableTitle' : function(identifier, process) {
+				if (process) {
+					return _.find(process.inputs, function(v) {
+						return v.identifier === identifier;
+					}).title;
+				}
+				else {
+					return '';
+				}
+			},
+			'formatProcessText' : function(obj) {
+				if (obj) {
+					if (_.isArray(obj)) {
+						return obj.join(', ');
+					}
+					if (_.isString(obj)) {
+						return obj;
+					}
+				}
+				else {
+					return '';
+				}
 			}
 		});
 	};

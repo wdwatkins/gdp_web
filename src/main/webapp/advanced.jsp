@@ -3,43 +3,32 @@
 <html lang="en">
 
     <head>
-		<%@include file="/WEB-INF/jsp/head.jsp" %>
+		<%@include file="/WEB-INF/jsp/head.jsp" %>			
 		<link rel="stylesheet" type="text/css" href="webjars/openlayers/<%= versionOpenLayers%>/theme/default/style.css" />
 		<link rel="stylesheet" type="text/css" href="webjars/jquery-file-upload/<%= versionJqueryFileUpload%>/css/jquery.fileupload.css">
-		<jsp:include page="template/USGSHead.jsp">
-			<jsp:param name="relPath" value="" />
-			<jsp:param name="shortName" value="USGS Geo Data Portal" />
-			<jsp:param name="title" value="USGS Geo Data Portal" />
-			<jsp:param name="description" value="" />
-			<jsp:param name="author" value="Ivan Suftin" />
-			<jsp:param name="keywords" value="" />
-			<jsp:param name="publisher" value="" />
-			<jsp:param name="revisedDate" value="" />
-			<jsp:param name="nextReview" value="" />
-			<jsp:param name="expires" value="never" />
-			<jsp:param name="development" value="<%=development%>" />
-		</jsp:include>
+		<link rel="stylesheet" type="text/css" href="css/gdp_custom.css">
 	</head>
     <body>
 		<div class="container">
-			<div class="row">
+			<header class="row">
 				<jsp:include page="template/USGSHeader.jsp">
 					<jsp:param name="relPath" value="" />
 					<jsp:param name="header-class" value="" />
 					<jsp:param name="site-title" value="USGS Geo Data Portal" />
 				</jsp:include>
-			</div>
+			</header>
 
-			<div id="advanced-page-content"></div>
+			<div class="row"id="advanced-page-content">
+			</div>
 			
-			<div class="row">
+			<footer class="row">
 				<jsp:include page="template/USGSFooter.jsp">
 					<jsp:param name="relPath" value="" />
 					<jsp:param name="header-class" value="" />
 					<jsp:param name="site-url" value="<script type='text/javascript'>document.write(document.location.href);</script>" />
 					<jsp:param name="contact-info" value="<a href='mailto:gdp@usgs.gov?Subject=GDP%20Derivative%20Portal%20Help%20Request'>Contact the Geo Data Portal team</a>" />
 				</jsp:include>
-			</div>
+			</footer>
 		</div>
 		
 		<%@include file="/WEB-INF/jsp/scripts.jsp" %>
@@ -61,6 +50,7 @@
 		<script type="text/javascript" src="js/advanced/collections/Processes<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/advanced/models/ProcessVariablesModel<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/advanced/models/JobModel<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/advanced/views/HubSpatialMapView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/advanced/views/HubView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/advanced/views/SpatialView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/advanced/views/AlgorithmConfigView<%= resourceSuffix %>.js"></script>

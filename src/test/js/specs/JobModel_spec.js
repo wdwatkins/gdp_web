@@ -1,10 +1,5 @@
-describe('GDP.ADVANCED.view.ProcessView', function() {
-	var templateSpy, algorithmTemplateSpy, algorithmRemoveSpy;
-	var jobModel;
-	var testView;
-
-	var PROCESSES =
-		[{
+describe('GDP.ADVANCED.model.Job', function() {
+	var PROCESSES = [{
 			"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageIntersectionAlgorithm",
 			"name" : "FeatureCoverageIntersectionAlgorithm",
 			"title" : "WCS Subset",
@@ -157,88 +152,30 @@ describe('GDP.ADVANCED.view.ProcessView', function() {
 		}
 	];
 
+	var jobModel;
+
 	beforeEach(function() {
-		templateSpy = jasmine.createSpy('templateSpy');
-		algorithmTemplateSpy = jasmine.createSpy('algorithmTemplateSpy');
-		algorithmRemoveSpy = jasmine.createSpy('algorithmRemoveSpy');
-		spyOn(GDP.ADVANCED.view, 'AlgorithmConfigView').andReturn({
-			remove : algorithmRemoveSpy
-		});
-		jobModel = new GDP.ADVANCED.model.Job({
-			algorithmId : '',
-			processes : new Backbone.Collection({
-				model : Backbone.Model
-			}),
-			processVariables : new Backbone.Model()
-		});
+		jobModel = new GDP.ADVANCED.model.Job();
 		jobModel.get('processes').reset(PROCESSES);
 
-		$('body').append('<div id="container-process-description"></div>');
-	    $('#container-process-description').append('<div id="process-description-FeatureCoverageIntersectionAlgorithm"></div>');
-		$('#container-process-description').append('<div id="process-description-FeatureWeightedGridStatisticsAlgorithm"></div>');
-
-		spyOn(GDP.ADVANCED.view.ProcessView.prototype, 'displayAlgorithmDescription').andCallThrough();
-		testView = new GDP.ADVANCED.view.ProcessView({
-			template : templateSpy,
-			model : jobModel,
-			algorithmTemplate : algorithmTemplateSpy
-		});
-	});
-
-	afterEach(function() {
-		$('#container-process-description').remove();
-	});
-
-	it('Expects the template to be rendered using the model passed in at initialization', function() {
-		expect(templateSpy).toHaveBeenCalledWith(jobModel.attributes);
-	});
-
-	it('Expects the algorithmConfigView to be instantiated', function() {
-		expect(testView.algorithmConfigView).toBeDefined();
-		expect(GDP.ADVANCED.view.AlgorithmConfigView).toHaveBeenCalled();
-		expect(GDP.ADVANCED.view.AlgorithmConfigView.mostRecentCall.args[0].template).toBe(algorithmTemplateSpy);
-		expect(GDP.ADVANCED.view.AlgorithmConfigView.mostRecentCall.args[0].model).toBe(jobModel);
-	});
-
-	describe('Tests for displayAlgorithmDescription', function() {
-		it('Expects that if algorithmId is null, nothing happens and an empty jquery object is returned', function() {
-			var result = testView.displayAlgorithmDescription();
-
-			expect(result.length).toBe(0);
-			expect($('#container-process-description div:visible').length).toBe(2);
-		});
-
-		it('Expects when then algorithmId is set, the corresponding div is visible', function() {
-			var $algorithm = $('#process-description-FeatureWeightedGridStatisticsAlgorithm');
-			jobModel.set('algorithmId', 'gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm');
-
-			expect(testView.displayAlgorithmDescription).toHaveBeenCalled();
-			expect($algorithm.length).toBe(1);
-			expect($algorithm.is(':visible')).toBe(true);
-			expect($('#container-process-description div').not(':visible').length).toBe(1);
-		});
-	});
-
-	it('Expects that selectProcess clears the processVariables and updates the algorithmId using the processes attribute', function() {
-		var vars = jobModel.get('processVariables');
-		var evt = {
-			target : {
-				id : 'select-FeatureWeightedGridStatisticsAlgorithm'
-			}
-		};
-		vars.set({'param1' : 'value1', 'param2' : 'value2'});
-
-		testView.selectProcess(evt);
-		expect(jobModel.get('algorithmId')).toEqual('gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm');
-		expect(algorithmRemoveSpy).toHaveBeenCalled();
-		expect(GDP.ADVANCED.view.AlgorithmConfigView.calls.length).toBe(2);
-	});
-
-	it('Expects that remove removes the algorithmConfigView', function() {
-		expect(algorithmRemoveSpy).not.toHaveBeenCalled();
-		testView.remove();
-		expect(algorithmRemoveSpy).toHaveBeenCalled();
 	})
 
+	it('Expects getSelectedAlgorithmProcess return undefined if no algorithmId is defined', function() {
+		expect(jobModel.getSelectedAlgorithmProcess()).not.toBeDefined();
+	});
 
+	it('Expects getSelectedAlgorithmProcess to return the process associated with the model\'s algorithmId', function() {
+		jobModel.set('algorithmId', 'gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm');
+		expect(jobModel.getSelectedAlgorithmProcess().get('name')).toEqual('FeatureWeightedGridStatisticsAlgorithm');
+	});
+
+	it('Expects getProcessInputs to return null if the algorithmId has not been set', function() {
+		expect(jobModel.getProcessInputs()).toBe(null);
+	});
+
+	it('Expects getProcessInputs to return the inputs minus excluded inputs', function() {
+		jobModel.set('algorithmId', 'gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm');
+		var inputs = jobModel.getProcessInputs();
+		expect(inputs.length).toBe(4);
+	});
 });

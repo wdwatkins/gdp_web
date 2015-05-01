@@ -2,6 +2,7 @@
 /*global Backbone*/
 var GDP = GDP || {};
 (function(){
+	"use strict;";
 
     GDP.ADVANCED = GDP.ADVANCED || {};
 
@@ -26,6 +27,7 @@ var GDP = GDP || {};
 
 			//spatial details:
 			aoiName : '',
+			aoiExtent : null, // will be the extent of the layer aoiName
 			aoiAttribute : '',
 			aoiAttributeValues : [],
 
@@ -37,6 +39,22 @@ var GDP = GDP || {};
 
 			email : '',
 			filename : ''
+		},
+
+		getSelectedAlgorithmProcess : function() {
+			return this.get('processes').findWhere({'id' : this.get('algorithmId')});
+		},
+
+		getProcessInputs : function() {
+			var algorithm = this.getSelectedAlgorithmProcess();
+			if (algorithm) {
+				return _.reject(algorithm.get('inputs'), function(input) {
+					return (['FEATURE_COLLECTION', 'DATASET_URI', 'DATASET_ID', 'TIME_START', 'TIME_END', 'FEATURE_ATTRIBUTE_NAME'].indexOf(input.identifier) !== -1);
+				});
+			}
+			else {
+				return null;
+			}
 		}
     });
     GDP.ADVANCED.model.Job = Job;

@@ -146,7 +146,7 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 
 	beforeEach(function() {
 		templateSpy = jasmine.createSpy('templateSpy');
-		jobModel = new Backbone.Model({
+		jobModel = new GDP.ADVANCED.model.Job({
 			algorithmId : '',
 			processes : new Backbone.Collection({
 				model : Backbone.Model

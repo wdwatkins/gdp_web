@@ -23,6 +23,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		 *    @prop {Backbone.model} model
 		 */
 		initialize : function(options) {
+			var process;
 			this.algorithmTemplate = options.algorithmTemplate;
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
@@ -30,8 +31,6 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		render : function () {
-			var algorithmId = this.model.get('algorithmId');
-
 			// Hiding the rendered template until the selected algorithm description is shown so that
 			// there isn't flashing when an algorithm has already been selected
 			this.$el.hide();
@@ -56,16 +55,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		 * @returns {Object} - The container containing the algorithm's description
 		 */
 		displayAlgorithmDescription : function () {
-			var algorithmId = this.model.get('algorithmId');
-			var process;
-			var algorithmName = '';
-
-			if (algorithmId) {
-				process = this.model.get('processes').findWhere({id : algorithmId});
-				if (process) {
-					algorithmName = process.get('name');
-				}
-			}
+			var process = this.model.getSelectedAlgorithmProcess();
+			var algorithmName = (process) ? process.get('name') : '';
 
 			var $selectedDescription = $('#process-description-' + algorithmName);
 
@@ -91,8 +82,22 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var targetId = evt.target.id;
 			var algorithmName = _.last(targetId.split('-'));
 
+			this.algorithmConfigView.remove();
 			this.model.get('processVariables').clear({silent : true});
 			this.model.set('algorithmId', this.model.get('processes').findWhere({'name': algorithmName}).get('id'));
+			// initialize processVariables from the defaults in the selected process.
+			var selectedProcessInputs = this.model.getProcessInputs();
+			var processVars = {};
+			_.each(selectedProcessInputs, function(i) {
+				processVars[i.identifier] = i['default'];
+			});
+			this.model.get('processVariables').set(processVars);
+
+			this.algorithmConfigView = new GDP.ADVANCED.view.AlgorithmConfigView({
+				template : this.algorithmTemplate,
+				model : this.model,
+				el : '#container-process-configuration'
+			});
 		},
 
 		/**
@@ -102,6 +107,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		 */
 		goToHub : function(evt) {
 			this.router.navigate("/", {trigger : true});
+		},
+
+		remove : function() {
+			this.algorithmConfigView.remove();
+			GDP.util.BaseView.prototype.remove.apply(this, arguments);
 		}
 	});
 }());
