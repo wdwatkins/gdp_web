@@ -62,6 +62,11 @@ var GDP = GDP || {};
 			}
 		},
 
+		/*
+		 *
+		 * @returns {Object} where each property represents a simple input to the WPS process. Each property value
+		 * is an array.
+		 */
 		getWPSStringInputs : function() {
 			var getISODate = function(dateStr) {
 				return dateStr.replace(/\//g, '-') + 'T00:00:00.000Z';
@@ -91,8 +96,7 @@ var GDP = GDP || {};
 		},
 
 		/*
-		 *
-		 * @returns {jquery.Deferred}. If successful it will return an Array containing the feature Ids.
+		 * @returns {jquery.Deferred.promise}. If successful it will return an Array containing the feature Ids.
 		 */
 		getSelectedFeatureIds : function() {
 			var name = this.get('aoiName');
@@ -123,12 +127,61 @@ var GDP = GDP || {};
 			else {
 				deferred.resolve([]);
 			}
-			return deferred;
+			return deferred.promise();
 		},
 
-		getWPSXMLInputs : function() {
-			result = '';
-			return result;
+		getMimeType : function() {
+			var mimeType
+			var delimiter = this.get('processVariables').get('DELIMITER');
+			if (delimiter === 'TAB') {
+				mimeType = 'text/tab-separated-values';
+			}
+			else if (delimiter === 'SPACE') {
+				mimeType = 'text/plain';
+			}
+			else {
+				mimeType = 'text/csv';
+			}
+			return mimeType;
+		},
+
+		/*
+		 * @param {String} geomProperty - Defaults to 'the_geom'
+		 * @param {String} srs - Defaults to not specifying the srsName attribute.
+		 * @returns $.Deferred.promise. This promise will be resolved with the xml string document as the data.
+		 */
+		getWPSXMLInputs : function(geomProperty, srs) {
+			var name = this.get('aoiName');
+			var attribute = this.get('aoiAttribute');
+			var result = '<wfs:GetFeature ' +
+                  'service="WFS" ' +
+                  'version="1.1.0" ' +
+                  'outputFormat="text/xml; subtype=gml/3.1.1" ' +
+                  'xmlns:wfs="http://www.opengis.net/wfs" ' +
+                  'xmlns:ogc="http://www.opengis.net/ogc" ' +
+                  'xmlns:gml="http://www.opengis.net/gml" ' +
+                  'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+                  'xsi:schemaLocation="http://www.opengis.net/wfs ../wfs/1.1.0/WFS.xsd"> ' +
+				  '<wfs:Query typeName="' + name + '" ' + ((srs) ? 'srsName="' + srs + '"' : '') + '> ' +
+                 '<wfs:PropertyName>'  +
+				 (srs ? 'srsName="' + srs + '"' : '') +
+				'</wfs:PropertyName> ' +
+                 '<wfs:PropertyName>' + attribute + '</wfs:PropertyName>';
+
+			var deferred = $.Deferred();
+			this.getSelectedFeatureIds().done(function(ids) {
+				if (ids[0] !== '*') {
+					result += '<ogc:Filter>';
+					_.each(ids, function(id) {
+						result += '<ogc:GmlObjectId gml:id="' + id + '"/>';
+					});
+					result += '</ogc:Filter>';
+				}
+
+				result += '</wfs:Query> </wfs:GetFeature>';
+				deferred.resolve(result);
+			});
+			return deferred.promise();
 		},
 
 		/*
