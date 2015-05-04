@@ -67,8 +67,34 @@ var GDP = GDP || {};
 		 * @returns {jquery.Deferred}. If successful it will return an Array containing the feature Ids.
 		 */
 		getSelectedFeatureIds : function() {
-			var deferred = $.Deferred();
+			var name = this.get('aoiName');
+			var attribute = this.get('aoiAttribute');
+			var values = this.get('aoiAttributeValues');
 
+			var deferred = $.Deferred();
+			if ((name) && (attribute) && (values.length > 0)) {
+				GDP.OGC.WFS.callWFS({
+					request : 'GetFeature',
+					typename : name,
+					propertyname : attribute,
+					cql_filter : GDP.util.mapUtils.createAOICQLFilter(attribute, values),
+					maxFeatures : 5001
+				}).done(function(data) {
+					// parse gml ids from result
+					var name_tag = name.substr(name.indexOf(':') + 1);
+					var result = [];
+					($(data).find(name_tag).each(function() {
+						result.push($(this).attr('gml:id'));
+					}));
+					deferred.resolve(result);
+				}).fail(function() {
+					GDP.logger.error('Get Selected features failed');
+					deferred.resolve([]);
+				});
+			}
+			else {
+				deferred.resolve([]);
+			}
 			return deferred;
 		},
 
@@ -102,9 +128,7 @@ var GDP = GDP || {};
 				result.push('Enter a valid data source url and select variables.');
 			}
 			else {
-				var selectedVars = _.filter(this.get('dataSourceVariables').models, function(dataVar) {
-					return dataVar.get('selected');
-				});
+				var selectedVars = this.get('dataSourceVariables').where({'selected' : true});
 				if (selectedVars.length === 0) {
 					result.push('Select at least one variable');
 				}

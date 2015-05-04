@@ -55,7 +55,9 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 		submitProcessingRequest : function() {
 			GDP.logger.debug("Starting submission process");
-			GDP.OGC.WPS.sendWpsExecuteRequest
+			this.model.getSelectedFeatureIds().done(function(data) {
+				GDP.logger.debug('Got selected features ' + data.length);
+			});
 		}
 });
 
