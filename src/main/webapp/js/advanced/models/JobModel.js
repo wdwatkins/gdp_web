@@ -79,7 +79,7 @@ var GDP = GDP || {};
 					propertyname : attribute,
 					cql_filter : GDP.util.mapUtils.createAOICQLFilter(attribute, values),
 					maxFeatures : 5001
-				}).done(function(data) {
+				}, 'POST').done(function(data) {
 					// parse gml ids from result
 					var name_tag = name.substr(name.indexOf(':') + 1);
 					var result = [];

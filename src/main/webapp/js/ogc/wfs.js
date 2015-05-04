@@ -11,10 +11,11 @@ GDP.OGC.WFS = (function () {
 
 	/*
 	 * @param {Object} query parameters to be passed to the WFS call
+	 * @param {String} method to be used for the request. Defaults to 'GET'
 	 * @return jquery.Deferred. If deferred is resolved it will return the data returned in the WFS call.
 	 *     If the WFS returns an exception or fails, the deferred is rejected with an error message returned.
 	 */
-	function _callWFS(data) {
+	function _callWFS(data, method) {
 		var deferred = $.Deferred();
 		var defaultData = {
 			'service': 'WFS',
@@ -29,6 +30,7 @@ GDP.OGC.WFS = (function () {
 		GDP.logger.debug('GDP: Calling WFS Service with a ' + wfsData.request + ' request.');
 		$.ajax({
 			url: GDP.config.get('application').endpoints.geoserver + '/wfs',
+			method : (method) ? method : 'GET',
 			data: wfsData,
 			cache: false,
 			success: function (data, textStatus, jqXHR) {

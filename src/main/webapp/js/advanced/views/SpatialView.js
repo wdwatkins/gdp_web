@@ -303,7 +303,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						request : 'GetFeature',
 						typename : name,
 						propertyname : attribute,
-						maxFeatures : 5001 //TODO verify that this is correct
+						maxFeatures : 5001 // Limits number of features shown in selection menu
 					}
 				);
 				getFeatureDeferred.done(function(data) {
