@@ -54,6 +54,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		submitProcessingRequest : function() {
+			var wpsStringInputs = this.model.getWPSStringInputs();
 			GDP.logger.debug("Starting submission process");
 			this.model.getSelectedFeatureIds().done(function(data) {
 				GDP.logger.debug('Got selected features ' + data.length);

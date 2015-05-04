@@ -1,5 +1,6 @@
 /*jslint browser: true*/
 /*global Backbone*/
+/*global _*/
 var GDP = GDP || {};
 (function(){
 	"use strict;";
@@ -45,6 +46,10 @@ var GDP = GDP || {};
 			return this.get('processes').findWhere({'id' : this.get('algorithmId')});
 		},
 
+		getSelectedDataSourceVariables : function() {
+			return this.get('dataSourceVariables').where({'selected' : true});
+		},
+
 		getProcessInputs : function() {
 			var algorithm = this.getSelectedAlgorithmProcess();
 			if (algorithm) {
@@ -58,7 +63,30 @@ var GDP = GDP || {};
 		},
 
 		getWPSStringInputs : function() {
-			var result = {};
+			var getISODate = function(dateStr) {
+				return dateStr.replace(/\//g, '-') + 'T00:00:00.000Z';
+			};
+
+			var result = {
+				FEATURE_ATTRIBUTE_NAME : [this.get('aoiAttribute')],
+				DATASET_URI : [this.get('dataSourceUrl')],
+				DATASET_ID : _.map(this.getSelectedDataSourceVariables(), function(model) {
+					return model.get('value');
+				}),
+				TIME_START : [getISODate(this.get('startDate'))],
+				TIME_END : [getISODate(this.get('endDate'))]
+			};
+
+			var processVars = {};
+			_.each(this.get('processVariables').attributes, function(value, key) {
+				if (_.isArray(value)) {
+					processVars[key] = value;
+				}
+				else {
+					return processVars[key] = [value];
+				}
+			})
+			_.extend(result, processVars);
 			return result;
 		},
 
@@ -128,8 +156,7 @@ var GDP = GDP || {};
 				result.push('Enter a valid data source url and select variables.');
 			}
 			else {
-				var selectedVars = this.get('dataSourceVariables').where({'selected' : true});
-				if (selectedVars.length === 0) {
+				if (this.getSelectedDataSourceVariables().length === 0) {
 					result.push('Select at least one variable');
 				}
 				if (!this.get('startDate') && !this.get('endDate')) {
