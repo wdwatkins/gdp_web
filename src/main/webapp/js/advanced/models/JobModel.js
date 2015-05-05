@@ -42,13 +42,18 @@ var GDP = GDP || {};
 			filename : ''
 		},
 
+		/*
+		 * Returns the process model for the model's algorithmId. If nothing matches, will return undefined
+		 * @returns {GDP.ADVANCED.model.Process}
+		 */
 		getSelectedAlgorithmProcess : function() {
 			return this.get('processes').findWhere({'id' : this.get('algorithmId')});
 		},
 
 		/*
-		 *
-		 * @returns {$.Deferred.promise}. Resolve data contains the url to use for WCS coverage. If WCS
+		 * Returns a promise which when resolved contains the url to use for the WCS coverage service. Will
+		 * return the null string if this can't be determine.
+		 * @returns {$.Deferred.promise}.
 		 */
 		getWCSDataSourceUrl : function() {
 			var deferred = $.Deferred();
@@ -79,7 +84,7 @@ var GDP = GDP || {};
 						},
 						error : function() {
 							//Assume that opendap is used
-							dataSourceUrl = dataSourceUrl.replace(/^http:\/\//, 'dods://');
+							dataSourceUrl = dataSourceUrl.replace(/^(http|https):\/\//, 'dods://');
 							deferred.resolve(dataSourceUrl);
 						}
 					});
@@ -98,10 +103,18 @@ var GDP = GDP || {};
 			return deferred.promise();
 		},
 
+		/*
+		 * Return the data source variables whose selected attribute is true.
+		 * @returns {Array of GDP.ADVANCED.model.DataSourceVariables}
+		 */
 		getSelectedDataSourceVariables : function() {
 			return this.get('dataSourceVariables').where({'selected' : true});
 		},
 
+		/*
+		 * Returns the inputs that are comprise the inputs to be used as processVariables.
+		 * @returns {Object} or null if no algorithm has been selected
+		 */
 		getProcessInputs : function() {
 			var algorithm = this.getSelectedAlgorithmProcess();
 			if (algorithm) {
@@ -115,9 +128,9 @@ var GDP = GDP || {};
 		},
 
 		/*
-		 *
-		 * @returns $.Deferred.promise. The promise resolve data is an {Object} where each property represents a simple input to the WPS process.
+		 * Returns a promise where resolve data is an {Object} where each property represents a simple input to the WPS process.
 		 *     Each property value is an array.
+		 * @returns $.Deferred.promise.
 		 */
 		getWPSStringInputs : function() {
 			var getISODate = function(dateStr){
@@ -153,11 +166,12 @@ var GDP = GDP || {};
 				result.DATASET_URI = [url];
 				deferred.resolve(result);
 			});
-			return deferred;
+			return deferred.promise();
 		},
 
 		/*
-		 * @returns {jquery.Deferred.promise}. If successful it will return an Array containing the feature Ids.
+		 * Returns a promise which resolves with an array containg the feature ids that have been selected.
+		 * @returns {jquery.Deferred.promise}.
 		 */
 		getSelectedFeatureIds : function() {
 			var name = this.get('aoiName');
@@ -213,7 +227,7 @@ var GDP = GDP || {};
 		/*
 		 * @param {String} geomProperty - Defaults to 'the_geom'
 		 * @param {String} srs - Defaults to not specifying the srsName attribute.
-		 * @returns $.Deferred.promise. This promise will be resolved with the xml string document as the data.
+		 * @returns {$.Deferred.promise}. This promise will be resolved with the xml string document as the data.
 		 */
 		getWPSXMLInputs : function(geomProperty, srs) {
 			var name = this.get('aoiName');
@@ -248,7 +262,7 @@ var GDP = GDP || {};
 		},
 
 		/*
-		 * @returns array of error messages. An empty array is returned if the data is fully specified for spatial.
+		 * @returns {Array of String} of error messages. An empty array is returned if the data is fully specified for spatial.
 		 */
 		spatialReadyForProcessing : function() {
 			var result = [];
@@ -264,7 +278,7 @@ var GDP = GDP || {};
 		},
 
 		/*
-		 * @returns array of error messages. An empty array is returned if the data is fully specified for data details.
+		 * @returns {Array of String} of error messages. An empty array is returned if the data is fully specified for data details.
 		 */
 		dataDetailsReadyForProcessing : function() {
 			var result = [];
@@ -283,7 +297,7 @@ var GDP = GDP || {};
 		},
 
 		/*
-		 * @returns array of error messages. An empty array is returned if the data is fully specified for algorithm.
+		 * @returns {Array of String} of error messages. An empty array is returned if the data is fully specified for algorithm.
 		 */
 		algorithmReadyForProcessing : function() {
 			var result = [];

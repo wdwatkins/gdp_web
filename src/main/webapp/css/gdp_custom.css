@@ -43,6 +43,9 @@
 .hub-tile h5 {
 	font-weight: bold;
 }
+.locked-tile {
+	background-color : grey;
+}
 .hub-tile .panel-body {
 	padding: 10px;
 }

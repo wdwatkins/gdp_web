@@ -57,17 +57,26 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.router.navigate('/process', {trigger: true});
 		},
 
+		setEditable : function(editable) {
+			$('#edit-spatial-btn').prop('disabled', !editable);
+			$('#edit-detail-btn').prop('disabled', !editable);
+			$('#edit-process-btn').prop('disabled', !editable);
+		},
+
 		submitProcessingRequest : function() {
 			var executePromise;
 			var mimeType = this.model.getMimeType();
 
 			var self = this;
 
-			GDP.logger.debug("Starting submission process");
-
 			var getWPSXMLInputs = this.model.getWPSXMLInputs();
 			var getWPSStringInputs = this.model.getWPSStringInputs();
 
+			var submitDone = $.Deferred();
+
+			GDP.logger.debug("Starting submission process");
+
+			this.setEditable(false);
 			$.when(getWPSXMLInputs, getWPSStringInputs).done(function(xmlInputs, wpsStringInputs) {
 				self.alertView.show('alert-info', 'Process status: Started');
 
@@ -97,29 +106,25 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						}
 						xml = $.parseXML(xmlText);
 
-						if (!self.wps.checkWpsResponse(xml)) {
-							if ($(xml).find('ProcessStarted').length > 0) {
-								GDP.logger.debug('GDP Status: Process started');
-								self.alertView.show('alert-info', 'Process status: checking status. Last checked: ' + (new Date()).toTimeString());
-							}
-							else if ($(xml).find('ProcessSucceeded').length > 0) {
-								window.clearInterval(intervalId);
-								self.alertView.show('alert-info', 'Process complete!');
-							}
-							else if ($(xml).find('ProcessFailed').length > 0) {
-								window.clearInterval(intervalId);
-								var message = 'GDP: STATUS: Process Failed: ' + $(xml).find('ProcessFailed').find('ExceptionText').text();
-								self.alertView.show('alert-warning', 'Process failed: ' + message);
-								GDP.logger.warn('GDP: STATUS: Process failed: ' + message);
-							}
-							else {
-								GDP.logger.warn('GDP: Status: Bad response received');
-								self.alertView.show('alert-info', 'Process status: Unknown response received. Retrying, Last checked: ' + (new Date()).toTimeString());
-							}
+						if ($(xml).find('ProcessStarted').length > 0) {
+							GDP.logger.debug('GDP Status: Process started');
+							self.alertView.show('alert-info', 'Process status: checking status. Last checked: ' + (new Date()).toTimeString());
+						}
+						else if ($(xml).find('ProcessSucceeded').length > 0) {
+							window.clearInterval(intervalId);
+							self.alertView.show('alert-info', 'Process complete!');
+							submitDone.resolve();
+						}
+						else if ($(xml).find('ProcessFailed').length > 0) {
+							window.clearInterval(intervalId);
+							var message = 'GDP: STATUS: Process Failed: ' + $(xml).find('ProcessFailed').find('ExceptionText').text();
+							self.alertView.show('alert-warning', 'Process failed: ' + message);
+							GDP.logger.warn('GDP: STATUS: Process failed: ' + message);
+							submitDone.resolve();
 						}
 						else {
-							window.clearInterval(intervalId);
-							self.alertView.show('alert-info', 'GDP: Status Process Failed');
+							GDP.logger.warn('GDP: Status: Bad response received');
+							self.alertView.show('alert-info', 'Process status: Unknown response received. Retrying, Last checked: ' + (new Date()).toTimeString());
 						}
 					};
 					var statusLocation = $(xml).find('ExecuteResponse').attr('statusLocation');
@@ -141,7 +146,12 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					}, 5000);
 				}).fail(function(jqXhr, errorThrown, errorMessage) {
 					self.alertView.show('alert-warning', 'Process status: Failed with ' + errorMessage);
+					submitDone.resolve();
 				});
+			});
+
+			submitDone.always(function() {
+				self.setEditable(true);
 			});
 		}
 	});
