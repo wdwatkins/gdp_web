@@ -178,4 +178,18 @@ describe('GDP.ADVANCED.model.Job', function() {
 		var inputs = jobModel.getProcessInputs();
 		expect(inputs.length).toBe(4);
 	});
+
+	describe('Tests for getWPSStringInputs', function() {
+		it('Expects startDate and endDate to be formatted as ISO dates', function() {
+			jobModel.set({
+				startDate : '01-01-1980',
+				endDate : '04-30-1988'
+			});
+			var result = jobModel.getWPSStringInputs();
+			expect(result.TIME_START.length).toBe(1);
+			expect(result.TIME_END.length).toBe(1);
+			expect(result.TIME_START[0]).toEqual('1980-01-01T00:00:00.000Z');
+			expect(result.TIME_END[0]).toEqual('1988-04-30T00:00:00.000Z');
+		});
+	});
 });

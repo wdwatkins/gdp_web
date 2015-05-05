@@ -19,13 +19,18 @@
 %>
 <%
 	Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));
+	String geoserverEndpoint = props.get("gdp.geoserver.endpoint");
 %>
 {
 	"application" : {
 		"development" : "<%= development %>",
 		"endpoints" : {
 			"geoserver" : "geoserver",
-			"utilityWps" : "utilityWps"
+			"utilityWps" : "utilityWps",
+			"processWps" : "processWps"
+		},
+		"serviceEndpoints" : {
+			"geoserver" : "<%= geoserverEndpoint %>"
 		}
 	},
 	"process" : {

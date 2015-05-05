@@ -41,6 +41,7 @@
 		<script type="text/javascript" src="js/util/BaseView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/SelectMenuView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/AlertView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/util/parseUri<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/models/Config<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/mapUtils<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/ogc/wfs<%= resourceSuffix %>.js"></script>

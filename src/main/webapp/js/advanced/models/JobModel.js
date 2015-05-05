@@ -11,7 +11,7 @@ var GDP = GDP || {};
 
     var Job = Backbone.Model.extend({
 		defaults: {
-			//data detailsL
+			//data details
 			dataSourceUrl : null,
 			invalidDataSourceUrl : true,
 			dataSourceVariables : new GDP.ADVANCED.model.DataSourceVariables(),
@@ -46,6 +46,58 @@ var GDP = GDP || {};
 			return this.get('processes').findWhere({'id' : this.get('algorithmId')});
 		},
 
+		/*
+		 *
+		 * @returns {$.Deferred.promise}. Resolve data contains the url to use for WCS coverage. If WCS
+		 */
+		getWCSDataSourceUrl : function() {
+			var deferred = $.Deferred();
+			var dataSourceUrl = this.get('dataSourceUrl');
+
+			var uri;
+			if (dataSourceUrl) {
+				uri = GDP.util.parseUri(dataSourceUrl);
+
+				if (uri.protocol === '') {
+					// initially assume http
+					dataSourceUrl = dataSourceUrl.replace(/^/, 'http://');
+					uri.protocol = 'http';
+				}
+
+				// TODO: need a cleaner way of testing service type and failing over
+				// to a different service
+				if (uri.protocol === 'http' || uri.protocol === 'https') {
+					// Try wcs first. If it doesn't succeed, try opendap.
+					$.ajax({
+						url: dataSourceUrl,
+						data : {
+							request : 'GetCapabilities',
+							version : '1.1.1'
+						},
+						success : function(data) {
+							deferred.resolve(dataSourceUrl);
+						},
+						error : function() {
+							//Assume that opendap is used
+							dataSourceUrl = dataSourceUrl.replace(/^http:\/\//, 'dods://');
+							deferred.resolve(dataSourceUrl);
+						}
+					});
+				}
+				else if (uri.protocol === 'dods') {
+					deferred.resolve(dataSourceUrl);
+				}
+				else {
+					GDP.logger.error('dataSourceUrl has an unknown dataset protocol: '  + uri.protocol);
+					deferred.resolve('');
+				}
+			}
+			else {
+				deferred.resolve('');
+			}
+			return deferred.promise();
+		},
+
 		getSelectedDataSourceVariables : function() {
 			return this.get('dataSourceVariables').where({'selected' : true});
 		},
@@ -64,17 +116,21 @@ var GDP = GDP || {};
 
 		/*
 		 *
-		 * @returns {Object} where each property represents a simple input to the WPS process. Each property value
-		 * is an array.
+		 * @returns $.Deferred.promise. The promise resolve data is an {Object} where each property represents a simple input to the WPS process.
+		 *     Each property value is an array.
 		 */
 		getWPSStringInputs : function() {
-			var getISODate = function(dateStr) {
-				return dateStr.replace(/\//g, '-') + 'T00:00:00.000Z';
+			var getISODate = function(dateStr){
+				var date = new Date(dateStr);
+				return (new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))).toISOString();
 			};
+
+			var deferred = $.Deferred();
+
+			var getDataSourceUrl = this.getWCSDataSourceUrl();
 
 			var result = {
 				FEATURE_ATTRIBUTE_NAME : [this.get('aoiAttribute')],
-				DATASET_URI : [this.get('dataSourceUrl')],
 				DATASET_ID : _.map(this.getSelectedDataSourceVariables(), function(model) {
 					return model.get('value');
 				}),
@@ -90,9 +146,14 @@ var GDP = GDP || {};
 				else {
 					return processVars[key] = [value];
 				}
-			})
+			});
 			_.extend(result, processVars);
-			return result;
+
+			getDataSourceUrl.done(function(url) {
+				result.DATASET_URI = [url];
+				deferred.resolve(result);
+			});
+			return deferred;
 		},
 
 		/*
@@ -130,8 +191,12 @@ var GDP = GDP || {};
 			return deferred.promise();
 		},
 
+		/*
+		 *
+		 * @returns {String} - represents the mimeType of the current Job. Note that this can be the null string
+		 */
 		getMimeType : function() {
-			var mimeType
+			var mimeType = '';
 			var delimiter = this.get('processVariables').get('DELIMITER');
 			if (delimiter === 'TAB') {
 				mimeType = 'text/tab-separated-values';
@@ -139,7 +204,7 @@ var GDP = GDP || {};
 			else if (delimiter === 'SPACE') {
 				mimeType = 'text/plain';
 			}
-			else {
+			else if (delimiter === 'COMMA') {
 				mimeType = 'text/csv';
 			}
 			return mimeType;
@@ -163,9 +228,7 @@ var GDP = GDP || {};
                   'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
                   'xsi:schemaLocation="http://www.opengis.net/wfs ../wfs/1.1.0/WFS.xsd"> ' +
 				  '<wfs:Query typeName="' + name + '" ' + ((srs) ? 'srsName="' + srs + '"' : '') + '> ' +
-                 '<wfs:PropertyName>'  +
-				 (srs ? 'srsName="' + srs + '"' : '') +
-				'</wfs:PropertyName> ' +
+				  '<wfs:PropertyName>' + (geomProperty ? geomProperty : 'the_geom') + '</wfs:PropertyName> ' +
                  '<wfs:PropertyName>' + attribute + '</wfs:PropertyName>';
 
 			var deferred = $.Deferred();
