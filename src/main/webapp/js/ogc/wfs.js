@@ -12,7 +12,7 @@ GDP.OGC.WFS = (function () {
 	/*
 	 * @param {Object} query parameters to be passed to the WFS call
 	 * @param {String} method to be used for the request. Defaults to 'GET'
-	 * @return jquery.Deferred. If deferred is resolved it will return the data returned in the WFS call.
+	 * @return jquery.Deferred.promise. If deferred is resolved it will return the data returned in the WFS call.
 	 *     If the WFS returns an exception or fails, the deferred is rejected with an error message returned.
 	 */
 	function _callWFS(data, method) {
@@ -48,7 +48,7 @@ GDP.OGC.WFS = (function () {
 				deferred.reject(textStatus);
 			}
 		});
-		return deferred;
+		return deferred.promise();
 	}
 
 	function _getBoundsFromCache(featureName) {
