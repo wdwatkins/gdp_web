@@ -1,6 +1,10 @@
 <div class="row" id="job-processing-div" >
 	<button id="submit-job-btn" {{#if invalidJob}}disabled{{/if}} class="center-block btn btn-primary">Submit Job for Processing</button>
-	<div id="job-processing-messages-div"></div>
+</div>
+<div id="job-processing-messages-div"></div>
+<div class="col-sm-12" id="job-results-div">
+	<button class="col-sm-offset-4 col-sm-2 btn btn-primary" id="retrieve-output-btn" class="btn btn-primary">Retrieve Output</button>
+	<button class="col-sm-2 btn btn-primary" id="retrieve-input-btn" class="btn btn-primary">Retrieve Process Input</button>
 </div>
 <div id="tiles-div" class="row">
 	<div class="col-md-6 hub-tile" id="spatial-wrapper">

@@ -48,10 +48,10 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var name = this.model.get('aoiName');
 			this.map.render(this.mapDiv);
 			if (name) {
-				this.map.zoomToExtent(this.model.get('aoiExtent'), true);
+				this.map.zoomToExtent(this.model.get('aoiExtent'), false);
 			}
 			else {
-				this.map.zoomToExtent(new OpenLayers.Bounds(GDP.config.get('map').extent.conus['3857']), true);
+				this.map.zoomToExtent(new OpenLayers.Bounds(GDP.config.get('map').extent.conus['3857']), false);
 			}
 		}
 	});
