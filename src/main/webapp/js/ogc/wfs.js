@@ -55,9 +55,9 @@ GDP.OGC.WFS = (function () {
 		var result;
 		$(capabilitiesCache).find('FeatureType').each(function () {
 			if ($(this).find('Name').text() === featureName) {
-				var bbox = $(this).find('WGS84BoundingBox');
-				var lowerCorner = $(bbox).find('LowerCorner').text().split(' ');
-				var upperCorner = $(bbox).find('UpperCorner').text().split(' ');
+				var bbox = $(this).find('ows\\:WGS84BoundingBox, WGS84BoundingBox');
+				var lowerCorner = $(bbox).find('ows\\:LowerCorner, LowerCorner').text().split(' ');
+				var upperCorner = $(bbox).find('ows\\:UpperCorner, UpperCorner').text().split(' ');
 
 				var minx = lowerCorner[0];
 				var miny = lowerCorner[1];

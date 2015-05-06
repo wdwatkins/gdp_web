@@ -189,8 +189,9 @@ var GDP = GDP || {};
 				}, 'POST').done(function(data) {
 					// parse gml ids from result
 					var name_tag = name.substr(name.indexOf(':') + 1);
+					var esc_name = name.replace(':', '\\:');
 					var result = [];
-					($(data).find(name_tag).each(function() {
+					($(data).find(esc_name + ', ' + name_tag).each(function() {
 						result.push($(this).attr('gml:id'));
 					}));
 					deferred.resolve(result);

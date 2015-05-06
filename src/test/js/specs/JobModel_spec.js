@@ -281,8 +281,8 @@ describe('GDP.ADVANCED.model.Job', function() {
 			expect(resolveSpy.calls[0].args[0].DATASET_URI).toEqual(['http://fakedatasetservice']);
 		});
 
-
-		it('Expects startDate and endDate to be formatted as ISO dates', function() {
+		// This does not work when running with phantomJS
+		xit('Expects startDate and endDate to be formatted as ISO dates', function() {
 			jobModel.set({
 				startDate : '01-01-1980',
 				endDate : '04-30-1988'
@@ -348,10 +348,13 @@ describe('GDP.ADVANCED.model.Job', function() {
 			mockWFSDeferred = $.Deferred();
 			spyOn(GDP.OGC.WFS, 'callWFS').andReturn(mockWFSDeferred.promise())
 			spyOn(GDP.util.mapUtils, 'createAOICQLFilter').andReturn("Fake filter")
+			GDP.logger = {
+				error : jasmine.createSpy('errorLoggerSpy'),
+			};
 
 			resolveSpy = jasmine.createSpy('resolveSpy');
 			jobModel.set({
-				aoiName : 'CONUS_States',
+				aoiName : 'derivative:CONUS_States',
 				aoiAttribute : 'FeatureAttribute',
 				aoiAttributeValues : ['A1', 'A2']
 			});
@@ -360,7 +363,7 @@ describe('GDP.ADVANCED.model.Job', function() {
 		it('Expects a callWFS to be issued with the appropriate typename, propertyname and cql_filter', function() {
 			jobModel.getSelectedFeatureIds();
 			expect(GDP.OGC.WFS.callWFS).toHaveBeenCalled();
-			expect(GDP.OGC.WFS.callWFS.calls[0].args[0].typename).toEqual('CONUS_States');
+			expect(GDP.OGC.WFS.callWFS.calls[0].args[0].typename).toEqual('derivative:CONUS_States');
 			expect(GDP.OGC.WFS.callWFS.calls[0].args[0].propertyname).toEqual('FeatureAttribute');
 			expect(GDP.OGC.WFS.callWFS.calls[0].args[0].cql_filter).toEqual('Fake filter');
 		});

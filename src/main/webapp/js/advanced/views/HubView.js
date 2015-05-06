@@ -61,6 +61,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			$('#edit-spatial-btn').prop('disabled', !editable);
 			$('#edit-detail-btn').prop('disabled', !editable);
 			$('#edit-process-btn').prop('disabled', !editable);
+			$('#submit-job-btn').prop('disabled', !editable);
 		},
 
 		submitProcessingRequest : function() {
@@ -106,18 +107,18 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						}
 						xml = $.parseXML(xmlText);
 
-						if ($(xml).find('ProcessStarted').length > 0) {
+						if ($(xml).find('wps\\:ProcessStarted, ProcessStarted').length > 0) {
 							GDP.logger.debug('GDP Status: Process started');
 							self.alertView.show('alert-info', 'Process status: checking status. Last checked: ' + (new Date()).toTimeString());
 						}
-						else if ($(xml).find('ProcessSucceeded').length > 0) {
+						else if ($(xml).find('wps\\:ProcessSucceeded, ProcessSucceeded').length > 0) {
 							window.clearInterval(intervalId);
 							self.alertView.show('alert-info', 'Process complete!');
 							submitDone.resolve();
 						}
-						else if ($(xml).find('ProcessFailed').length > 0) {
+						else if ($(xml).find('wps\\:ProcessFailed, ProcessFailed').length > 0) {
 							window.clearInterval(intervalId);
-							var message = 'GDP: STATUS: Process Failed: ' + $(xml).find('ProcessFailed').find('ExceptionText').text();
+							var message = 'GDP: STATUS: Process Failed: ' + $(xml).find('wps\\:ProcessFailed, ProcessFailed').find('wps\:ExceptionText, ExceptionText').text();
 							self.alertView.show('alert-warning', 'Process failed: ' + message);
 							GDP.logger.warn('GDP: STATUS: Process failed: ' + message);
 							submitDone.resolve();
@@ -127,7 +128,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 							self.alertView.show('alert-info', 'Process status: Unknown response received. Retrying, Last checked: ' + (new Date()).toTimeString());
 						}
 					};
-					var statusLocation = $(xml).find('ExecuteResponse').attr('statusLocation');
+					var statusLocation = $(xml).find('wps\\:ExecuteResponse, ExecuteResponse').attr('statusLocation');
 					var statusID = (statusLocation.split('?')[1]).split('id=')[1];
 					var intervalId = window.setInterval(function() {
 						$.ajax({
