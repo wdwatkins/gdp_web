@@ -52,7 +52,7 @@ var GDP = GDP || {};
 
 		/*
 		 * Returns a promise which when resolved contains the url to use for the WCS coverage service. Will
-		 * return the null string if this can't be determine.
+		 * return the empty string if this can't be determined.
 		 * @returns {$.Deferred.promise}.
 		 */
 		getWCSDataSourceUrl : function() {
@@ -187,7 +187,7 @@ var GDP = GDP || {};
 					cql_filter : GDP.util.mapUtils.createAOICQLFilter(attribute, values),
 					maxFeatures : 5001
 				}, 'POST').done(function(data) {
-					// parse gml ids from result
+					// parse gml ids from result. I have to have two selectors, one with the namespace and one without.
 					var name_tag = name.substr(name.indexOf(':') + 1);
 					var esc_name = name.replace(':', '\\:');
 					var result = [];
@@ -208,7 +208,7 @@ var GDP = GDP || {};
 
 		/*
 		 *
-		 * @returns {String} - represents the mimeType of the current Job. Note that this can be the null string
+		 * @returns {String} - represents the mimeType of the current Job. Note that this can be the empty string
 		 */
 		getMimeType : function() {
 			var mimeType = '';
@@ -265,7 +265,7 @@ var GDP = GDP || {};
 		/*
 		 * @returns {Array of String} of error messages. An empty array is returned if the data is fully specified for spatial.
 		 */
-		spatialReadyForProcessing : function() {
+		spatialErrorMessages : function() {
 			var result = [];
 			if (!(this.get('aoiName'))) {
 				result.push('Select or upload an area of interest and select features.');
@@ -281,7 +281,7 @@ var GDP = GDP || {};
 		/*
 		 * @returns {Array of String} of error messages. An empty array is returned if the data is fully specified for data details.
 		 */
-		dataDetailsReadyForProcessing : function() {
+		dataDetailsErrorMessages : function() {
 			var result = [];
 			if (this.get('invalidDataSourceUrl')) {
 				result.push('Enter a valid data source url and select variables.');
@@ -300,7 +300,7 @@ var GDP = GDP || {};
 		/*
 		 * @returns {Array of String} of error messages. An empty array is returned if the data is fully specified for algorithm.
 		 */
-		algorithmReadyForProcessing : function() {
+		algorithmErrorMessages : function() {
 			var result = [];
 			if (!this.get('algorithmId')) {
 				result.push('Select an algorithm to process the data.');
@@ -318,11 +318,11 @@ var GDP = GDP || {};
 		 * @return {Object} with property for each page in hub. Each property's value will be an array of error messages.
 		 * If no errors for that page the array will be empty.
 		 */
-		readyForProcessing : function() {
+		jobErrorMessages : function() {
 			var result = {
-				spatial : this.spatialReadyForProcessing(),
-				dataDetails : this.dataDetailsReadyForProcessing(),
-				algorithm : this.algorithmReadyForProcessing()
+				spatial : this.spatialErrorMessages(),
+				dataDetails : this.dataDetailsErrorMessages(),
+				algorithm : this.algorithmErrorMessages()
 			};
 			return result;
 		}

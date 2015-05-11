@@ -21,7 +21,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 		render: function () {
 			var process = this.model.getSelectedAlgorithmProcess();
-			var messages = this.model.readyForProcessing();
+			var messages = this.model.jobErrorMessages();
 			var invalidJob = (messages.spatial.length !== 0) || (messages.dataDetails.length !== 0) || (messages.algorithm.length !== 0);
 			this.$el.html(this.template({
 				jobModel: this.model.attributes,
@@ -132,7 +132,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						}
 						else if ($(xml).find('wps\\:ProcessFailed, ProcessFailed').length > 0) {
 							window.clearInterval(intervalId);
-							var message = 'GDP: STATUS: Process Failed: ' + $(xml).find('wps\\:ProcessFailed, ProcessFailed').find('wps\:ExceptionText, ExceptionText').text();
+							var message = 'GDP: STATUS: Process Failed: ' + $(xml).find('wps\\:ProcessFailed, ProcessFailed').find('ows\\:ExceptionText, ExceptionText').text();
 							self.alertView.show('alert-danger', 'Process failed: ' + message);
 							GDP.logger.warn('GDP: STATUS: Process failed: ' + message);
 							submitDone.reject();

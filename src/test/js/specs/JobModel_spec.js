@@ -142,6 +142,7 @@ describe('GDP.ADVANCED.model.Job', function() {
 			],
 			"outputs" : [
 				{
+
 					"identifier" : "OUTPUT",
 					"title" : "Output File",
 					"abstract" : "A delimited text file containing requested process output.",

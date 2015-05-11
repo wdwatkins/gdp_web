@@ -9,7 +9,7 @@ describe('GDP.ADVANCED.view.HubView', function() {
 
 		model = new GDP.ADVANCED.model.Job();
 		spyOn(model, "getSelectedAlgorithmProcess").andReturn(new Backbone.Model({'var1' : 'value1', 'var2' : 'value2'}));
-		spyOn(model, 'readyForProcessing').andReturn({
+		spyOn(model, 'jobErrorMessages').andReturn({
 			spatial : [],
 			dataDetails : [],
 			algorithm : []
