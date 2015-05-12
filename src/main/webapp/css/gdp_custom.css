@@ -36,6 +36,13 @@
 .checkbox label {
 	font-weight: bold;
 }
+
+#job-processing-div, #job-results-div {
+	margin-bottom: 15px;
+}
+#job-results-div {
+	display:none;
+}
 .hub-tile h5 {
 	font-weight: bold;
 }

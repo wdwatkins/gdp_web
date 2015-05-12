@@ -329,11 +329,13 @@
 						<source>webjars/bootstrap-datepicker.js</source>
 						<source>webjars/jquery-ui.js</source>
 						<source>webjars/jquery.fileupload.js</source>
+						<source>vendor/jQuery.download.js</source>
 					</preloadSources>
 					<sourceIncludes>
 						<include>util/**.js</include>
 						<include>models/Config.js</include>
 						<include>ogc/wfs.js</include>
+						<include>ogc/wps.js</include>
 						<include>advanced/models/Process.js</include>
 						<include>advanced/models/DataSourceModels.js</include>
 						<include>advanced/collections/Processes.js</include>

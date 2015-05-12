@@ -112,7 +112,12 @@ GDP.util.mapUtils = (function() {
 			displayInLayerSwitcher : false,
 			visibility : true,
 			isBaseLayer : false,
-			singleTile : true
+			singleTile : true,
+			tileOptions: {
+				// http://www.faqs.org/rfcs/rfc2616.html
+				// This will cause any request larger than this many characters to be a POST
+				maxGetUrlLength: 1024
+			}
 		};
 
 		_.extend(layerParams, params, {

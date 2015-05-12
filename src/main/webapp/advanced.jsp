@@ -18,7 +18,7 @@
 				</jsp:include>
 			</header>
 
-			<div class="row"id="advanced-page-content">
+			<div class="row" id="advanced-page-content">
 			</div>
 			
 			<footer class="row">
@@ -37,10 +37,13 @@
 		<script type="text/javascript" src="webjars/jquery-ui/<%= versionJqueryUI%>/jquery-ui<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="webjars/jquery-file-upload/<%= versionJqueryFileUpload%>/js/jquery.fileupload.js"></script>
 		<script type="text/javascript" src="webjars/bootstrap-datepicker/<%= versionBsDatePicker%>/js/bootstrap-datepicker<%= development ? "" : ".min"%>.js"></script>
+		<script type="text/javascript" src="js/vendor/jQuery.download<%= resourceSuffix %>.js"></script>
+		
 		<script type="text/javascript" src="js/util/templateLoader<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/BaseView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/SelectMenuView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/AlertView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/util/parseUri<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/models/Config<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/mapUtils<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/ogc/wfs<%= resourceSuffix %>.js"></script>

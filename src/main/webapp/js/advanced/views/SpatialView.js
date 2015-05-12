@@ -21,8 +21,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		events : {
 			'change #select-aoi' : 'changeName',
 			'change #select-attribute' : 'changeAttribute',
-			'change #select-values' : 'changeValues',
-			'click #done-btn' : 'goToHub'
+			'change #select-values' : 'changeValues'
 		},
 
 		render : function() {
@@ -48,6 +47,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		initialize : function(options) {
+			var self = this;
 			var baseLayers = [GDP.util.mapUtils.createWorldStreetMapLayer()];
 			var controls = [
 				new OpenLayers.Control.Navigation(),
@@ -90,7 +90,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					data.url = data.url + '&qqfile=' + data.files[0].name;
 					$('#upload-indicator').show();
 				},
-				done : _.bind(function(e, data) {
+				done : function(e, data) {
 					$('#upload-indicator').hide();
 
 					var $resp = $(data.result);
@@ -101,99 +101,103 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						var layer = $resp.find('name').first().text();
 
 						if (warning) {
-							this.alertView.show('alert-warning', 'Upload succeeded with warning ' + warning);
+							self.alertView.show('alert-warning', 'Upload succeeded with warning ' + warning);
 						}
 						else {
-							this.alertView.show('alert-success', 'Upload was successful.');
+							self.alertView.show('alert-success', 'Upload was successful.');
 						}
 
-						this.getAvailableFeatures().then(
-							_.bind(function() {
-								$('#select-aoi').val(layer);
-								this.model.set('aoiName', layer);
-							}, this),
-							_.bind(function() {
-								this.alertView('alert-error', 'Unable to read uploaded shapefile attributes.');
-							}, this)
-						);
+						self.getAvailableFeatures().then(function() {
+							$('#select-aoi').val(layer);
+							self.model.set('aoiName', layer);
+						},
+						function() {
+							self.alertView('alert-error', 'Unable to read uploaded shapefile attributes.');
+						});
+
 					}
 					else {
 						var error = $resp.find('error').first().text();
 						var exception = $resp.find('exception').first().text();
-						this.alertView.show('alert-danger', 'File Upload error: ' + error + '. ' + exception);
+						self.alertView.show('alert-danger', 'File Upload error: ' + error + '. ' + exception);
 					}
 
-				}, this),
-				fail : _.bind(function(e, data) {
+				},
+				fail : function(e, data) {
 					$('#upload-indicator').hide();
-					this.alertView.show('alert-error', 'Upload failed');
-				}, this)
+					self.alertView.show('alert-error', 'Upload failed');
+				}
 			});
 
-			this.getAvailableFeatures().then(
-				function() {
-					return;
-				},
-				function() {
-					GDP.logger.error('GDP.view.SpatialView getAvailableFeatures failed');
-				}
-			);
+			// get features, attributes, and values
+			var name = self.model.get('aoiName');
+			var attribute = self.model.get('aoiAttribute');
+			var values = self.model.get('aoiAttributeValues');
 
-			// Initialize DOM
-			var attribute = this.model.get('aoiAttribute');
-			var values = this.model.get('aoiAttributeValues');
-			this.updateSelectedAoiName();
-			// Need to reset the aoiAttribute because updateSelectedAoiName clears it.
-			if (attribute) {
-				this.model.set('aoiAttribute', attribute);// Need to
-				this.updateSelectedAoiAttribute();
-			}
-			// Need to reset the aoiAttributeValues because updateSelectedAOIAttribute clears it.
-			if (values.length !== 0) {
-				this.model.set('aoiAttributeValues', values);
-				this.updateSelectedAoiAttributeValues();
-			}
+			var getDeferreds = [];
+			getDeferreds.push(this.getAvailableFeatures());
+			getDeferreds.push(this._updateAttributes(name));
+			getDeferreds.push(this._updateValues(name, attribute));
+			$.when.apply(this, getDeferreds).done(function() {
+				self._updateAOILayer(name);
+				self._highlightFeatures(name, attribute, values);
 
-			this.listenTo(this.model, 'change:aoiName', this.updateSelectedAoiName);
-			this.listenTo(this.model, 'change:aoiAttribute', this.updateSelectedAoiAttribute);
-			this.listenTo(this.model, 'change:aoiAttributeValues', this.updateSelectedAoiAttributeValues);
+				$('#select-aoi').val(name);
+				$('#select-attribute').val(attribute);
+				$('#select-values').val(values);
+
+				self.listenTo(self.model, 'change:aoiName', self.updateSelectedAoiName);
+				self.listenTo(self.model, 'change:aoiAttribute', self.updateSelectedAoiAttribute);
+				self.listenTo(self.model, 'change:aoiAttributeValues', self.updateSelectedAoiAttributeValues);
+			});
 		},
 
+		/*
+		 *	Makes a WFS GetCapabilities call to determine what areas of interest are available and fills in the selection menu.
+		 * @ return {jquery.Deferred}. If resolved returns the data received. If rejected returns the error message.
+		 */
+
 		getAvailableFeatures : function() {
-			var populateFeatureTypesSelectBox = _.bind(function(data) {
-				this.nameSelectMenuView.$el.val(null);
-				var optionValues = _.map($(data).find('FeatureType'), function(el) {
-					var text = $(el).find('Name').text();
-					return {
-						text : text,
-						value : text
-					};
+			var getDeferred = GDP.OGC.WFS.callWFS({
+				request : 'GetCapabilities'
+			});
+			var self = this;
+
+			getDeferred.done(function(data) {
+					self.nameSelectMenuView.$el.val(null);
+					var optionValues = _.map($(data).find('FeatureType'), function(el) {
+						var text = $(el).find('Name').text();
+						return {
+							text : text,
+							value : text
+						};
+					});
+
+					self.nameSelectMenuView.updateMenuOptions(optionValues);
+				}).fail(function(message) {
+					GDP.logger.error(message);
 				});
-
-				this.nameSelectMenuView.updateMenuOptions(optionValues);
-			}, this);
-
-			return GDP.OGC.WFS.callWFS(
-				{
-					request : 'GetCapabilities'
-				},
-				false,
-				populateFeatureTypesSelectBox
-			);
+			return getDeferred;
 		},
 
 		updateSelectedAoiName : function() {
 			var name = this.model.get('aoiName');
+			var self = this;
 			$('#select-aoi').val(name);
+			self._updateAOILayer(name);
+			// Clear out
+			this.model.set('aoiAttribute');
 			this._updateAttributes(name);
-			this._updateAOILayer(name);
 		},
 
 		updateSelectedAoiAttribute : function() {
+			var self = this;
 			var name = this.model.get('aoiName');
 			var attribute = this.model.get('aoiAttribute');
 			$('#select-attribute').val(attribute);
-			this._updateValues(name, attribute);
+			this._updateValues(name, attribute).done(function(data) {
+				self.model.set('aoiAttributeValues', data);
+			});
 		},
 
 		updateSelectedAoiAttributeValues : function() {
@@ -219,15 +223,6 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.model.set('aoiAttributeValues', aoiAttributeValues);
 		},
 
-		/**
-		 * Navigates to the hub page.
-		 * @param {Jquery event} evt
-		 * @returns {undefined}
-		 */
-		goToHub : function(evt) {
-			this.router.navigate("/", {trigger : true});
-		},
-
 		_updateAOILayer : function(name) {
 			var name = this.model.get('aoiName');
 
@@ -251,69 +246,96 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			}
 		},
 
+		/*
+		 * @return Deferred which is resolved when the DescribeFeatureType request is done and the attributes have been updated.
+		 */
 		_updateAttributes : function(name) {
+			var self = this;
+			var deferred = $.Deferred();
+
 			this.attributeSelectMenuView.$el.val(null);
 			this.attributeSelectMenuView.updateMenuOptions([]);
-			this.model.set('aoiAttribute', '');
 
 			if (name) {
-				GDP.OGC.WFS.callWFS(
+				var getDescribeFeature = GDP.OGC.WFS.callWFS(
 					{
 						request : 'DescribeFeatureType',
 						typename : name
-					},
-					false,
-					_.bind(function(data) {
-						var $elements = $(data).find('complexContent').find('element[name!="the_geom"]');
-						var optionValues = _.map($elements, function(el) {
-							var name = $(el).attr('name');
-							return {
-								text : name,
-								value: name
-							};
-						});
-
-						this.attributeSelectMenuView.updateMenuOptions(optionValues);
-					}, this)
+					}
 				);
+				getDescribeFeature.done(function(data) {
+					var $elements = $(data).find('xsd\\:complexContent, complexContent').find('xsd\\:element[name!="the_geom"], element[name!="the_geom"]');
+					var optionValues = _.map($elements, function(el) {
+						var name = $(el).attr('name');
+						return {
+							text : name,
+							value: name
+						};
+					});
+
+					self.attributeSelectMenuView.updateMenuOptions(optionValues);
+					deferred.resolve();
+				}).fail(function(message) {
+					GDP.logger.error(message);
+					deferred.resolve();
+				});
 			}
+			else {
+				deferred.resolve();
+			}
+
+			return deferred;
 		},
 
+		/*
+		 * @return jquery.Deferred which will be resolved when the values have been updated.
+		 */
 		_updateValues : function(name, attribute) {
-			this.model.set('aoiAttributeValues', []);
+			var self = this;
+			var deferred = $.Deferred();
+			var getFeatureDeferred;
+			var ns_attribute = name.slice(0, name.indexOf(':'));
+
 			this.attributeValuesSelectMenuView.$el.val(null);
 			this.attributeValuesSelectMenuView.updateMenuOptions([]);
 
 			if ((name) && (attribute)) {
-				GDP.OGC.WFS.callWFS(
+				getFeatureDeferred = GDP.OGC.WFS.callWFS(
 					{
 						request : 'GetFeature',
 						typename : name,
 						propertyname : attribute,
-						maxFeatures : 5001 //TODO verify that this is correct
-					},
-					false,
-
-					_.bind(function(data) {
-						// Don't repeat values in the list
-						var optionValues = _.uniq(
-							_.map($(data).find(attribute), function(datum) {
-								return $(datum).text();
-							})
-						);
-
-						var optionObjects = _.map(optionValues, function(optionValue){
-							return {
-								text: optionValue,
-								value: optionValue
-							};
-						});
-						this.attributeValuesSelectMenuView.updateMenuOptions(optionObjects);
-						this.model.set('aoiAttributeValues', optionValues);
-						this.attributeValuesSelectMenuView.$el.val(optionValues);
-					}, this)
+						maxFeatures : 5001 // Limits number of features shown in selection menu
+					}
 				);
+				getFeatureDeferred.done(function(data) {
+					// Don't repeat values in the list
+					var optionValues = _.uniq(
+						_.map($(data).find(ns_attribute + '\\:' + attribute + ', ' + attribute), function(datum) {
+							return $(datum).text();
+						})
+					);
+
+					var optionObjects = _.map(optionValues, function(optionValue){
+						return {
+							text: optionValue,
+							value: optionValue
+						}
+					});
+					self.attributeValuesSelectMenuView.updateMenuOptions(optionObjects);
+					self.attributeValuesSelectMenuView.$el.val(optionValues);
+
+					deferred.resolve(optionValues);
+				}).fail(function(message) {
+					GDP.logger.error(message);
+					deferred.resolve([]);
+				});
 			}
+			else {
+				deferred.resolve([]);
+			}
+
+			return deferred;
 		},
 
 		_highlightFeatures : function(name, attribute, values) {

@@ -1,84 +1,102 @@
-<div class="col-md-6 hub-tile" id="spatial-wrapper">
-	 <div class="panel panel-default"  >
-        <div class="panel-heading">Spatial</div>
-
-		<div class="panel-body">
-			<h5>Selected Area of Interest</h5>
-			<div class="selected-option">
-				{{jobModel.aoiName}}&nbsp;
-			</div>
-			<div id="hub-spatial-inset-map"></div>
-			<h5>Selected Attribute</h5>
-			<div class="selected-option">
-				{{jobModel.aoiAttribute}}&nbsp;
-			</div>
-			<h5>Number of Selected Values</h5>
-			<div class="selected-option">
-				{{jobModel.aoiAttributeValues.length}}
-			</div>
-			<div class="hub-tile-button-div">
-				<button id="edit-spatial-btn" class="btn btn-primary">Edit Spatial</button>
-			</div>
-		</div>
-	</div>
-</div><!--content-wrapper-->
-
-<div class="col-md-6 hub-tile" id="data-detail-wrapper">
-	<div class="panel panel-default">
-		<div class="panel-heading">Data Detail</div>
-		<div class="panel-body">
-			<h5>Data Source URL</h5>
-			<div class="selected-option">
-				{{jobModel.dataSourceUrl}}&nbsp;
-			</div>
-			<h5>Number of Selected Variables</h5>
-			<div class="selected-option">
-				{{jobModel.dataSourceVariables.length}}
-			</div>
-			<h5>Date Range</h5>
-			<div class="selected-option">
-				{{#if jobModel.startDate}}
-					{{#if jobModel.endDate }}
-						{{jobModel.startDate}} - {{jobModel.endDate}}
-					{{/if}}
-				{{/if}}
-				&nbsp;
-			</div>
-			<div class="hub-tile-button-div">
-				<button id="edit-detail-btn" class="btn btn-primary">Edit Data Detail</button>
-			</div>
-		</div>
-	</div>
+<div class="row" id="job-processing-div" >
+	<button id="submit-job-btn" {{#if invalidJob}}disabled{{/if}} class="center-block btn btn-primary">Submit Job for Processing</button>
 </div>
-<div class="clearfix visible-md-block visible-lg-block"></div>
+<div id="job-processing-messages-div"></div>
+<div class="col-sm-12" id="job-results-div">
+	<button class="col-sm-offset-4 col-sm-2 btn btn-primary" id="retrieve-output-btn" class="btn btn-primary">Retrieve Output</button>
+	<button class="col-sm-2 btn btn-primary" id="retrieve-input-btn" class="btn btn-primary">Retrieve Process Input</button>
+</div>
+<div id="tiles-div" class="row">
+	<div class="col-md-6 hub-tile" id="spatial-wrapper">
+		 <div class="panel panel-default"  >
+			<div class="panel-heading">Spatial</div>
+			<div class="panel-body">
+				{{#each messages.spatial}}
+					<div class="bg-danger">{{this}}</div>
+				{{/each}}
+				<h5>Selected Area of Interest</h5>
+				<div class="selected-option">
+					{{jobModel.aoiName}}&nbsp;
+				</div>
+				<div id="hub-spatial-inset-map"></div>
+				<h5>Selected Attribute</h5>
+				<div class="selected-option">
+					{{jobModel.aoiAttribute}}&nbsp;
+				</div>
+				<h5>Number of Selected Values</h5>
+				<div class="selected-option">
+					{{jobModel.aoiAttributeValues.length}}
+				</div>
+				<div class="hub-tile-button-div">
+					<button id="edit-spatial-btn" class="btn btn-primary">Edit Spatial</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<div class="col-md-6 hub-tile" id="process-wrapper">
-	<div class="panel panel-default">
-		<div class="panel-heading">Algorithm Selected</div>
-		<div class="panel-body">
-			<h5>Algorithm Selected</h5>
-			<div class="selected-option">
-				{{selectedProcess.title}}&nbsp;
+	<div class="col-md-6 hub-tile" id="data-detail-wrapper">
+		<div class="panel panel-default">
+			<div class="panel-heading">Data Detail</div>
+			<div class="panel-body">
+				{{#each messages.dataDetails}}
+					<div class="bg-danger">{{this}}</div>
+				{{/each}}
+				<h5>Data Source URL</h5>
+				<div class="selected-option">
+					{{jobModel.dataSourceUrl}}&nbsp;
+				</div>
+				<h5>Number of Selected Variables</h5>
+				<div class="selected-option">
+					{{selectedVariables jobModel.dataSourceVariables.models}}
+				</div>
+				<h5>Date Range</h5>
+				<div class="selected-option">
+					{{#if jobModel.startDate}}
+						{{#if jobModel.endDate }}
+							{{jobModel.startDate}} - {{jobModel.endDate}}
+						{{/if}}
+					{{/if}}
+					&nbsp;
+				</div>
+				<div class="hub-tile-button-div">
+					<button id="edit-detail-btn" class="btn btn-primary">Edit Data Detail</button>
+				</div>
 			</div>
-			{{#each jobModel.processVariables.attributes}}
-				{{#ifBoolean this}}
-					<h5>{{variableTitle @key ../../selectedProcess}} is {{this}}</h5>
-				{{/ifBoolean}}
-				{{#ifNotBoolean this }}
-					<h5>{{variableTitle @key ../../selectedProcess}}</h5>
-					<div class="selected-option">{{formatProcessText this}}&nbsp;</div>
-				{{/ifNotBoolean}}
-			{{/each}}
-			<h5>Email</h5>
-			<div class="selected-option">
-				{{email}}
-			</div>
-			<h5>Filename</h5>
-			<div class="selected-option">
-				{{filename}}
-			</div>
-			<div class="hub-tile-button-div">
-				<button id="edit-process-btn" class="btn btn-primary">Edit Process</button>
+		</div>
+	</div>
+	<div class="clearfix visible-md-block visible-lg-block"></div>
+
+	<div class="col-md-6 hub-tile" id="process-wrapper">
+		<div class="panel panel-default">
+			<div class="panel-heading">Algorithm Selected</div>
+			<div class="panel-body">
+				{{#each messages.algorithm}}
+					<div class="bg-danger">{{this}}</div>
+				{{/each}}
+				<h5>Algorithm Selected</h5>
+				<div class="selected-option">
+					{{selectedProcess.title}}&nbsp;
+				</div>
+				{{#each jobModel.processVariables.attributes}}
+					{{#ifBoolean this}}
+						<h5>{{variableTitle @key ../../selectedProcess}} is {{this}}</h5>
+					{{/ifBoolean}}
+					{{#ifNotBoolean this }}
+						<h5>{{variableTitle @key ../../selectedProcess}}</h5>
+						<div class="selected-option">{{formatProcessText this}}&nbsp;</div>
+					{{/ifNotBoolean}}
+				{{/each}}
+				<h5>Email</h5>
+				<div class="selected-option">
+					{{jobModel.email}}&nbsp;
+				</div>
+				<h5>Filename</h5>
+				<div class="selected-option">
+					{{jobModel.filename}}&nbsp;
+				</div>
+				<div class="hub-tile-button-div">
+					<button id="edit-process-btn" class="btn btn-primary">Edit Process</button>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -22,7 +22,7 @@ var GDP = GDP || {};
 
 	var VARIABLE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.ListOpendapGrids';
 	var DATE_RANGE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.GetGridTimeRange';
-    
+
     GDP.ADVANCED.view.DataDetailsView = GDP.util.BaseView.extend({
 	'events' : (function(){
 		var ret = {};
@@ -46,7 +46,7 @@ var GDP = GDP || {};
 		this.listenTo(this.model, 'change:maxDate', this.changeMaxDate);
 		this.listenTo(this.model, 'change:startDate', this.changeStartDate);
 		this.listenTo(this.model, 'change:endDate', this.changeEndDate);
-		
+
 		this.changeAvailableVariables();
 		this.changeInvalidUrl();
 		this.changeMinDate();
@@ -124,13 +124,13 @@ var GDP = GDP || {};
 					'selected': option.selected
 				};
 			});
-			
+
 		var dataSourceVariables = this.model.get('dataSourceVariables');
-		
+
 		dataSourceVariables.set(variables);
 	},
 	/**
-	 * On model change, updates the dom to reflect the current data source's 
+	 * On model change, updates the dom to reflect the current data source's
 	 * available variables in <option> elements in a <select>
 	 * @returns {undefined}
 	 */
@@ -146,16 +146,16 @@ var GDP = GDP || {};
 			datePickers.end.selector,
 			variablePicker.selector
 		];
-		
+
 		_.each(selectorsToToggleDisabled, function(selector){
 			$(selector).prop('disabled', invalidUrl);
 		});
 	},
 	/**
 	 * Reacts to a change in url
-	 * 
-	 * @returns {jQuery.Deferred.promise} The promise is resolved with no args 
-	 * if user cleared the url or if user submitted a url and all subesequent 
+	 *
+	 * @returns {jQuery.Deferred.promise} The promise is resolved with no args
+	 * if user cleared the url or if user submitted a url and all subesequent
 	 * web service calls succeded. The promise is rejected with an error message
 	 * if any web service calls fail, or if the web service responses cannot be
 	 * parsed.
@@ -197,12 +197,12 @@ var GDP = GDP || {};
 		return isValid;
 	},
 	/**
-	 * Gets the variables present in a url. 
-	 * 
+	 * Gets the variables present in a url.
+	 *
 	 * @param {String} dataSourceUrl
-	 * @returns {jQuery.Deferred.promise} The promise is resolved with args 
-	 * ({String} data source url, {String} variable name) when the web service call 
-	 * succeeds. The promise is rejected with one arg ({String} error message) 
+	 * @returns {jQuery.Deferred.promise} The promise is resolved with args
+	 * ({String} data source url, {String} variable name) when the web service call
+	 * succeeds. The promise is rejected with one arg ({String} error message)
 	 * if the web service calls fail or their responses cannot be parsed.
 	 */
 	'getGrids': function (dataSourceUrl) {
@@ -225,41 +225,42 @@ var GDP = GDP || {};
 				true,
 				'json',
 				'application/json'
-				).done(function (response, textStatus, message) {
-			var invalidUrl = true;
-			if (self.isValidGridResponse(response)) {
-				if(!response.datatypecollection.types.length){
-					response.datatypecollection.types = [response.datatypecollection.types];
+				)
+			.done(function (response, textStatus, message) {
+				var invalidUrl = true;
+				if (self.isValidGridResponse(response)) {
+					if(!response.datatypecollection.types.length){
+						response.datatypecollection.types = [response.datatypecollection.types];
+					}
+					variables = _.map(response.datatypecollection.types, function (type) {
+						var text = type.name + ' - ' + type.description + ' (' + type.unitsstring + ")";
+						var value = type.name;
+						return {
+							'text': text,
+							'value': value,
+							'selected': false
+						};
+					});
+					invalidUrl = false;
+					deferred.resolve(dataSourceUrl, variables[0].value);
 				}
-				variables = _.map(response.datatypecollection.types, function (type) {
-					var text = type.name + ' - ' + type.description + ' (' + type.unitsstring + ")";
-					var value = type.name;
-					return {
-						'text': text,
-						'value': value,
-						'selected': false
-					};
-				});
-				invalidUrl = false;
-				deferred.resolve(dataSourceUrl, variables[0].value);
-			}
-			else {
+				else {
+					//todo: anything better than 'alert'
+					var message = self.failedToParseVariableResponseMessage;
+					alert(message);
+					deferred.reject(message);
+				}
+				self.model.get('dataSourceVariables').reset(variables);
+				self.model.set('invalidDataSourceUrl', invalidUrl);
+			}).fail(function (jqxhr, textStatus, message) {
 				//todo: anything better than 'alert'
-				var message = self.failedToParseVariableResponseMessage;
 				alert(message);
+				self.model.set('invalidDataSourceUrl', true);
+				self.model.get('dataSourceVariables').reset();
 				deferred.reject(message);
-			}
-			self.model.get('dataSourceVariables').reset(variables);
-			self.model.set('invalidDataSourceUrl', invalidUrl);
-		}).fail(function (jqxhr, textStatus, message) {
-			//todo: anything better than 'alert'
-			alert(message);
-			self.model.set('invalidDataSourceUrl', true);
-			self.model.get('dataSourceVariables').reset();
-			deferred.reject(message);
-		}).always(function () {
-		});
-		return deferred.promise();
+			}).always(function () {
+			});
+			return deferred.promise();
 	},
 	'hasExpectedNumericProperties' : function(obj, expectedProperties){
 		var hasExpectedNumericProperties = true;
@@ -299,7 +300,7 @@ var GDP = GDP || {};
 	/**
 	 * Retrieves the date range for a given data source and variable. Updates
 	 * the model with the retrieved values.
-	 * 
+	 *
 	 * @param {String} dataSourceUrl
 	 * @param {String} variableName
 	 * @returns {jQuery.Deferred.promise} The promise is resolved with no args
@@ -316,7 +317,7 @@ var GDP = GDP || {};
 				"grid": [variableName]
 			},
 			wpsOutput = ["result_as_json"];
-		
+
 		this.wps.sendWpsExecuteRequest(
 			this.wpsEndpoint + '/WebProcessingService',
 			DATE_RANGE_WPS_PROCESS_ID,
