@@ -3,7 +3,7 @@
 /*global _*/
 var GDP = GDP || {};
 (function(){
-	"use strict;";
+	"use strict";
 
     GDP.ADVANCED = GDP.ADVANCED || {};
 
@@ -189,13 +189,10 @@ var GDP = GDP || {};
 					cql_filter : GDP.util.mapUtils.createCQLFilter(attribute, values),
 					maxFeatures : 5001
 				}, 'POST').done(function(data) {
-					// parse gml ids from result. I have to have two selectors, one with the namespace and one without.
-					var name_tag = name.substr(name.indexOf(':') + 1);
-					var esc_name = name.replace(':', '\\:');
 					var result = [];
-					($(data).find(esc_name + ', ' + name_tag).each(function() {
+					GDP.util.findXMLNamespaceTags($(data), name).each(function() {
 						result.push($(this).attr('gml:id'));
-					}));
+					});
 					deferred.resolve(result);
 				}).fail(function() {
 					GDP.logger.error('Get Selected features failed');

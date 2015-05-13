@@ -76,17 +76,18 @@ GDP.OGC.WPS = function (logger) {
 	function getWpsErrorMessage(responseText) {
 		var response = $(responseText);
 
-		var success = response.find('ExecuteResponse'),
+		var success = GDP.util.findXMLNamespaceTags(response, 'ows:ExecuteResponse'),
 				error,
 				message;
 
 		if (success.length > 0) {
 			return false;
 		} else {
-			error = response.find('Exception');
+			error = GDP.util.findXMLNamespaceTags(response, 'ows:Exception');
 
 			if (error.length > 0) {
-				message = 'JAVA_ROOTCause is '+ response.find('Exception[exceptionCode="JAVA_RootCause"] > ExceptionText:eq(0)').text();
+				$exception = GDP.util.findXMLNamespaceTags(response, 'ows:Exception[exceptionCode="JAVA_RootCause"]');
+				message = 'JAVA_ROOTCause is ' + GDP.util.findXMLNamespaceTags($exception, 'ows:ExceptionText:eq(0)').text();
 
 			}
 			else {

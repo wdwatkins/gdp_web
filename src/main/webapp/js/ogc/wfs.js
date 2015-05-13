@@ -34,7 +34,7 @@ GDP.OGC.WFS = (function () {
 			data: wfsData,
 			cache: false,
 			success: function (data, textStatus, jqXHR) {
-				if (!$(data).find('ExceptionReport').length) {
+				if (GDP.util.findXMLNamespaceTags($(data), 'ows:ExceptionReport').length === 0) {
 					if ('GetCapabilities' === wfsData.request) {
 						capabilitiesCache = data;
 					}
@@ -55,9 +55,9 @@ GDP.OGC.WFS = (function () {
 		var result;
 		$(capabilitiesCache).find('FeatureType').each(function () {
 			if ($(this).find('Name').text() === featureName) {
-				var bbox = $(this).find('ows\\:WGS84BoundingBox, WGS84BoundingBox');
-				var lowerCorner = $(bbox).find('ows\\:LowerCorner, LowerCorner').text().split(' ');
-				var upperCorner = $(bbox).find('ows\\:UpperCorner, UpperCorner').text().split(' ');
+				var bbox = GDP.util.findXMLNamespaceTags($(this), 'ows:WGS84BoundingBox');
+				var lowerCorner = GDP.util.findXMLNamespaceTags($(bbox), 'ows:LowerCorner').text().split(' ');
+				var upperCorner = GDP.util.findXMLNamespaceTags($(bbox),'ows:UpperCorner').text().split(' ');
 
 				var minx = lowerCorner[0];
 				var miny = lowerCorner[1];

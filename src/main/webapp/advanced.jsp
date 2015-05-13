@@ -39,6 +39,7 @@
 		<script type="text/javascript" src="webjars/bootstrap-datepicker/<%= versionBsDatePicker%>/js/bootstrap-datepicker<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="js/vendor/jQuery.download<%= resourceSuffix %>.js"></script>
 		
+		<script type="text/javascript" src="js/util/jqueryUtils<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/templateLoader<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/BaseView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/SelectMenuView<%= resourceSuffix %>.js"></script>

@@ -37,7 +37,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				this.map.addLayer(GDP.util.mapUtils.createAOILayer(name));
 
 				if ((attribute) && (values.length > 0)) {
-					filter = GDP.util.mapUtils.createAOICQLFilter(attribute, values);
+					filter = GDP.util.mapUtils.createCQLFilter(attribute, values);
 					this.map.addLayer(GDP.util.mapUtils.createAOIFeaturesLayer(name, filter));
 				}
 			}

@@ -355,7 +355,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					}
 				);
 				getDescribeFeature.done(function(data) {
-					var $elements = $(data).find('xsd\\:complexContent, complexContent').find('xsd\\:element[name!="the_geom"], element[name!="the_geom"]');
+					var $complexContent = GDP.util.findXMLNamespaceTags($(data), 'xsd:complexContent');
+					var $elements = GDP.util.findXMLNamespaceTags($complexContent, 'xsd:element[name!="the_geom"]');
 					var optionValues = _.map($elements, function(el) {
 						var name = $(el).attr('name');
 						return {
@@ -407,7 +408,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				getFeatureDeferred.done(function(data) {
 					// Don't repeat values in the list
 					var optionValues = _.uniq(
-						_.map($(data).find(ns_attribute + '\\:' + attribute + ', ' + attribute), function(datum) {
+						_.map(GDP.util.findXMLNamespaceTags($(data), ns_attribute + ':' + attribute), function(datum) {
 							return $(datum).text();
 						})
 					);
