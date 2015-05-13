@@ -33,7 +33,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 		wfsDeferred = $.Deferred();
 
 		spyOn(OpenLayers.Layer, 'WMS');
-//		spyOn(GDP.ADVANCED.view.SpatialView.prototype, '_createDrawPolygonControl');
+		spyOn(GDP.ADVANCED.view.SpatialView.prototype, '_createDrawPolygonControl');
 
 		templateSpy = jasmine.createSpy('templateSpy');
 		loggerSpy = jasmine.createSpyObj('logger', ['error']);

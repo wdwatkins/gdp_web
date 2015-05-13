@@ -146,17 +146,15 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		updateSelectedAoiName : function() {
 			var name = this.model.get('aoiName');
 			var needsAoiAttributeValues = this._needsAoiAttributeValues();
-			var self = this;
 			$('#select-aoi').val(name);
-			self._updateAOILayer(name);
+			this._updateAOILayer(name);
 
 			this._setVisibility($('#aoi-attribute-div'), needsAoiAttributeValues);
 			this._setVisibility($('#aoi-attribute-values-div'), needsAoiAttributeValues);
 
 			if (needsAoiAttributeValues) {
 				this._updateAttributes(name);
-				// This will clear out any highlighted layer
-				this._highlightFeatures(name, '', '');
+				this.model.set('aoiAttribute', '');
 			}
 			else {
 				this.model.set('aoiAttribute', this._DRAW_FEATURE_ATTRIBUTE);
@@ -173,9 +171,14 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var name = this.model.get('aoiName');
 			var attribute = this.model.get('aoiAttribute');
 			$('#select-attribute').val(attribute);
-			this._updateValues(name, attribute).done(function(data) {
-				self.model.set('aoiAttributeValues', data);
-			});
+			if (this._needsAoiAttributeValues()) {
+				this._updateValues(name, attribute).done(function(data) {
+					self.model.set('aoiAttributeValues', data);
+				});
+			}
+			else {
+				self.model.set('aoiAttributeValues', ['*']);
+			}
 		},
 
 		/*
@@ -442,7 +445,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var needsAoiAttributeValues = this._needsAoiAttributeValues();
 			if (name) {
 				if (!needsAoiAttributeValues || ((attribute) && (values.length !== 0))) {
-					var filter = needsAoiAttributeValues ? GDP.util.mapUtils.createAOICQLFilter(attribute, values) : '';
+					var filter = needsAoiAttributeValues ? GDP.util.mapUtils.createCQLFilter(attribute, values) : '';
 					if (this.highlightLayer) {
 						this.highlightLayer.mergeNewParams({
 							layers : name,

@@ -348,7 +348,7 @@ describe('GDP.ADVANCED.model.Job', function() {
 		beforeEach(function() {
 			mockWFSDeferred = $.Deferred();
 			spyOn(GDP.OGC.WFS, 'callWFS').andReturn(mockWFSDeferred.promise())
-			spyOn(GDP.util.mapUtils, 'createAOICQLFilter').andReturn("Fake filter")
+			spyOn(GDP.util.mapUtils, 'createCQLFilter').andReturn("Fake filter")
 			GDP.logger = {
 				error : jasmine.createSpy('errorLoggerSpy'),
 			};
@@ -382,6 +382,12 @@ describe('GDP.ADVANCED.model.Job', function() {
 			expect(resolveSpy).not.toHaveBeenCalled();
 
 			mockWFSDeferred.reject();
+			expect(resolveSpy).toHaveBeenCalledWith([]);
+		});
+
+		it('Expects if aoiAttributeValues first array element contains "*" then an empty array is returned', function() {
+			jobModel.set('aoiAttributeValues', ['*']);
+			jobModel.getSelectedFeatureIds().done(resolveSpy);
 			expect(resolveSpy).toHaveBeenCalledWith([]);
 		});
 	});

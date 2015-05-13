@@ -43,14 +43,6 @@ var GDP = GDP || {};
 		},
 
 		/*
-		 * @returns {Boolean}
-		 */
-		needsAoiAttributeValues : function() {
-			var namespace = this.get('aoiName').split(':')[0];
-			return namespace !== 'draw';
-		},
-
-		/*
 		 * Returns the process model for the model's algorithmId. If nothing matches, will return undefined
 		 * @returns {GDP.ADVANCED.model.Process}
 		 */
@@ -180,7 +172,7 @@ var GDP = GDP || {};
 		},
 
 		/*
-		 * Returns a promise which resolves with an array containg the feature ids that have been selected.
+		 * Returns a promise which resolves with an array containing the feature ids that have been selected.
 		 * @returns {jquery.Deferred.promise}.
 		 */
 		getSelectedFeatureIds : function() {
@@ -189,15 +181,12 @@ var GDP = GDP || {};
 			var values = this.get('aoiAttributeValues');
 
 			var deferred = $.Deferred();
-			if (!this.needsAoiAttributeValues()) {
-				deferred.resolve([]);
-			}
-			else if ((name) && (attribute) && (values.length > 0)) {
+			if ((name) && (attribute) && (_.first(values) !== '*')) {
 				GDP.OGC.WFS.callWFS({
 					request : 'GetFeature',
 					typename : name,
 					propertyname : attribute,
-					cql_filter : GDP.util.mapUtils.createAOICQLFilter(attribute, values),
+					cql_filter : GDP.util.mapUtils.createCQLFilter(attribute, values),
 					maxFeatures : 5001
 				}, 'POST').done(function(data) {
 					// parse gml ids from result. I have to have two selectors, one with the namespace and one without.
@@ -285,7 +274,7 @@ var GDP = GDP || {};
 
 
 			}
-			else if (this.needsAoiAttributeValues() && (!(this.get('aoiAttribute')) || !(this.get('aoiAttributeValues')))) {
+			else if (!(this.get('aoiAttribute')) || !(this.get('aoiAttributeValues'))) {
 				result.push('Select a feature within the area of interest.');
 			}
 			return result;
