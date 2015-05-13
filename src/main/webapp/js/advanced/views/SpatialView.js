@@ -208,6 +208,10 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var attribute = self.model.get('aoiAttribute');
 			var values = self.model.get('aoiAttributeValues');
 
+			var needsAoiAttributeValues = this.model.needsAoiAttributeValues();
+			this._setVisibility($('#aoi-attribute-div'), needsAoiAttributeValues);
+			this._setVisibility($('#aoi-attribute-values-div'), needsAoiAttributeValues);
+
 			var getDeferreds = [];
 			getDeferreds.push(this.getAvailableFeatures());
 			getDeferreds.push(this._updateAttributes(name));
@@ -406,7 +410,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.attributeSelectMenuView.$el.val(null);
 			this.attributeSelectMenuView.updateMenuOptions([]);
 
-			if ((name) && (this.model.needsAoiAttributeValues())) {
+			if (name) {
 				var getDescribeFeature = GDP.OGC.WFS.callWFS(
 					{
 						request : 'DescribeFeatureType',
@@ -518,11 +522,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var $inputs = $el.find(':input');
 			if (isVisible) {
 				$el.show();
-				$inputs.removeProp('disabled')
+				$inputs.attr('required', 'required');
 			}
 			else {
 				$el.hide();
-				$inputs.prop('disabled', true);
+				$inputs.removeAttr('required');
 			}
 		}
 	});
