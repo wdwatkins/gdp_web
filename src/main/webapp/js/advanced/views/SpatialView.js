@@ -19,13 +19,16 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 	"use strict";
 	GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
 
+		_DRAW_FEATURE_NS : 'draw',
+		_DRAW_FEATURE_ATTRIBUTE : 'ID',
+
 		events : {
 			'change #select-aoi' : 'changeName',
 			'change #select-attribute' : 'changeAttribute',
 			'change #select-values' : 'changeValues',
 			'click #draw-polygon-btn' : 'toggleDrawControl',
 			'click #draw-submit-btn' : 'saveDrawnPolygons',
-			'click #draw-clear-btn' : 'clearDrawnPolygons',
+			'click #draw-clear-btn' : 'clearDrawnPolygons'
 		},
 
 		render : function() {
@@ -78,137 +81,15 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				el : '#messages-div'
 			});
 
-			// Set up file uploader
-			var params = {
-				maxfilesize : 167772160,
-				'response.encoding' : 'xml',
-				'filename.param' : 'qqfile',
-				'use.crs.failover' : 'true',
-				'projection.policy' : 'reproject'
-			};
-
-			$('#upload-shapefile-input').fileupload({
-				url : 'uploadhandler?' +  $.param(params),
-				type: 'POST',
-				dataType: 'xml',
-				send : function(e, data) {
-					data.url = data.url + '&qqfile=' + data.files[0].name;
-					$('#upload-indicator').show();
-				},
-				done : function(e, data) {
-					$('#upload-indicator').hide();
-
-					var $resp = $(data.result);
-					// Determine if the response indicated an error
-					var success = $resp.find('success').first().text();
-					if (success === 'true') {
-						var warning = $resp.find('warning').first().text();
-						var layer = $resp.find('name').first().text();
-
-						if (warning) {
-							self.alertView.show('alert-warning', 'Upload succeeded with warning ' + warning);
-						}
-						else {
-							self.alertView.show('alert-success', 'Upload was successful.');
-						}
-
-						self.getAvailableFeatures().then(function() {
-							$('#select-aoi').val(layer);
-							self.model.set('aoiName', layer);
-						},
-						function() {
-							self.alertView('alert-error', 'Unable to read uploaded shapefile attributes.');
-						});
-
-					}
-					else {
-						var error = $resp.find('error').first().text();
-						var exception = $resp.find('exception').first().text();
-						self.alertView.show('alert-danger', 'File Upload error: ' + error + '. ' + exception);
-					}
-
-				},
-				fail : function(e, data) {
-					$('#upload-indicator').hide();
-					self.alertView.show('alert-error', 'Upload failed');
-				}
-			});
-
-			//Set up draw control by creating a feature layer with a save strategy.
-			this.saveStrategy = new OpenLayers.Strategy.Save();
-			this.saveStrategy.events.register('success', null, function() {
-				// Now need to add an attribute so that GDP can use this feature
-				var featureType = self.drawFeatureLayer.protocol.featureType;
-				var attribute = 'ID';
-				var value = 0;
-
-				var updateTransaction =
-					'<?xml version="1.0"?>' +
-					'<wfs:Transaction xmlns:ogc="http://www.opengis.net/ogc" ' +
-					'xmlns:wfs="http://www.opengis.net/wfs" ' +
-					'xmlns:gml="http://www.opengis.net/gml" ' +
-					'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-					'version="1.1.0" service="WFS" '+
-					'xsi:schemaLocation="http://www.opengis.net/wfs ../wfs/1.1.0/WFS.xsd">' +
-					'<wfs:Update typeName="' + featureType + '">' +
-					'<wfs:Property>' +
-					'<wfs:Name>' + attribute + '</wfs:Name>' +
-					'<wfs:Value>' + value + '</wfs:Value>'+
-					'</wfs:Property>'+
-					'</wfs:Update>'+
-					'</wfs:Transaction>';
-
-				$.ajax({
-					url: GDP.config.get('application').endpoints.geoserver + '/wfs',
-					type: 'POST',
-					contentType: 'application/xml',
-					data: updateTransaction,
-					success : function() {
-						self.toggleDrawControl();
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-						self.alertView.show('alert-danger', 'Could not update the drawn feature ' + featureType + ' with error ' + textStatus);
-					}
-				}).done(function() {
-					self.getAvailableFeatures().done(function() {
-						self.model.set('aoiName', featureType);
-						self.model.set('aoiAttribute', attribute);
-					});
-				});
-
-			});
-			this.saveStrategy.events.register('fail', null, function() {
-				self.alertView.show('alert-danger', 'Unable to save polygon');
-			});
-			this.drawFeatureLayer = new OpenLayers.Layer.Vector('Draw Polygon Layer', {
-				strategies: [new OpenLayers.Strategy.BBOX(), this.saveStrategy],
-				projection: new OpenLayers.Projection('EPSG:4326'),
-				protocol: new OpenLayers.Protocol.WFS({
-					version: '1.1.0',
-					srsName: 'EPSG:4326',
-					url: GDP.config.get('application').endpoints.geoserver + '/wfs',
-					featureNS :  'gov.usgs.cida.gdp.draw',
-					featureType : "dummy-" + new Date().getTime() + '', // this gets changed before submitting geometry
-					geometryName: 'the_geom'
-				})
-			});
-			this.map.addLayer(this.drawFeatureLayer);
-
-			this.drawFeatureControl = new OpenLayers.Control.DrawFeature(
-				this.drawFeatureLayer,
-				OpenLayers.Handler.Polygon,
-				{
-					multi : true
-				}
-			);
-		    this.map.addControl(this.drawFeatureControl);
+			this._createFileUploader($('#upload-shapefile-input'), $('#upload-indicator'));
+			this._createDrawPolygonControl();
 
 			// get features, attributes, and values
 			var name = self.model.get('aoiName');
 			var attribute = self.model.get('aoiAttribute');
 			var values = self.model.get('aoiAttributeValues');
 
-			var needsAoiAttributeValues = this.model.needsAoiAttributeValues();
+			var needsAoiAttributeValues = this._needsAoiAttributeValues();
 			this._setVisibility($('#aoi-attribute-div'), needsAoiAttributeValues);
 			this._setVisibility($('#aoi-attribute-values-div'), needsAoiAttributeValues);
 
@@ -234,7 +115,6 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		 *	Makes a WFS GetCapabilities call to determine what areas of interest are available and fills in the selection menu.
 		 * @ return {jquery.Deferred}. If resolved returns the data received. If rejected returns the error message.
 		 */
-
 		getAvailableFeatures : function() {
 			var getDeferred = GDP.OGC.WFS.callWFS({
 				request : 'GetCapabilities'
@@ -258,9 +138,14 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			return getDeferred;
 		},
 
+		/*
+		 * Updates the selected AOI menu and the AOI shown on the map. Determine if the AOI attribute
+		 * values need to be specified and update the DOM and model. Clears out any highlighted layer
+		 * @returns {undefined}
+		 */
 		updateSelectedAoiName : function() {
 			var name = this.model.get('aoiName');
-			var needsAoiAttributeValues = this.model.needsAoiAttributeValues();
+			var needsAoiAttributeValues = this._needsAoiAttributeValues();
 			var self = this;
 			$('#select-aoi').val(name);
 			self._updateAOILayer(name);
@@ -270,15 +155,21 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 			if (needsAoiAttributeValues) {
 				this._updateAttributes(name);
+				// This will clear out any highlighted layer
+				this._highlightFeatures(name, '', '');
 			}
 			else {
-				this.model.set('aoiAttribute', 'ID');
+				this.model.set('aoiAttribute', this._DRAW_FEATURE_ATTRIBUTE);
 			}
 
-			// This will clear out any highlighted layer
-			this._highlightFeatures(name, '', '');
+
 		},
 
+		/*
+		 * Updates the selected AOI attribute in the DOM, retrieves the values for the selected
+		 * attributes and updates the model's aoiAttributeValues with this array of values
+		 * @returns {undefined}
+		 */
 		updateSelectedAoiAttribute : function() {
 			var self = this;
 			var name = this.model.get('aoiName');
@@ -289,6 +180,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			});
 		},
 
+		/*
+		 * Updates the DOM to show the aoiAttributeValues in the model. Updates the highlight feature
+		 * layer to show the selected features in the area of interest.
+		 * @returns {undefined}
+		 */
 		updateSelectedAoiAttributeValues : function() {
 			var name = this.model.get('aoiName');
 			var attribute = this.model.get('aoiAttribute');
@@ -298,20 +194,39 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this._highlightFeatures(name, attribute, values);
 		},
 
+		/*
+		 * Updates the model attributes aoiExtent and aoiName with the value in ev
+		 * @param {Jquery.event} ev
+		 * @returns {undefined}
+		 */
 		changeName : function(ev) {
 			this.model.set('aoiExtent', GDP.util.mapUtils.transformWGS84ToMercator(GDP.OGC.WFS.getBoundsFromCache(ev.target.value)));
 			this.model.set('aoiName', ev.target.value);
 		},
 
+		/*
+		 * Updates the model's aoiAttributes withe value in ev
+		 * @param {Jquery.event} ev
+		 * @returns {undefined}
+		 */
 		changeAttribute : function(ev) {
 			this.model.set('aoiAttribute', ev.target.value);
 		},
 
+		/*
+		 * Updates the model's aoiAttributeValues array with the values in ev.
+		 * @param {Jquery.event} ev
+		 * @returns {undefined}
+		 */
 		changeValues : function(ev) {
 			var aoiAttributeValues = _.pluck(ev.target.selectedOptions, 'text');
 			this.model.set('aoiAttributeValues', aoiAttributeValues);
 		},
 
+		/*
+		 * Activate/Deactivate's the draw control
+		 * @returns {undefined}
+		 */
 		toggleDrawControl : function() {
 			var $toggle = $('#draw-polygon-btn');
 			var turnDrawOn = !$toggle.hasClass('active');
@@ -331,7 +246,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			}
 		},
 
-		saveDrawnPolygons : function(ev) {
+		/*
+		 * Saves the drawn polygon after verifying that all necessary information has been entered.
+		 * @returns {undefined}
+		 */
+		saveDrawnPolygons : function() {
 			var self = this;
 			var name = $('#polygon-name-input').val();
 			if (this.drawFeatureLayer.features.length === 0) {
@@ -373,13 +292,29 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 		},
 
-		clearDrawnPolygons : function(ev) {
+		/*
+		 * Remove any drawn features
+		 * @returns {undefined}
+		 */
+		clearDrawnPolygons : function() {
 			this.drawFeatureLayer.removeAllFeatures();
 		},
 
-		_updateAOILayer : function(name) {
-			var name = this.model.get('aoiName');
+		/*
+		 * Returns true when the user must specify attribute values to select features.
+		 * @returns {Boolean}
+		 */
+		_needsAoiAttributeValues : function() {
+			var namespace = this.model.get('aoiName').split(':')[0];
+			return (namespace !== this._DRAW_FEATURE_NS);
+		},
 
+		/*
+		 * Updates the AOI layer to show the layer, name, and sets the extent to the aoi's bounds.
+		 * @param {String} name
+		 * @returns {undefined}
+		 */
+		_updateAOILayer : function(name) {
 			if (name) {
 				if (this.aoiLayer) {
 					this.aoiLayer.mergeNewParams({
@@ -401,7 +336,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		/*
-		 * @return Deferred which is always resolved when the DescribeFeatureType request is done and the attributes have been updated.
+		 * Makes a service call to retrieve the attributes for feature name.
+		 * @return Deferred.promise which is always resolved when the DescribeFeatureType request is done and the attributes have been updated.
 		 */
 		_updateAttributes : function(name) {
 			var self = this;
@@ -442,7 +378,12 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		/*
-		 * @return jquery.Deferred which will be resolved when the values have been updated.
+		 * Makes a service call to retrieve the attribute values for feature name for attribute. Updates
+		 * the AOI attribute selection menu and selects all of the values.
+		 * @param {String} name
+		 * @param {String} attribute
+		 * @return jquery.Deferred.promise which will be resolved with {Array of Object} option values. If the service call
+		 * the deferred is resolved with an empty array.
 		 */
 		_updateValues : function(name, attribute) {
 			var self = this;
@@ -474,7 +415,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						return {
 							text: optionValue,
 							value: optionValue
-						}
+						};
 					});
 					self.attributeValuesSelectMenuView.updateMenuOptions(optionObjects);
 					self.attributeValuesSelectMenuView.$el.val(optionValues);
@@ -489,13 +430,21 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				deferred.resolve([]);
 			}
 
-			return deferred;
+			return deferred.promise();
 		},
 
+		/*
+		 * Highlights the selected features in the AOI  on the map. If no features are selected remove the
+		 * highlight layer from the map.
+		 * @param {String} name
+		 * @param {String} attribute
+		 * @param {String} values
+		 */
 		_highlightFeatures : function(name, attribute, values) {
+			var needsAoiAttributeValues = this._needsAoiAttributeValues();
 			if (name) {
-				if (!this.model.needsAoiAttributeValues() || ((attribute) && (values.length !== 0))) {
-					var filter = GDP.util.mapUtils.createAOICQLFilter(attribute, values);
+				if (!needsAoiAttributeValues || ((attribute) && (values.length !== 0))) {
+					var filter = needsAoiAttributeValues ? GDP.util.mapUtils.createAOICQLFilter(attribute, values) : '';
 					if (this.highlightLayer) {
 						this.highlightLayer.mergeNewParams({
 							layers : name,
@@ -518,6 +467,153 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			}
 		},
 
+		/*
+		 * Sets up
+		 * @param {Jquery element} $fileUploaderInput
+		 * @param {Jquery element} $uploadIndicator
+		 */
+		_createFileUploader : function($fileUploaderInput, $uploadIndicator) {
+			var self = this;
+			var params = {
+				maxfilesize : 167772160,
+				'response.encoding' : 'xml',
+				'filename.param' : 'qqfile',
+				'use.crs.failover' : 'true',
+				'projection.policy' : 'reproject'
+			};
+
+			$fileUploaderInput.fileupload({
+				url : 'uploadhandler?' +  $.param(params),
+				type: 'POST',
+				dataType: 'xml',
+				send : function(e, data) {
+					data.url = data.url + '&qqfile=' + data.files[0].name;
+					$uploadIndicator.show();
+				},
+				done : function(e, data) {
+					$uploadIndicator.hide();
+
+					var $resp = $(data.result);
+					// Determine if the response indicated an error
+					var success = $resp.find('success').first().text();
+					if (success === 'true') {
+						var warning = $resp.find('warning').first().text();
+						var layer = $resp.find('name').first().text();
+
+						if (warning) {
+							self.alertView.show('alert-warning', 'Upload succeeded with warning ' + warning);
+						}
+						else {
+							self.alertView.show('alert-success', 'Upload was successful.');
+						}
+
+						self.getAvailableFeatures().then(function() {
+							$('#select-aoi').val(layer);
+							self.model.set('aoiExtent', GDP.util.mapUtils.transformWGS84ToMercator(GDP.OGC.WFS.getBoundsFromCache(layer)));
+							self.model.set('aoiName', layer);
+						},
+						function() {
+							self.alertView('alert-danger', 'Unable to read uploaded shapefile attributes.');
+						});
+
+					}
+					else {
+						var error = $resp.find('error').first().text();
+						var exception = $resp.find('exception').first().text();
+						self.alertView.show('alert-danger', 'File Upload error: ' + error + '. ' + exception);
+					}
+
+				},
+				fail : function(e, data) {
+					$uploadIndicator.hide();
+					self.alertView.show('alert-danger', 'Upload failed');
+				}
+			});
+		},
+
+		/*
+		 * Create the draw control and draw feature layer and add to the map. set up the save strategy to update the saved
+		 * feature and to alert the user when the save is successful or if it has failed. If the save
+		 * is successful the model is updated so that the new feature is selected.
+		 */
+		_createDrawPolygonControl : function() {
+			var self = this;
+
+			this.saveStrategy = new OpenLayers.Strategy.Save();
+			this.saveStrategy.events.register('success', null, function() {
+				// Now need to add an attribute so that GDP can use this feature
+				var featureType = self._DRAW_FEATURE_NS + ':' + self.drawFeatureLayer.protocol.featureType;
+				var attribute = self._DRAW_FEATURE_ATTRIBUTE;
+				var value = 0;
+
+				var updateTransaction =
+					'<?xml version="1.0"?>' +
+					'<wfs:Transaction xmlns:ogc="http://www.opengis.net/ogc" ' +
+					'xmlns:wfs="http://www.opengis.net/wfs" ' +
+					'xmlns:gml="http://www.opengis.net/gml" ' +
+					'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+					'version="1.1.0" service="WFS" '+
+					'xsi:schemaLocation="http://www.opengis.net/wfs ../wfs/1.1.0/WFS.xsd">' +
+					'<wfs:Update typeName="' + featureType + '">' +
+					'<wfs:Property>' +
+					'<wfs:Name>' + attribute + '</wfs:Name>' +
+					'<wfs:Value>' + value + '</wfs:Value>'+
+					'</wfs:Property>'+
+					'</wfs:Update>'+
+					'</wfs:Transaction>';
+
+				$.ajax({
+					url: GDP.config.get('application').endpoints.geoserver + '/wfs',
+					type: 'POST',
+					contentType: 'application/xml',
+					data: updateTransaction,
+					success : function() {
+						self.toggleDrawControl();
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						self.alertView.show('alert-danger', 'Could not update the drawn feature ' + featureType + ' with error ' + textStatus);
+					}
+				}).done(function() {
+					self.getAvailableFeatures().done(function() {
+						self.model.set('aoiExtent', GDP.util.mapUtils.transformWGS84ToMercator(GDP.OGC.WFS.getBoundsFromCache(featureType)));
+						self.model.set('aoiName', featureType);
+						self.model.set('aoiAttribute', attribute);
+					});
+				});
+
+			});
+			this.saveStrategy.events.register('fail', null, function() {
+				self.alertView.show('alert-danger', 'Unable to save polygon');
+			});
+			this.drawFeatureLayer = new OpenLayers.Layer.Vector('Draw Polygon Layer', {
+				strategies: [new OpenLayers.Strategy.BBOX(), this.saveStrategy],
+				projection: new OpenLayers.Projection('EPSG:4326'),
+				protocol: new OpenLayers.Protocol.WFS({
+					version: '1.1.0',
+					srsName: 'EPSG:4326',
+					url: GDP.config.get('application').endpoints.geoserver + '/wfs',
+					featureNS :  'gov.usgs.cida.gdp.' + this._DRAW_FEATURE_NS,
+					featureType : "dummy-" + new Date().getTime() + '', // this gets changed before submitting geometry
+					geometryName: 'the_geom'
+				})
+			});
+			this.map.addLayer(this.drawFeatureLayer);
+
+			this.drawFeatureControl = new OpenLayers.Control.DrawFeature(
+				this.drawFeatureLayer,
+				OpenLayers.Handler.Polygon,
+				{
+					multi : true
+				}
+			);
+		    this.map.addControl(this.drawFeatureControl);
+		},
+
+		/*
+		 * Set the visiblity of $el and remove/add required attribute from any inputs.
+		 * @param {Jquery.element} $el
+		 * @param {Boolean} isVisible
+		 */
 		_setVisibility : function($el, isVisible) {
 			var $inputs = $el.find(':input');
 			if (isVisible) {
