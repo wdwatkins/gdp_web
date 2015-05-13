@@ -33,6 +33,8 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 		wfsDeferred = $.Deferred();
 
 		spyOn(OpenLayers.Layer, 'WMS');
+//		spyOn(GDP.ADVANCED.view.SpatialView.prototype, '_createDrawPolygonControl');
+
 		templateSpy = jasmine.createSpy('templateSpy');
 		loggerSpy = jasmine.createSpyObj('logger', ['error']);
 		callWFSSpy = jasmine.createSpy('callWFSSpy').andReturn(wfsDeferred);
@@ -114,7 +116,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 	it('Expects a failed fileupload to show an alert with the error message', function() {
 		var data = {
 			result : $.parseXML('<Response><error>Process failed during execution Target layer upload:test_layer already exists in the catalog</error><success>false</success></Response>')
-		}
+		};
 		var getDeferred = $.Deferred();
 		spyOn(testView, 'getAvailableFeatures').andReturn(getDeferred);
 		spyOn(testView.alertView, 'show');
@@ -132,6 +134,12 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 		var callWfsArgs = callWFSSpy.mostRecentCall.args;
 		expect(callWfsArgs[0].request).toEqual('DescribeFeatureType');
 		expect(callWfsArgs[0].typename).toEqual('featureName');
+	});
+
+	it('Expects a change to aoiName which is using the draw namepsace to set the aoiAttribute', function() {
+		wfsDeferred.resolve();
+		testView.model.set('aoiName', testView._DRAW_FEATURE_NS +':featureName');
+		expect(testView.model.get('aoiAttribute')).toEqual(testView._DRAW_FEATURE_ATTRIBUTE);
 	});
 
 	//TODO: Add tests to build DOM correctly from DescribeFeaturetype response when aoiName is changed

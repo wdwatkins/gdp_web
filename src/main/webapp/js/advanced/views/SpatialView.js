@@ -161,8 +161,6 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			else {
 				this.model.set('aoiAttribute', this._DRAW_FEATURE_ATTRIBUTE);
 			}
-
-
 		},
 
 		/*
