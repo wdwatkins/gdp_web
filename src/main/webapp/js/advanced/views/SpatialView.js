@@ -443,10 +443,9 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		 * @param {String} values
 		 */
 		_highlightFeatures : function(name, attribute, values) {
-			var needsAoiAttributeValues = this._needsAoiAttributeValues();
 			if (name) {
-				if (!needsAoiAttributeValues || ((attribute) && (values.length !== 0))) {
-					var filter = needsAoiAttributeValues ? GDP.util.mapUtils.createCQLFilter(attribute, values) : '';
+				if ((attribute) && (values.length !== 0)) {
+					var filter = GDP.util.mapUtils.createCQLFilter(attribute, values);
 					if (this.highlightLayer) {
 						this.highlightLayer.mergeNewParams({
 							layers : name,

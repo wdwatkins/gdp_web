@@ -76,14 +76,14 @@ GDP.OGC.WPS = function (logger) {
 	function getWpsErrorMessage(responseText) {
 		var response = $(responseText);
 
-		var success = GDP.util.findXMLNamespaceTags(response, 'ows:ExecuteResponse'),
+		var success = GDP.util.findXMLNamespaceTags(response, 'wps:ExecuteResponse'),
 				error,
 				message;
 
 		if (success.length > 0) {
 			return false;
 		} else {
-			error = GDP.util.findXMLNamespaceTags(response, 'ows:Exception');
+			error = GDP.util.findXMLNamespaceTags(response, 'wps:Exception');
 
 			if (error.length > 0) {
 				$exception = GDP.util.findXMLNamespaceTags(response, 'ows:Exception[exceptionCode="JAVA_RootCause"]');
