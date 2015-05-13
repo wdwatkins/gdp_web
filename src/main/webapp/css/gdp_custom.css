@@ -61,3 +61,8 @@
 #job-results-div {
 	display: none;
 }
+#spatial-selection-text-div {
+	font-size : large;
+	font-weight : bold;
+	margin-top : 5px;
+}
