@@ -43,6 +43,14 @@ var GDP = GDP || {};
 		},
 
 		/*
+		 * @returns {Boolean}
+		 */
+		needsAoiAttributeValues : function() {
+			var namespace = this.get('aoiName').split(':')[0];
+			return namespace !== 'draw';
+		},
+
+		/*
 		 * Returns the process model for the model's algorithmId. If nothing matches, will return undefined
 		 * @returns {GDP.ADVANCED.model.Process}
 		 */
@@ -138,12 +146,14 @@ var GDP = GDP || {};
 				return (new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))).toISOString();
 			};
 
+			var aoiAttribute = this.get('aoiAttribute');
+
 			var deferred = $.Deferred();
 
 			var getDataSourceUrl = this.getWCSDataSourceUrl();
 
 			var result = {
-				FEATURE_ATTRIBUTE_NAME : [this.get('aoiAttribute')],
+				FEATURE_ATTRIBUTE_NAME : [aoiAttribute ],
 				DATASET_ID : _.map(this.getSelectedDataSourceVariables(), function(model) {
 					return model.get('value');
 				}),
@@ -179,7 +189,10 @@ var GDP = GDP || {};
 			var values = this.get('aoiAttributeValues');
 
 			var deferred = $.Deferred();
-			if ((name) && (attribute) && (values.length > 0)) {
+			if (!this.needsAoiAttributeValues()) {
+				deferred.resolve([]);
+			}
+			else if ((name) && (attribute) && (values.length > 0)) {
 				GDP.OGC.WFS.callWFS({
 					request : 'GetFeature',
 					typename : name,
@@ -244,11 +257,11 @@ var GDP = GDP || {};
                   'xsi:schemaLocation="http://www.opengis.net/wfs ../wfs/1.1.0/WFS.xsd"> ' +
 				  '<wfs:Query typeName="' + name + '" ' + ((srs) ? 'srsName="' + srs + '"' : '') + '> ' +
 				  '<wfs:PropertyName>' + (geomProperty ? geomProperty : 'the_geom') + '</wfs:PropertyName> ' +
-                 '<wfs:PropertyName>' + attribute + '</wfs:PropertyName>';
+                 '<wfs:PropertyName>' + (attribute ? attribute :  'ID') + '</wfs:PropertyName>';
 
 			var deferred = $.Deferred();
 			this.getSelectedFeatureIds().done(function(ids) {
-				if (ids[0] !== '*') {
+				if (ids.length > 0) {
 					result += '<ogc:Filter>';
 					_.each(ids, function(id) {
 						result += '<ogc:GmlObjectId gml:id="' + id + '"/>';
@@ -272,7 +285,7 @@ var GDP = GDP || {};
 
 
 			}
-			else if (!(this.get('aoiAttribute')) || !(this.get('aoiAttributeValues'))) {
+			else if (this.needsAoiAttributeValues() && (!(this.get('aoiAttribute')) || !(this.get('aoiAttributeValues')))) {
 				result.push('Select a feature within the area of interest.');
 			}
 			return result;

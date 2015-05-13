@@ -36,7 +36,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			if (name) {
 				this.map.addLayer(GDP.util.mapUtils.createAOILayer(name));
 
-				if ((attribute) && (values.length > 0)) {
+				if (!this.model.needsAoiAttributeValues() || ((attribute) && (values.length > 0))) {
 					filter = GDP.util.mapUtils.createAOICQLFilter(attribute, values);
 					this.map.addLayer(GDP.util.mapUtils.createAOIFeaturesLayer(name, filter));
 				}

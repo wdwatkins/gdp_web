@@ -89,10 +89,15 @@ GDP.util.mapUtils = (function() {
 	 * @return String that can be used as a CQL filter
 	 */
 	that.createAOICQLFilter = function(attribute, values) {
-		var escValues = _.map(values, function(v) {
-			return '\'' + v + '\'';
-		});
-		return attribute + ' IN (' + escValues.join(',') + ')';
+		if ((attribute) && (values.length > 0)) {
+			var escValues = _.map(values, function(v) {
+				return '\'' + v + '\'';
+			});
+			return attribute + ' IN (' + escValues.join(',') + ')';
+		}
+		else {
+			return '';
+		}
 	};
 
 	/*
@@ -121,9 +126,11 @@ GDP.util.mapUtils = (function() {
 		};
 
 		_.extend(layerParams, params, {
-			layers : name,
-			cql_filter : filter
+			layers : name
 		});
+		if (filter) {
+			layerParams.cql_filter = filter;
+		}
 		_.extend(layerOptions, options);
 
 		return new OpenLayers.Layer.WMS(

@@ -6,6 +6,7 @@
 /*global GDP.util.SelectMenuView*/
 /*global GDP.util.mapUtils*/
 /*global GDP.OGC.WFS*/
+/*global GDP.config*/
 
 var GDP = GDP || {};
 
@@ -21,7 +22,10 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		events : {
 			'change #select-aoi' : 'changeName',
 			'change #select-attribute' : 'changeAttribute',
-			'change #select-values' : 'changeValues'
+			'change #select-values' : 'changeValues',
+			'click #draw-polygon-btn' : 'toggleDrawControl',
+			'click #draw-submit-btn' : 'saveDrawnPolygons',
+			'click #draw-clear-btn' : 'clearDrawnPolygons',
 		},
 
 		render : function() {
@@ -48,6 +52,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 		initialize : function(options) {
 			var self = this;
+			this.wps = options.wps;
 			var baseLayers = [GDP.util.mapUtils.createWorldStreetMapLayer()];
 			var controls = [
 				new OpenLayers.Control.Navigation(),
@@ -70,7 +75,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
 			this.alertView = new GDP.util.AlertView({
-				el : '#upload-messages-div'
+				el : '#messages-div'
 			});
 
 			// Set up file uploader
@@ -129,6 +134,75 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				}
 			});
 
+			//Set up draw control by creating a feature layer with a save strategy.
+			this.saveStrategy = new OpenLayers.Strategy.Save();
+			this.saveStrategy.events.register('success', null, function() {
+				// Now need to add an attribute so that GDP can use this feature
+				var featureType = self.drawFeatureLayer.protocol.featureType;
+				var attribute = 'ID';
+				var value = 0;
+
+				var updateTransaction =
+					'<?xml version="1.0"?>' +
+					'<wfs:Transaction xmlns:ogc="http://www.opengis.net/ogc" ' +
+					'xmlns:wfs="http://www.opengis.net/wfs" ' +
+					'xmlns:gml="http://www.opengis.net/gml" ' +
+					'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+					'version="1.1.0" service="WFS" '+
+					'xsi:schemaLocation="http://www.opengis.net/wfs ../wfs/1.1.0/WFS.xsd">' +
+					'<wfs:Update typeName="' + featureType + '">' +
+					'<wfs:Property>' +
+					'<wfs:Name>' + attribute + '</wfs:Name>' +
+					'<wfs:Value>' + value + '</wfs:Value>'+
+					'</wfs:Property>'+
+					'</wfs:Update>'+
+					'</wfs:Transaction>';
+
+				$.ajax({
+					url: GDP.config.get('application').endpoints.geoserver + '/wfs',
+					type: 'POST',
+					contentType: 'application/xml',
+					data: updateTransaction,
+					success : function() {
+						self.toggleDrawControl();
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						self.alertView.show('alert-danger', 'Could not update the drawn feature ' + featureType + ' with error ' + textStatus);
+					}
+				}).done(function() {
+					self.getAvailableFeatures().done(function() {
+						self.model.set('aoiName', featureType);
+						self.model.set('aoiAttribute', attribute);
+					});
+				});
+
+			});
+			this.saveStrategy.events.register('fail', null, function() {
+				self.alertView.show('alert-danger', 'Unable to save polygon');
+			});
+			this.drawFeatureLayer = new OpenLayers.Layer.Vector('Draw Polygon Layer', {
+				strategies: [new OpenLayers.Strategy.BBOX(), this.saveStrategy],
+				projection: new OpenLayers.Projection('EPSG:4326'),
+				protocol: new OpenLayers.Protocol.WFS({
+					version: '1.1.0',
+					srsName: 'EPSG:4326',
+					url: GDP.config.get('application').endpoints.geoserver + '/wfs',
+					featureNS :  'gov.usgs.cida.gdp.draw',
+					featureType : "dummy-" + new Date().getTime() + '', // this gets changed before submitting geometry
+					geometryName: 'the_geom'
+				})
+			});
+			this.map.addLayer(this.drawFeatureLayer);
+
+			this.drawFeatureControl = new OpenLayers.Control.DrawFeature(
+				this.drawFeatureLayer,
+				OpenLayers.Handler.Polygon,
+				{
+					multi : true
+				}
+			);
+		    this.map.addControl(this.drawFeatureControl);
+
 			// get features, attributes, and values
 			var name = self.model.get('aoiName');
 			var attribute = self.model.get('aoiAttribute');
@@ -182,12 +256,23 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 		updateSelectedAoiName : function() {
 			var name = this.model.get('aoiName');
+			var needsAoiAttributeValues = this.model.needsAoiAttributeValues();
 			var self = this;
 			$('#select-aoi').val(name);
 			self._updateAOILayer(name);
-			// Clear out
-			this.model.set('aoiAttribute');
-			this._updateAttributes(name);
+
+			this._setVisibility($('#aoi-attribute-div'), needsAoiAttributeValues);
+			this._setVisibility($('#aoi-attribute-values-div'), needsAoiAttributeValues);
+
+			if (needsAoiAttributeValues) {
+				this._updateAttributes(name);
+			}
+			else {
+				this.model.set('aoiAttribute', 'ID');
+			}
+
+			// This will clear out any highlighted layer
+			this._highlightFeatures(name, '', '');
 		},
 
 		updateSelectedAoiAttribute : function() {
@@ -223,6 +308,71 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.model.set('aoiAttributeValues', aoiAttributeValues);
 		},
 
+		toggleDrawControl : function() {
+			var $toggle = $('#draw-polygon-btn');
+			var turnDrawOn = !$toggle.hasClass('active');
+
+			this.drawFeatureLayer.setVisibility(turnDrawOn);
+			if (turnDrawOn) {
+				this.drawFeatureControl.activate();
+				$('#draw-polygon-div').show();
+				$toggle.addClass('active');
+			}
+			else {
+				this.drawFeatureLayer.removeAllFeatures();
+				this.drawFeatureControl.deactivate();
+
+				$('#draw-polygon-div').hide();
+				$toggle.removeClass('active');
+			}
+		},
+
+		saveDrawnPolygons : function(ev) {
+			var self = this;
+			var name = $('#polygon-name-input').val();
+			if (this.drawFeatureLayer.features.length === 0) {
+				this.alertView.show('alert-warning', 'Must draw at least one polygon.');
+				return;
+			}
+
+			if (!name) {
+				this.alertView.show('alert-warning', 'Please specify a name for the feature drawn');
+				$('#polygon-name-input').focus();
+				return;
+			}
+
+			if (/\W/.test(name) || /^[^A-Za-z]/.test(name)) {
+				this.alertView.show('alert-warning', 'Name must begin with a letter, and may only contain letters, numbers, and underscores.');
+				$('#polygon-name-input').focus();
+				return;
+			}
+
+			//Update the feature with the name entered
+			this.drawFeatureLayer.protocol.setFeatureType(name);
+
+			// Create the a datastore for the new shapefile
+			var wpsInputs = {
+				name : [name]
+			};
+			var wpsOutputs = ['layer-name'];
+			this.wps.sendWpsExecuteRequest(
+				GDP.config.get('application').endpoints.utilityWps + '/WebProcessingService',
+				'gov.usgs.cida.gdp.wps.algorithm.filemanagement.CreateNewShapefileDataStore',
+				wpsInputs,
+				wpsOutputs,
+				false
+			).done(function() {
+				self.saveStrategy.save();
+			}).fail(function(errors) {
+				self.alertView.show('alert-danger', 'Could not save the drawn polygon with error: ' + _.last(errors));
+			});
+
+		},
+
+		clearDrawnPolygons : function(ev) {
+			this.drawFeatureLayer.removeAllFeatures();
+		},
+
 		_updateAOILayer : function(name) {
 			var name = this.model.get('aoiName');
 
@@ -247,7 +397,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		/*
-		 * @return Deferred which is resolved when the DescribeFeatureType request is done and the attributes have been updated.
+		 * @return Deferred which is always resolved when the DescribeFeatureType request is done and the attributes have been updated.
 		 */
 		_updateAttributes : function(name) {
 			var self = this;
@@ -256,7 +406,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.attributeSelectMenuView.$el.val(null);
 			this.attributeSelectMenuView.updateMenuOptions([]);
 
-			if (name) {
+			if ((name) && (this.model.needsAoiAttributeValues())) {
 				var getDescribeFeature = GDP.OGC.WFS.callWFS(
 					{
 						request : 'DescribeFeatureType',
@@ -284,7 +434,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				deferred.resolve();
 			}
 
-			return deferred;
+			return deferred.promise();
 		},
 
 		/*
@@ -339,22 +489,40 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		_highlightFeatures : function(name, attribute, values) {
-			if ((name) && (attribute) && (values.length !== 0)) {
-				var filter = GDP.util.mapUtils.createAOICQLFilter(attribute, values);
-				if (this.highlightLayer) {
-					this.highlightLayer.mergeNewParams({
-						layers : name,
-						cql_filter : filter
-					});
-				}
-				else {
-					this.highlightLayer = GDP.util.mapUtils.createAOIFeaturesLayer(name, filter);
-					this.map.addLayer(this.highlightLayer);
+			if (name) {
+				if (!this.model.needsAoiAttributeValues() || ((attribute) && (values.length !== 0))) {
+					var filter = GDP.util.mapUtils.createAOICQLFilter(attribute, values);
+					if (this.highlightLayer) {
+						this.highlightLayer.mergeNewParams({
+							layers : name,
+							cql_filter : filter
+						});
+						if (!filter) {
+							delete this.highlightLayer.params.CQL_FILTER;
+						}
+					}
+					else {
+						this.highlightLayer = GDP.util.mapUtils.createAOIFeaturesLayer(name, filter);
+						this.map.addLayer(this.highlightLayer);
+					}
+					return;
 				}
 			}
-			else if (this.highlightLayer) {
+			if (this.highlightLayer) {
 				this.map.removeLayer(this.highlightLayer);
 				this.highlightLayer = null;
+			}
+		},
+
+		_setVisibility : function($el, isVisible) {
+			var $inputs = $el.find(':input');
+			if (isVisible) {
+				$el.show();
+				$inputs.removeProp('disabled')
+			}
+			else {
+				$el.hide();
+				$inputs.prop('disabled', true);
 			}
 		}
 	});
