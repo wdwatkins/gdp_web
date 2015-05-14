@@ -50,6 +50,7 @@ var GDP = GDP || {};
 			aoiExtent : null, // will be the extent of the layer aoiName
 			aoiAttribute : '',
 			aoiAttributeValues : [],
+			aoiAttributeFeatureIds : [], // Array of objects with {String} value property and {Array of String} ids property associated with that value.
 
 			//ows identifier for the algorithm. Ex: gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm
 			processes: new GDP.ADVANCED.collection.Processes(),
@@ -191,37 +192,20 @@ var GDP = GDP || {};
 		},
 
 		/*
-		 * Returns a promise which resolves with an array containing the feature ids that have been selected.
-		 * @returns {jquery.Deferred.promise}.
+		 * Returns an array containing the feature ids that have been selected.
+		 * @returns {Array of strings}.
 		 */
 		getSelectedFeatureIds : function() {
-			var name = this.get('aoiName');
-			var attribute = this.get('aoiAttribute');
+			var result = [];
+			var featureIds = this.get('aoiAttributeFeatureIds');
 			var values = this.get('aoiAttributeValues');
-
-			var deferred = $.Deferred();
-			if ((name) && (attribute) && (_.first(values) !== '*')) {
-				GDP.OGC.WFS.callWFS({
-					request : 'GetFeature',
-					typename : name,
-					propertyname : attribute,
-					cql_filter : GDP.util.mapUtils.createCQLFilter(attribute, values),
-					maxFeatures : 5001
-				}, 'POST').done(function(data) {
-					var result = [];
-					GDP.util.findXMLNamespaceTags($(data), name).each(function() {
-						result.push($(this).attr('gml:id'));
-					});
-					deferred.resolve(result);
-				}).fail(function() {
-					GDP.logger.error('Get Selected features failed');
-					deferred.resolve([]);
-				});
-			}
-			else {
-				deferred.resolve([]);
-			}
-			return deferred.promise();
+			var selectedFeatures = _.filter(featureIds, function(e) {
+				return _.contains(values, e.value);
+			});
+			_.each(selectedFeatures, function(e) {
+				result = result.concat(e.ids);
+			});
+			return result;
 		},
 
 		/*
@@ -246,23 +230,17 @@ var GDP = GDP || {};
 		/*
 		 * @param {String} geomProperty - Defaults to 'the_geom'
 		 * @param {String} srs - Defaults to not specifying the srsName attribute.
-		 * @returns {$.Deferred.promise}. This promise will be resolved with the xml string document as the data.
+		 * @returns {String} -the xml string document as the data.
 		 */
 		getWPSXMLInputs : function(geomProperty, srs) {
-			var self = this;
-			var deferred = $.Deferred();
-
-			this.getSelectedFeatureIds().done(function(ids) {
-				var context = {
-					name : self.get('aoiName'),
-					attribute : self.get('aoiAttribute'),
-					srs : (srs) ? srs : '',
-					geomProperty : (geomProperty) ? geomProperty : '',
-					featureIds : ids
-				};
-				deferred.resolve(featureTemplate(context));
-			});
-			return deferred.promise();
+			var context = {
+				name : this.get('aoiName'),
+				attribute : this.get('aoiAttribute'),
+				srs : (srs) ? srs : '',
+				geomProperty : (geomProperty) ? geomProperty : '',
+				featureIds : this.getSelectedFeatureIds()
+			};
+			return featureTemplate(context);
 		},
 
 		/*

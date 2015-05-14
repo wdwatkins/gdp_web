@@ -400,6 +400,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.attributeValuesSelectMenuView.updateMenuOptions([]);
 
 			if ((name) && (attribute)) {
+				this.model.set('aoiAttributeFeatureIds', []);
 				getFeatureDeferred = GDP.OGC.WFS.callWFS(
 					{
 						request : 'GetFeature',
@@ -409,21 +410,35 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					}
 				);
 				getFeatureDeferred.done(function(data) {
-					// Don't repeat values in the list
-					var optionValues = _.uniq(
-						_.map(GDP.util.findXMLNamespaceTags($(data), ns_attribute + ':' + attribute), function(datum) {
-							return $(datum).text();
-						})
-					);
-
-					var optionObjects = _.map(optionValues, function(optionValue){
+					var aoiAttributeFeatureIds = [];
+					GDP.util.findXMLNamespaceTags($(data), name).each(function(){
+						var value = GDP.util.findXMLNamespaceTags($(this), ns_attribute + ':' + attribute).text();
+						var id = $(this).attr('gml:id');
+						var index = _.findIndex(aoiAttributeFeatureIds, function(e) {
+							return e.value === value;
+						});
+						// Don't repeat values in the list
+						if (index > -1) {
+							aoiAttributeFeatureIds[index].ids.push(id);
+						}
+						else {
+							aoiAttributeFeatureIds.push({
+								value : value,
+								ids : [id]
+							});
+						}
+					});
+					var optionObjects = _.map(aoiAttributeFeatureIds, function(e){
 						return {
-							text: optionValue,
-							value: optionValue
+							text: e.value,
+							value: e.value
 						};
 					});
+					var optionValues = _.pluck(optionObjects, 'value');
 					self.attributeValuesSelectMenuView.updateMenuOptions(optionObjects);
 					self.attributeValuesSelectMenuView.$el.val(optionValues);
+
+					self.model.set('aoiAttributeFeatureIds', aoiAttributeFeatureIds);
 
 					deferred.resolve(optionValues);
 				}).fail(function(message) {

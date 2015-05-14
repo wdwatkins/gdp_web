@@ -76,7 +76,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 			var self = this;
 
-			var getWPSXMLInputs = this.model.getWPSXMLInputs();
+			var xmlInputs = this.model.getWPSXMLInputs();
 			var getWPSStringInputs = this.model.getWPSStringInputs();
 
 			var submitDone = $.Deferred();
@@ -86,7 +86,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.setEditable(false);
 			$('#submit-job-btn').prop('disabled', true);
 
-			$.when(getWPSXMLInputs, getWPSStringInputs).done(function(xmlInputs, wpsStringInputs) {
+			$.when(getWPSStringInputs).done(function(wpsStringInputs) {
 				self.alertView.show('alert-info', 'Process status: started');
 
 				executePromise = self.wps.sendWpsExecuteRequest(
