@@ -192,19 +192,24 @@ var GDP = GDP || {};
 		},
 
 		/*
-		 * Returns an array containing the feature ids that have been selected.
+		 * Returns an array containing the feature ids that have been selected. If the first element of aoiAttributeValues is '*',
+		 * then return an empty array
 		 * @returns {Array of strings}.
 		 */
 		getSelectedFeatureIds : function() {
 			var result = [];
 			var featureIds = this.get('aoiAttributeFeatureIds');
 			var values = this.get('aoiAttributeValues');
-			var selectedFeatures = _.filter(featureIds, function(e) {
-				return _.contains(values, e.value);
-			});
-			_.each(selectedFeatures, function(e) {
-				result = result.concat(e.ids);
-			});
+			var selectedFeatures;
+			
+			if (values.length > 0 && values[0] !== '*') {
+				selectedFeatures = _.filter(featureIds, function(e) {
+					return _.contains(values, e.value);
+				});
+				_.each(selectedFeatures, function(e) {
+					result = result.concat(e.ids);
+				});
+			}
 			return result;
 		},
 
