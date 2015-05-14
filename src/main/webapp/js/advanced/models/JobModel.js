@@ -1,6 +1,7 @@
 /*jslint browser: true*/
 /*global Backbone*/
 /*global _*/
+/*global Handlebars*/
 var GDP = GDP || {};
 (function(){
 	"use strict";
@@ -8,6 +9,24 @@ var GDP = GDP || {};
     GDP.ADVANCED = GDP.ADVANCED || {};
 
     GDP.ADVANCED.model = GDP.ADVANCED.model || {};
+
+	var GET_FEATURE_XML_TEMPLATE = '<wfs:GetFeature ' +
+                  'service="WFS" ' +
+                  'version="1.1.0" ' +
+                  'outputFormat="text/xml; subtype=gml/3.1.1" ' +
+                  'xmlns:wfs="http://www.opengis.net/wfs" ' +
+                  'xmlns:ogc="http://www.opengis.net/ogc" ' +
+                  'xmlns:gml="http://www.opengis.net/gml" ' +
+                  'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+                  'xsi:schemaLocation="http://www.opengis.net/wfs ../wfs/1.1.0/WFS.xsd"> ' +
+				  '<wfs:Query typeName="{{name}}" {{#if src}} srsName"{{src}}"{{/if}}> ' +
+				  '<wfs:PropertyName>{{#if geomProperty }}{{geomProperty}}{{else}}the_geom{{/if}}</wfs:PropertyName> ' +
+                  '<wfs:PropertyName>{{#if attribute }}{{attribute}}{{else}}ID{{/if}}</wfs:PropertyName>' +
+				  '{{#if featureIds}}<ogc:Filter>' +
+				  '{{#each featureIds}}<ogc:GmlObjectId gml:id="{{this}}"/>{{/each}}' +
+				  '</ogc:Filter>{{/if}}' +
+				  '</wfs:Query></wfs:GetFeature>';
+	var featureTemplate = Handlebars.compile(GET_FEATURE_XML_TEMPLATE);
 
     var Job = Backbone.Model.extend({
 		defaults: {
@@ -230,33 +249,18 @@ var GDP = GDP || {};
 		 * @returns {$.Deferred.promise}. This promise will be resolved with the xml string document as the data.
 		 */
 		getWPSXMLInputs : function(geomProperty, srs) {
-			var name = this.get('aoiName');
-			var attribute = this.get('aoiAttribute');
-			var result = '<wfs:GetFeature ' +
-                  'service="WFS" ' +
-                  'version="1.1.0" ' +
-                  'outputFormat="text/xml; subtype=gml/3.1.1" ' +
-                  'xmlns:wfs="http://www.opengis.net/wfs" ' +
-                  'xmlns:ogc="http://www.opengis.net/ogc" ' +
-                  'xmlns:gml="http://www.opengis.net/gml" ' +
-                  'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-                  'xsi:schemaLocation="http://www.opengis.net/wfs ../wfs/1.1.0/WFS.xsd"> ' +
-				  '<wfs:Query typeName="' + name + '" ' + ((srs) ? 'srsName="' + srs + '"' : '') + '> ' +
-				  '<wfs:PropertyName>' + (geomProperty ? geomProperty : 'the_geom') + '</wfs:PropertyName> ' +
-                 '<wfs:PropertyName>' + (attribute ? attribute :  'ID') + '</wfs:PropertyName>';
-
+			var self = this;
 			var deferred = $.Deferred();
-			this.getSelectedFeatureIds().done(function(ids) {
-				if (ids.length > 0) {
-					result += '<ogc:Filter>';
-					_.each(ids, function(id) {
-						result += '<ogc:GmlObjectId gml:id="' + id + '"/>';
-					});
-					result += '</ogc:Filter>';
-				}
 
-				result += '</wfs:Query> </wfs:GetFeature>';
-				deferred.resolve(result);
+			this.getSelectedFeatureIds().done(function(ids) {
+				var context = {
+					name : self.get('aoiName'),
+					attribute : self.get('aoiAttribute'),
+					srs : (srs) ? srs : '',
+					geomProperty : (geomProperty) ? geomProperty : '',
+					featureIds : ids
+				};
+				deferred.resolve(featureTemplate(context));
 			});
 			return deferred.promise();
 		},
