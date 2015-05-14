@@ -90,8 +90,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var values = self.model.get('aoiAttributeValues');
 
 			var needsAoiAttributeValues = this._needsAoiAttributeValues();
-			this._setVisibility($('#aoi-attribute-div'), needsAoiAttributeValues);
-			this._setVisibility($('#aoi-attribute-values-div'), needsAoiAttributeValues);
+			this._setVisibility(this.$el.find('#aoi-attribute-div'), needsAoiAttributeValues);
+			this._setVisibility(this.$el.find('#aoi-attribute-values-div'), needsAoiAttributeValues);
 
 			var getDeferreds = [];
 			getDeferreds.push(this.getAvailableFeatures());
@@ -101,9 +101,9 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				self._updateAOILayer(name);
 				self._highlightFeatures(name, attribute, values);
 
-				$('#select-aoi').val(name);
-				$('#select-attribute').val(attribute);
-				$('#select-values').val(values);
+				self.$el.find('#select-aoi').val(name);
+				self.$el.find('#select-attribute').val(attribute);
+				self.$el.find('#select-values').val(values);
 
 				self.listenTo(self.model, 'change:aoiName', self.updateSelectedAoiName);
 				self.listenTo(self.model, 'change:aoiAttribute', self.updateSelectedAoiAttribute);
@@ -146,11 +146,11 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		updateSelectedAoiName : function() {
 			var name = this.model.get('aoiName');
 			var needsAoiAttributeValues = this._needsAoiAttributeValues();
-			$('#select-aoi').val(name);
+			this.$el.find('#select-aoi').val(name);
 			this._updateAOILayer(name);
 
-			this._setVisibility($('#aoi-attribute-div'), needsAoiAttributeValues);
-			this._setVisibility($('#aoi-attribute-values-div'), needsAoiAttributeValues);
+			this._setVisibility(this.$el.find('#aoi-attribute-div'), needsAoiAttributeValues);
+			this._setVisibility(this.$el.find('#aoi-attribute-values-div'), needsAoiAttributeValues);
 
 			if (needsAoiAttributeValues) {
 				this._updateAttributes(name);
@@ -170,7 +170,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var self = this;
 			var name = this.model.get('aoiName');
 			var attribute = this.model.get('aoiAttribute');
-			$('#select-attribute').val(attribute);
+			this.$el.find('#select-attribute').val(attribute);
 			if (this._needsAoiAttributeValues()) {
 				this._updateValues(name, attribute).done(function(data) {
 					self.model.set('aoiAttributeValues', data);
@@ -191,7 +191,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var attribute = this.model.get('aoiAttribute');
 			var values = this.model.get('aoiAttributeValues');
 
-			$('#select-values').val(values);
+			this.$el.find('#select-values').val(values);
 			this._highlightFeatures(name, attribute, values);
 		},
 
@@ -229,20 +229,21 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		 * @returns {undefined}
 		 */
 		toggleDrawControl : function() {
-			var $toggle = $('#draw-polygon-btn');
+			var $toggle = this.$el.find('#draw-polygon-btn');
+			var $div = this.$el.find('#draw-polygon-div');
 			var turnDrawOn = !$toggle.hasClass('active');
 
 			this.drawFeatureLayer.setVisibility(turnDrawOn);
 			if (turnDrawOn) {
 				this.drawFeatureControl.activate();
-				$('#draw-polygon-div').show();
+				$div.show();
 				$toggle.addClass('active');
 			}
 			else {
 				this.drawFeatureLayer.removeAllFeatures();
 				this.drawFeatureControl.deactivate();
 
-				$('#draw-polygon-div').hide();
+				$div.hide();
 				$toggle.removeClass('active');
 			}
 		},
@@ -253,7 +254,9 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		 */
 		saveDrawnPolygons : function() {
 			var self = this;
-			var name = $('#polygon-name-input').val();
+
+			var $nameInput = this.$el.find('#polygon-name-input');
+			var name = $nameInput.val();
 			if (this.drawFeatureLayer.features.length === 0) {
 				this.alertView.show('alert-warning', 'Must draw at least one polygon.');
 				return;
@@ -261,13 +264,13 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 			if (!name) {
 				this.alertView.show('alert-warning', 'Please specify a name for the feature drawn');
-				$('#polygon-name-input').focus();
+				$nameInput.focus();
 				return;
 			}
 
 			if (/\W/.test(name) || /^[^A-Za-z]/.test(name)) {
 				this.alertView.show('alert-warning', 'Name must begin with a letter, and may only contain letters, numbers, and underscores.');
-				$('#polygon-name-input').focus();
+				$nameInput.focus();
 				return;
 			}
 
@@ -443,24 +446,22 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		 * @param {String} values
 		 */
 		_highlightFeatures : function(name, attribute, values) {
-			if (name) {
-				if ((attribute) && (values.length !== 0)) {
-					var filter = GDP.util.mapUtils.createCQLFilter(attribute, values);
-					if (this.highlightLayer) {
-						this.highlightLayer.mergeNewParams({
-							layers : name,
-							cql_filter : filter
-						});
-						if (!filter) {
-							delete this.highlightLayer.params.CQL_FILTER;
-						}
+			if ((name) && (attribute) && (values.length !== 0)) {
+				var filter = GDP.util.mapUtils.createCQLFilter(attribute, values);
+				if (this.highlightLayer) {
+					this.highlightLayer.mergeNewParams({
+						layers : name,
+						cql_filter : filter
+					});
+					if (!filter) {
+						delete this.highlightLayer.params.CQL_FILTER;
 					}
-					else {
-						this.highlightLayer = GDP.util.mapUtils.createAOIFeaturesLayer(name, filter);
-						this.map.addLayer(this.highlightLayer);
-					}
-					return;
 				}
+				else {
+					this.highlightLayer = GDP.util.mapUtils.createAOIFeaturesLayer(name, filter);
+					this.map.addLayer(this.highlightLayer);
+				}
+				return;
 			}
 			if (this.highlightLayer) {
 				this.map.removeLayer(this.highlightLayer);
@@ -469,14 +470,14 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		/*
-		 * Sets up
+		 * Sets up the file loader plugin.
 		 * @param {Jquery element} $fileUploaderInput
 		 * @param {Jquery element} $uploadIndicator
 		 */
 		_createFileUploader : function($fileUploaderInput, $uploadIndicator) {
 			var self = this;
 			var params = {
-				maxfilesize : 167772160,
+				'maxfilesize' : 167772160,
 				'response.encoding' : 'xml',
 				'filename.param' : 'qqfile',
 				'use.crs.failover' : 'true',
