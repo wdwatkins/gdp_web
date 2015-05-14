@@ -33,7 +33,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		initialize : function(options) {
-			this.wps = new GDP.OGC.WPS(GDP.logger);
+			this.wps = options.wps;
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 			this.spatialMapView = new GDP.ADVANCED.view.HubSpatialMapView({
 				model : this.model,

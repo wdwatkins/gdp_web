@@ -3,35 +3,46 @@
 	<div id="spatial-map">
 	</div>
 </div>
-<div class="col-xs-12" id="spatial-area-selection-div">
-	<div class="row form-group" id="upload-container-div">
-		<span class="btn btn-primary fileinput-button">
-			<i class="glyphicon glyphicon-plus"></i>
-			<span>Select shapefile to upload...</span>
-			<!-- The file input field used as target for the file upload widget -->
-			<input id="upload-shapefile-input" type="file" name="qqfile">
-		</span>
-		<i id="upload-indicator" class="fa fa-2x fa-spinner fa-spin"></i>
-		<div id="upload-messages-div"></div>
+<div id="spatial-area-selection-div">
+	<div id="upload-draw-container-div" class="row">
+		<div class="col-sm-3 form-group" id="upload-container-div">
+			<span class="btn btn-primary fileinput-button">
+				<i class="glyphicon glyphicon-plus"></i>
+				<span>Select shapefile to upload...</span>
+				<!-- The file input field used as target for the file upload widget -->
+				<input id="upload-shapefile-input" type="file" name="qqfile">
+			</span>
+			<i id="upload-indicator" class="fa fa-2x fa-spinner fa-spin"></i>
+		</div>
+		<div id="spatial-selection-text-div" class="col-sm-1 text-center">Or</div>
+		<div class="col-sm-8" id="draw-container-div">
+			<button id="draw-polygon-btn" class="col-sm-3 btn btn-primary">Draw Polygon(s)</button>
+			<div class="col-sm-9" id="draw-polygon-div">
+				<label for="polygon-name-input">Feature Name:</label>
+				<input type="text" id="polygon-name-input" name="polygon-name-input">
+				<button id="draw-submit-btn" class="btn btn-info">Submit</button>
+				<button id="draw-clear-btn" class="btn btn-info">Clear Polygon(s)</button>
+			</div>
+		</div>
+		<div class="col-sm-12" id="messages-div"></div>
 	</div>
 	
-	
-	<form action="#/" class="row" id="shapefile-selection-div">
-		<div class="form-group">
+	<form action="#/" id="shapefile-selection-div">
+		<div id="aoi-selection-div" class="form-group">
 			<label for="select-aoi">Select Area of Interest</label>
-			<select required class="form-control" id="select-aoi">
+			<select required="required" class="form-control" id="select-aoi">
 				<option></option>
 			</select>
 		</div>
-		<div class="form-group">
+		<div id="aoi-attribute-div" class="form-group">
 			<label for="select-attribute">Select Attribute</label>
-			<select required class="form-control" id="select-attribute">
+			<select required="required" class="form-control" id="select-attribute">
 				<option></option>	
 			</select>
 		</div>
-		<div class="form-group">
+		<div id="aoi-attribute-values-div" class="form-group">
 			<label for="select-values">Select Value(s)</label>
-			<select required class="form-control" multiple id="select-values">
+			<select required="required" class="form-control" multiple id="select-values">
 			</select>
 		</div>
 		<div>

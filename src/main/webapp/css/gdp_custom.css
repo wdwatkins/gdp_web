@@ -26,6 +26,10 @@
 	border: 1px solid black;
 }
 
+#draw-polygon-div {
+	display: none;
+}
+
 #select-values {
 	height: 200px;
 }
@@ -35,13 +39,6 @@
 }
 .checkbox label {
 	font-weight: bold;
-}
-
-#job-processing-div, #job-results-div {
-	margin-bottom: 15px;
-}
-#job-results-div {
-	display:none;
 }
 .hub-tile h5 {
 	font-weight: bold;
@@ -60,4 +57,15 @@
 #hub-spatial-inset-map {
 	height: 250px;
 	border : 1px solid black;
+}
+#job-results-div {
+	display: none;
+}
+#job-processing-div, #job-results-div {
+	margin-bottom: 15px;
+}
+#spatial-selection-text-div {
+	font-size : large;
+	font-weight : bold;
+	margin-top : 5px;
 }

@@ -85,14 +85,19 @@ GDP.util.mapUtils = (function() {
 
 	/*
 	 * @param {String} attribute
-	 * @param {Array of String} values - values to include in filter
+	 * @param {Array of String} values - values to include in filter. If the first value is the wildcard '*', return the empty string.
 	 * @return String that can be used as a CQL filter
 	 */
-	that.createAOICQLFilter = function(attribute, values) {
-		var escValues = _.map(values, function(v) {
-			return '\'' + v + '\'';
-		});
-		return attribute + ' IN (' + escValues.join(',') + ')';
+	that.createCQLFilter = function(attribute, values) {
+		if ((attribute) && (_.first(values) !== '*')) {
+			var escValues = _.map(values, function(v) {
+				return '\'' + v + '\'';
+			});
+			return attribute + ' IN (' + escValues.join(',') + ')';
+		}
+		else {
+			return '';
+		}
 	};
 
 	/*
@@ -121,9 +126,11 @@ GDP.util.mapUtils = (function() {
 		};
 
 		_.extend(layerParams, params, {
-			layers : name,
-			cql_filter : filter
+			layers : name
 		});
+		if (filter) {
+			layerParams.cql_filter = filter;
+		}
 		_.extend(layerOptions, options);
 
 		return new OpenLayers.Layer.WMS(
