@@ -7,7 +7,8 @@ GDP.model = GDP.model || {};
 GDP.model.Config = Backbone.Model.extend({
 	defaults : {
 		"application" : {
-			"development" : "true"
+			"development" : "true",
+			"maxPolygonsToShowAttributeValues" : "1000"
 		}
 	}
 });

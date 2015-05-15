@@ -201,8 +201,9 @@ var GDP = GDP || {};
 			var featureIds = this.get('aoiAttributeFeatureIds');
 			var values = this.get('aoiAttributeValues');
 			var selectedFeatures;
-			
-			if (values.length > 0 && values[0] !== '*') {
+			var totalFeatures = [];
+
+			if ((values.length > 0 && values[0] !== '*') && (values.length < featureIds.length)) {
 				selectedFeatures = _.filter(featureIds, function(e) {
 					return _.contains(values, e.value);
 				});

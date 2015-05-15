@@ -19,12 +19,15 @@
 %>
 <%
 	Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));
+	String maxPolygonsToShowAttributeValues = props.get("gdp.application.maxPolygonsToShowAttributeValues");
+	maxPolygonsToShowAttributeValues = (maxPolygonsToShowAttributeValues == null) ? "1000" : maxPolygonsToShowAttributeValues;
 	String geoserverEndpoint = props.get("gdp.geoserver.endpoint");
 	/* serviceEndpoints below point at the actual endpoints versus endpoints which can be proxies */
 %>
 {
 	"application" : {
 		"development" : "<%= development %>",
+		"maxPolygonsToShowAttributeValues" : <%= maxPolygonsToShowAttributeValues%>,
 		"endpoints" : {
 			"geoserver" : "geoserver",
 			"utilityWps" : "utilityWps",

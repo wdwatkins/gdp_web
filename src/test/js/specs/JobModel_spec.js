@@ -375,6 +375,11 @@ describe('GDP.ADVANCED.model.Job', function() {
 			expect(r).toContain('id7');
 		});
 
+		it('Expects that if all values are selected, then the empty array is returned', function() {
+			jobModel.set('aoiAttributeValues', ['v1', 'v2', 'v3', 'v4']);
+			expect(jobModel.getSelectedFeatureIds()).toEqual([]);
+		})
+
 		it('Expects that if the first element of aoiAttributeValues is "*", then an empty array is returned', function() {
 			jobModel.set('aoiAttributeValues', ['*']);
 			expect(jobModel.getSelectedFeatureIds()).toEqual([]);
