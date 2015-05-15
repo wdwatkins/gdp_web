@@ -29,6 +29,7 @@ var GDP = GDP || {};
 	var featureTemplate = Handlebars.compile(GET_FEATURE_XML_TEMPLATE);
 
     var Job = Backbone.Model.extend({
+		SELECT_ALL_AOI_ATTRIBUTE_VALUES : ['*'],
 		defaults: {
 			//data details
 			dataSourceUrl : null,
@@ -203,7 +204,7 @@ var GDP = GDP || {};
 			var selectedFeatures;
 			var totalFeatures = [];
 
-			if ((values.length > 0 && values[0] !== '*') && (values.length < featureIds.length)) {
+			if ((values !== this.SELECT_ALL_AOI_ATTRIBUTE_VALUES) && (values.length < featureIds.length)) {
 				selectedFeatures = _.filter(featureIds, function(e) {
 					return _.contains(values, e.value);
 				});

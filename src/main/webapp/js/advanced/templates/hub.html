@@ -25,7 +25,9 @@
 				</div>
 				<h5>Number of Selected Values</h5>
 				<div class="selected-option">
-					{{jobModel.aoiAttributeValues.length}}
+					{{#if areAllAOIVariablesSelected}}All
+					{{else}}{{jobModel.aoiAttributeValues.length}}
+					{{/if}}
 				</div>
 				<div class="hub-tile-button-div">
 					<button id="edit-spatial-btn" class="btn btn-primary">Edit Spatial</button>

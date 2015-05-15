@@ -25,6 +25,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var invalidJob = (messages.spatial.length !== 0) || (messages.dataDetails.length !== 0) || (messages.algorithm.length !== 0);
 			this.$el.html(this.template({
 				jobModel: this.model.attributes,
+				areAllAOIVariablesSelected : this.model.attributes.aoiAttributeValues === this.model.SELECT_ALL_AOI_ATTRIBUTE_VALUES,
 				selectedProcess : (process) ? process.attributes : '',
 				processInputs : this.model.getProcessInputs(),
 				messages : messages,

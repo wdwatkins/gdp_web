@@ -177,7 +177,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				});
 			}
 			else {
-				self.model.set('aoiAttributeValues', ['*']);
+				self.model.set('aoiAttributeValues', self.model.SELECT_ALL_AOI_ATTRIBUTE_VALUES);
 			}
 		},
 
@@ -453,7 +453,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 						// We have exceeded the limit so we won't show the attribute value selection. Instead show a message indicating why.
 						self._setVisibility(self.attributeValuesSelectMenuView.$el, false);
 						messageDiv.show();
-						optionValues = ['*'];
+						optionValues = self.model.SELECT_ALL_AOI_ATTRIBUTE_VALUES;
 
 					}
 				    self.model.set('aoiAttributeFeatureIds', aoiAttributeFeatureIds);
