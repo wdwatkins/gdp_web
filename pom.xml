@@ -366,6 +366,53 @@
 					<excludes></excludes>
 				</configuration>  
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeGroupIds>org.webjars</includeGroupIds>
+							<includeArtifactIds>bootstrap</includeArtifactIds>
+							<outputDirectory>src/main/webapp/less/webjars</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.lesscss</groupId>
+				<artifactId>lesscss-maven-plugin</artifactId>
+				<version>1.7.0.1.1</version>
+				<configuration>
+					<sourceDirectory>${project.basedir}/src/main/webapp/less</sourceDirectory>
+					<outputDirectory>${project.basedir}/src/main/webapp/css</outputDirectory>
+					<includes>
+						<include>custom.less</include>
+						<include>gdp_custom.less</include>
+					</includes>
+					<compress>false</compress>
+					<force>true</force>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<packagingExcludes>less/webjars/**</packagingExcludes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
