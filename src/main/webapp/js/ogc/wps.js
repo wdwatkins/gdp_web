@@ -83,7 +83,7 @@ GDP.OGC.WPS = function (logger) {
 		if (success.length > 0) {
 			return false;
 		} else {
-			error = GDP.util.findXMLNamespaceTags(response, 'wps:Exception');
+			error = GDP.util.findXMLNamespaceTags(response, 'ows:Exception');
 
 			if (error.length > 0) {
 				$exception = GDP.util.findXMLNamespaceTags(response, 'ows:Exception[exceptionCode="JAVA_RootCause"]');

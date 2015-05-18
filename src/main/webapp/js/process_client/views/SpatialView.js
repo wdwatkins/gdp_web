@@ -10,14 +10,14 @@
 
 var GDP = GDP || {};
 
-GDP.ADVANCED = GDP.ADVANCED || {};
+GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
 
-GDP.ADVANCED.view = GDP.ADVANCED.view || {};
+GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 
 (function() {
 	"use strict";
-	GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
+	GDP.PROCESS_CLIENT.view.SpatialView = GDP.util.BaseView.extend({
 
 		_DRAW_FEATURE_NS : 'draw',
 		_DRAW_FEATURE_ATTRIBUTE : 'ID',

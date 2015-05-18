@@ -1,6 +1,6 @@
 /*jslint browser: true*/
 /*global sinon,Backbone,jasmine,expect,GDP,_,expect,window*/
-describe('GDP.ADVANCED.view.DataDetailsView', function() {
+describe('GDP.PROCESS_CLIENT.view.DataDetailsView', function() {
 	var model,
 	templateSpy,
 	renderSpy,
@@ -11,10 +11,10 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 	wpsDeferred,
 	wps,
 	url = 'http://cida.usgs.gov';
-	
+
 	//no-op alert
 	window.alert = function(){};
-	
+
 	//mock promises for patching
 	var resolveWithResponse = function(response){
 		return function(){
@@ -23,7 +23,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 			return deferred.promise();
 		};
 	};
-	
+
 	var rejectWithErrorMessage = function(message){
 		return function(){
 			var deferred = $.Deferred();
@@ -31,10 +31,10 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 			return deferred.promise();
 		};
 	};
-	
+
 	beforeEach(function() {
 		server = sinon.fakeServer.create();
-		model = new GDP.ADVANCED.model.Job();
+		model = new GDP.PROCESS_CLIENT.model.Job();
 
 		wpsDeferred = $.Deferred();
 
@@ -48,7 +48,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 			sendWpsExecuteRequest : callWpsSpy
 		};
 
-		testView = new GDP.ADVANCED.view.DataDetailsView({
+		testView = new GDP.PROCESS_CLIENT.view.DataDetailsView({
 			model : model,
 			template : templateSpy,
 			wps: wps
@@ -63,7 +63,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 		testView.setUrl({ target : { value : url } });
 		expect(testView.model.get('dataSourceUrl')).toEqual(url);
 	});
-	
+
 	it('Expects setSelectedVariables() to change the model\'s dataSourceVariables property', function() {
 		var options = [
 			{
@@ -82,7 +82,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 			selected: ''
 			}
 		];
-		
+
 		//call the function with 0, 1, 2, and 3 options.
 		_.each(_.range(options.length), function(numberOfOptions){
 			var optionsToUse = _.first(options, numberOfOptions);
@@ -117,10 +117,10 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 		var failingValues = [
 			//not an object
 			null,
-			
+
 			//empty object
 			{},
-			
+
 			//object with only a some of the expected properties
 			{
 				'a': null,
@@ -133,7 +133,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 				'c': {}
 			}
 		],
-		
+
 		//object with all expected properties and all numeric values
 		passingValue = {
 			'a': 42,
@@ -192,11 +192,11 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 	});
 	it('expects the getDateRange() promise to be rejected with an error message if the web service call succeeds, but delivers an unparseable response', function(){
 		var promise, returnedMessage;
-		
+
 		//mocks
 		testView.isValidDateRangeResponse = function(){return false;};
 		testView.wps.sendWpsExecuteRequest = resolveWithResponse(null);
-		
+
 		runs(function(){
 			promise = testView.getDateRange('mockUrl', 'mockVariableName').fail(function(myMessage){
 				returnedMessage = myMessage;
@@ -244,7 +244,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 			{
 				datatypecollection:
 					{
-						
+
 					}
 			},
 			{
@@ -261,11 +261,11 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 					}
 			}
 		];
-		
+
 		_.each(invalidResponses, function(invalidResponse){
 			expect(testView.isValidGridResponse(invalidResponse)).toBe(false);
 		});
-		
+
 		var validResponses = [
 			{
 				datatypecollection:
@@ -287,7 +287,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 					}
 			}
 		];
-		
+
 		_.each(validResponses, function(validResponse){
 			expect(testView.isValidGridResponse(validResponse)).toBe(true);
 		});
@@ -309,7 +309,7 @@ describe('GDP.ADVANCED.view.DataDetailsView', function() {
 				endtime: endtime
 			}
 		};
-		
+
 		var promise,
 		returnedResponse = 'something'; //if successful, this should be set to undefined
 		testView.wps.sendWpsExecuteRequest = resolveWithResponse(parseableResponse);

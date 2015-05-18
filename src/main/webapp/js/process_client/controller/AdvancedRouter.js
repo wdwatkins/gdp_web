@@ -2,11 +2,11 @@
 /*global Backbone*/
 var GDP = GDP || {};
 
-GDP.ADVANCED = GDP.ADVANCED || {};
+GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
 
-GDP.ADVANCED.controller = GDP.ADVANCED.controller || {};
+GDP.PROCESS_CLIENT.controller = GDP.PROCESS_CLIENT.controller || {};
 
-GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
+GDP.PROCESS_CLIENT.controller.AdvancedRouter = Backbone.Router.extend({
 
 	applicationContextDiv : '#advanced-page-content',
 	jobModel: null,
@@ -22,24 +22,24 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 	},
 
 	hub : function() {
-		this.showView(GDP.ADVANCED.view.HubView, {
-			template : GDP.ADVANCED.templates.getTemplate('hub'),
+		this.showView(GDP.PROCESS_CLIENT.view.HubView, {
+			template : GDP.PROCESS_CLIENT.templates.getTemplate('hub'),
 			model: this.jobModel,
 			wps : this.wps
 		});
 	},
 
 	spatial : function() {
-		this.showView(GDP.ADVANCED.view.SpatialView, {
-			template : GDP.ADVANCED.templates.getTemplate('spatial'),
+		this.showView(GDP.PROCESS_CLIENT.view.SpatialView, {
+			template : GDP.PROCESS_CLIENT.templates.getTemplate('spatial'),
 			model : this.jobModel,
 			wps : this.wps
 		});
 	},
 
 	datadetail : function() {
-		this.showView(GDP.ADVANCED.view.DataDetailsView, {
-			template : GDP.ADVANCED.templates.getTemplate('datadetail'),
+		this.showView(GDP.PROCESS_CLIENT.view.DataDetailsView, {
+			template : GDP.PROCESS_CLIENT.templates.getTemplate('datadetail'),
 			model: this.jobModel,
 			wps: this.wps,
 			wpsEndpoint: GDP.config.get('application').endpoints.utilityWps
@@ -47,9 +47,9 @@ GDP.ADVANCED.controller.AdvancedRouter = Backbone.Router.extend({
 	},
 
 	process : function() {
-		this.showView(GDP.ADVANCED.view.ProcessView, {
-			template : GDP.ADVANCED.templates.getTemplate('process'),
-			algorithmTemplate : GDP.ADVANCED.templates.getTemplate('algorithm-config'),
+		this.showView(GDP.PROCESS_CLIENT.view.ProcessView, {
+			template : GDP.PROCESS_CLIENT.templates.getTemplate('process'),
+			algorithmTemplate : GDP.PROCESS_CLIENT.templates.getTemplate('algorithm-config'),
 			model: this.jobModel
 		});
 	},

@@ -3,12 +3,12 @@
 /*global _*/
 var GDP = GDP || {};
 
-GDP.ADVANCED = GDP.ADVANCED || {};
-GDP.ADVANCED.view = GDP.ADVANCED.view || {};
+GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
+GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 
-// Can't wrap this in a function because it is used when defining GDP.ADVANCED.view.ProcessView
-GDP.ADVANCED.view.AlgorithmConfigView = GDP.util.BaseView.extend({
+// Can't wrap this in a function because it is used when defining GDP.PROCESS_CLIENT.view.ProcessView
+GDP.PROCESS_CLIENT.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 
 	events : {
 		'change #process-algorithm-configuration-description input[type="text"]' : 'changeTextProcessVariable',

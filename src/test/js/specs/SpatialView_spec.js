@@ -1,4 +1,4 @@
-describe('GDP.ADVANCED.VIEW.SpatialView', function() {
+describe('GDP.PROCESS_CLIENT.VIEW.SpatialView', function() {
 	var model;
 	var templateSpy;
 	var loggerSpy;
@@ -10,7 +10,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 
 	beforeEach(function() {
 		server = sinon.fakeServer.create();
-		model = new GDP.ADVANCED.model.Job();
+		model = new GDP.PROCESS_CLIENT.model.Job();
 		GDP.config = new GDP.model.Config({
 			application : {
 				endpoints : {
@@ -29,7 +29,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 		wfsDeferred = $.Deferred();
 
 		spyOn(OpenLayers.Layer, 'WMS');
-		spyOn(GDP.ADVANCED.view.SpatialView.prototype, '_createDrawPolygonControl');
+		spyOn(GDP.PROCESS_CLIENT.view.SpatialView.prototype, '_createDrawPolygonControl');
 
 		templateSpy = jasmine.createSpy('templateSpy');
 		loggerSpy = jasmine.createSpyObj('logger', ['error']);
@@ -49,7 +49,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 		$('body').append('<div id="test-div"><div id="spatial-map"></div><input id="upload-shapefile-input" type="file" name="qqfile"></div>')
 
 
-		testView = new GDP.ADVANCED.view.SpatialView({
+		testView = new GDP.PROCESS_CLIENT.view.SpatialView({
 			model : model,
 			template : templateSpy
 		});

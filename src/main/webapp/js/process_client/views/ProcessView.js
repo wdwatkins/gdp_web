@@ -2,12 +2,12 @@
 /*global _*/
 /*global $*/
 var GDP = GDP || {};
-GDP.ADVANCED = GDP.ADVANCED || {};
-GDP.ADVANCED.view = GDP.ADVANCED.view || {};
+GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
+GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 (function() {
 	"use strict";
-	GDP.ADVANCED.view.ProcessView = GDP.util.BaseView.extend({
+	GDP.PROCESS_CLIENT.view.ProcessView = GDP.util.BaseView.extend({
 
 		algorithmConfigView : null,
 
@@ -37,7 +37,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.displayAlgorithmDescription();
 			this.$el.show();
 
-			this.algorithmConfigView = new GDP.ADVANCED.view.AlgorithmConfigView({
+			this.algorithmConfigView = new GDP.PROCESS_CLIENT.view.AlgorithmConfigView({
 				template : this.algorithmTemplate,
 				model : this.model,
 				el : '#container-process-configuration'
@@ -92,7 +92,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			});
 			this.model.get('processVariables').set(processVars);
 
-			this.algorithmConfigView = new GDP.ADVANCED.view.AlgorithmConfigView({
+			this.algorithmConfigView = new GDP.PROCESS_CLIENT.view.AlgorithmConfigView({
 				template : this.algorithmTemplate,
 				model : this.model,
 				el : '#container-process-configuration'

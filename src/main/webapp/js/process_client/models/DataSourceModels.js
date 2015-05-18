@@ -3,9 +3,9 @@
 var GDP = GDP || {};
 (function(){
     "use strict";
-    GDP.ADVANCED = GDP.ADVANCED || {};
+    GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
 
-    GDP.ADVANCED.model = GDP.ADVANCED.model || {};
+    GDP.PROCESS_CLIENT.model = GDP.PROCESS_CLIENT.model || {};
 
     var DataSourceVariable = Backbone.Model.extend({
 	defaults:{
@@ -14,11 +14,11 @@ var GDP = GDP || {};
 	    selected: false
 	}
     });
-    
+
     var DataSourceVariables = Backbone.Collection.extend({
 	model: DataSourceVariable
     });
-    
-    GDP.ADVANCED.model.DataSourceVariable = DataSourceVariable;
-    GDP.ADVANCED.model.DataSourceVariables = DataSourceVariables;
+
+    GDP.PROCESS_CLIENT.model.DataSourceVariable = DataSourceVariable;
+    GDP.PROCESS_CLIENT.model.DataSourceVariables = DataSourceVariables;
 }());

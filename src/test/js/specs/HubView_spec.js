@@ -1,4 +1,4 @@
-describe('GDP.ADVANCED.view.HubView', function() {
+describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 	var model;
 	var templateSpy, spatialViewRemoveSpy;
 	var server;
@@ -7,7 +7,7 @@ describe('GDP.ADVANCED.view.HubView', function() {
 	beforeEach(function() {
 		server = sinon.fakeServer.create();
 
-		model = new GDP.ADVANCED.model.Job();
+		model = new GDP.PROCESS_CLIENT.model.Job();
 		spyOn(model, "getSelectedAlgorithmProcess").andReturn(new Backbone.Model({'var1' : 'value1', 'var2' : 'value2'}));
 		spyOn(model, 'jobErrorMessages').andReturn({
 			spatial : [],
@@ -19,13 +19,13 @@ describe('GDP.ADVANCED.view.HubView', function() {
 		spyOn(GDP.OGC, 'WPS').andReturn({});
 
 		spatialViewRemoveSpy = jasmine.createSpy('spatialViewRemoveSpy');
-		spyOn(GDP.ADVANCED.view, 'HubSpatialMapView').andReturn({
+		spyOn(GDP.PROCESS_CLIENT.view, 'HubSpatialMapView').andReturn({
 			remove : spatialViewRemoveSpy
 		});
 
 		spyOn($, 'download');
 
-		testView = new GDP.ADVANCED.view.HubView({
+		testView = new GDP.PROCESS_CLIENT.view.HubView({
 			model : model,
 			template : templateSpy
 		});

@@ -3,8 +3,8 @@
 var GDP = GDP || {};
 (function(_, $){
     "use strict";
-    GDP.ADVANCED= GDP.ADVANCED || {};
-    GDP.ADVANCED.view = GDP.ADVANCED.view || {};
+    GDP.PROCESS_CLIENT= GDP.PROCESS_CLIENT || {};
+    GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 	var variablePicker  = {
 		selector : '#data-source-vars'
     };
@@ -23,7 +23,7 @@ var GDP = GDP || {};
 	var VARIABLE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.ListOpendapGrids';
 	var DATE_RANGE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.GetGridTimeRange';
 
-    GDP.ADVANCED.view.DataDetailsView = GDP.util.BaseView.extend({
+    GDP.PROCESS_CLIENT.view.DataDetailsView = GDP.util.BaseView.extend({
 	'events' : (function(){
 		var ret = {};
 		ret['change ' + variablePicker.selector] = 'setSelectedVariables';
