@@ -12,7 +12,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		algorithmConfigView : null,
 
 		events : {
-			"click .menu-dropdown-select-process" : "selectProcess"
+			"click .menu-dropdown-select-process" : "selectProcess",
+			"submit form" : "goToHubPage"
 		},
 
 		/*
@@ -102,6 +103,16 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		remove : function() {
 			this.algorithmConfigView.remove();
 			GDP.util.BaseView.prototype.remove.apply(this, arguments);
+		},
+
+		/*
+		 * Route back to the hub page.
+		 * @param {Jquery event} ev
+		 * @returns {undefined}
+		 */
+		goToHubPage : function(ev) {
+			ev.preventDefault();
+			this.router.navigate('', {trigger : true});
 		}
 	});
 }());

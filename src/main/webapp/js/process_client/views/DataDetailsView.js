@@ -30,6 +30,7 @@ var GDP = GDP || {};
 		ret['change ' + urlPicker.selector] = 'setUrl';
 		ret['changeDate ' + datePickers.start.selector] = 'setStartDate';
 		ret['changeDate ' + datePickers.end.selector] = 'setEndDate';
+		ret['submit form'] = 'goToHubPage';
 		return ret;
 	}()),
 	'wps' : null,
@@ -69,6 +70,16 @@ var GDP = GDP || {};
 	'setUrl' : function(ev){
 		this.model.set('dataSourceUrl', ev.target.value);
 	},
+	/*
+	 * Route back to the hub page.
+	 * @param {Jquery event} ev
+	 * @returns {undefined}
+	 */
+	goToHubPage : function(ev) {
+		ev.preventDefault();
+		this.router.navigate('', {trigger : true});
+	},
+
 	'changeMinDate' : function(){
 		var minDate = this.model.get('minDate');
 		$(datePickers.start.selector).datepicker('setStartDate', minDate);

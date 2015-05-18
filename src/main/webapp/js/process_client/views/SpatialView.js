@@ -28,7 +28,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			'change #select-values' : 'changeValues',
 			'click #draw-polygon-btn' : 'toggleDrawControl',
 			'click #draw-submit-btn' : 'saveDrawnPolygons',
-			'click #draw-clear-btn' : 'clearDrawnPolygons'
+			'click #draw-clear-btn' : 'clearDrawnPolygons',
+			'submit form' : 'goToHubPage'
 		},
 
 		render : function() {
@@ -302,6 +303,16 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 */
 		clearDrawnPolygons : function() {
 			this.drawFeatureLayer.removeAllFeatures();
+		},
+
+		/*
+		 * Route back to the hub page.
+		 * @param {Jquery event} ev
+		 * @returns {undefined}
+		 */
+		goToHubPage : function(ev) {
+			ev.preventDefault();
+			this.router.navigate('', {trigger : true});
 		},
 
 		/*
