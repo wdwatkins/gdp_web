@@ -20,7 +20,7 @@
 				</jsp:include>
 			</header>
 
-			<div class="row" id="advanced-page-content">
+			<div id="advanced-page-content">
 			</div>
 			
 			<footer class="row">

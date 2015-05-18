@@ -1,0 +1,60 @@
+#job-processing-div {
+	.make-row();
+}
+
+#job-results-div {
+	display: none;
+	.make-sm-column(12);
+	
+	#retrieve-output-btn {
+		.make-sm-column-offset(4);
+		.make-sm-column(2);
+	}
+	#retrieve-input-btn {
+		.make-sm-column(2);
+	}
+}
+
+#job-processing-div, #job-results-div {
+	margin-bottom: 15px;
+}
+
+.selected-option {
+	background:#fff;
+	border:1px solid #ccc;
+	border-radius:5px;
+	padding:5px 8px;
+	color:#555;
+	overflow:hidden;
+	text-align: left;
+}
+#tiles-div {
+	.make-row();
+	.hub-tile {
+		.make-md-column(6);
+	}
+	
+	.hub-tile h5 {
+		font-weight: bold;
+	}
+	.hub-tile .panel-body {
+		padding: 10px;
+	}
+	.hub-tile .panel-heading {
+		text-align: center;
+		font-weight: bold;
+	}
+	.hub-tile-button-div {
+		margin-top : 10px;
+		text-align: center;
+	}
+	#hub-tile-blank-row {
+		.clearfix();
+	}
+	#hub-spatial-inset-map {
+		height: 250px;
+		border : 1px solid black;
+	}
+}
+
+
