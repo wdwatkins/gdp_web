@@ -6,11 +6,11 @@
 	</welcome-file-list>
 	
 	<servlet>
-		<servlet-name>advanced</servlet-name>
-		<jsp-file>/advanced.jsp</jsp-file>
+		<servlet-name>process_client</servlet-name>
+		<jsp-file>/process_client.jsp</jsp-file>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>advanced</servlet-name>
+		<servlet-name>process_client</servlet-name>
 		<url-pattern>/advanced</url-pattern>
 	</servlet-mapping>
 	

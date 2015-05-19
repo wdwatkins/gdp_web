@@ -3,8 +3,8 @@
 var GDP = GDP || {};
 (function(_, $){
     "use strict";
-    GDP.ADVANCED= GDP.ADVANCED || {};
-    GDP.ADVANCED.view = GDP.ADVANCED.view || {};
+    GDP.PROCESS_CLIENT= GDP.PROCESS_CLIENT || {};
+    GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 	var variablePicker  = {
 		selector : '#data-source-vars'
     };
@@ -23,13 +23,14 @@ var GDP = GDP || {};
 	var VARIABLE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.ListOpendapGrids';
 	var DATE_RANGE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.GetGridTimeRange';
 
-    GDP.ADVANCED.view.DataDetailsView = GDP.util.BaseView.extend({
+    GDP.PROCESS_CLIENT.view.DataDetailsView = GDP.util.BaseView.extend({
 	'events' : (function(){
 		var ret = {};
 		ret['change ' + variablePicker.selector] = 'setSelectedVariables';
 		ret['change ' + urlPicker.selector] = 'setUrl';
 		ret['changeDate ' + datePickers.start.selector] = 'setStartDate';
 		ret['changeDate ' + datePickers.end.selector] = 'setEndDate';
+		ret['submit form'] = 'goToHubPage';
 		return ret;
 	}()),
 	'wps' : null,
@@ -69,6 +70,16 @@ var GDP = GDP || {};
 	'setUrl' : function(ev){
 		this.model.set('dataSourceUrl', ev.target.value);
 	},
+	/*
+	 * Route back to the hub page.
+	 * @param {Jquery event} ev
+	 * @returns {undefined}
+	 */
+	goToHubPage : function(ev) {
+		ev.preventDefault();
+		this.router.navigate('', {trigger : true});
+	},
+
 	'changeMinDate' : function(){
 		var minDate = this.model.get('minDate');
 		$(datePickers.start.selector).datepicker('setStartDate', minDate);

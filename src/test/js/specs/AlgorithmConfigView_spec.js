@@ -1,4 +1,4 @@
-describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
+describe('GDP.PROCESS_CLIENT.view.AlgorithmConfigView', function() {
 	var templateSpy;
 	var jobModel;
 
@@ -146,7 +146,7 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 
 	beforeEach(function() {
 		templateSpy = jasmine.createSpy('templateSpy');
-		jobModel = new GDP.ADVANCED.model.Job({
+		jobModel = new GDP.PROCESS_CLIENT.model.Job({
 			algorithmId : '',
 			processes : new Backbone.Collection({
 				model : Backbone.Model
@@ -155,14 +155,14 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 		});
 		jobModel.get('processes').reset(PROCESSES);
 
-		spyOn(GDP.ADVANCED.view.AlgorithmConfigView.prototype, 'updateProcessVariable').andCallThrough();
+		spyOn(GDP.PROCESS_CLIENT.view.AlgorithmConfigView.prototype, 'updateProcessVariable').andCallThrough();
 	});
 
 	describe('Tests initialization with empty model', function() {
 		var testView;
 
 		beforeEach(function() {
-			testView = new GDP.ADVANCED.view.AlgorithmConfigView({
+			testView = new GDP.PROCESS_CLIENT.view.AlgorithmConfigView({
 				template : templateSpy,
 				model : jobModel,
 				el : 'test-div'
@@ -174,7 +174,7 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 		});
 
 		it('Expects that updateProcessVariable will not be called', function() {
-			expect(GDP.ADVANCED.view.AlgorithmConfigView.prototype.updateProcessVariable).not.toHaveBeenCalled();
+			expect(GDP.PROCESS_CLIENT.view.AlgorithmConfigView.prototype.updateProcessVariable).not.toHaveBeenCalled();
 		});
 	});
 
@@ -188,7 +188,7 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 				'SUMMARIZE_TIMESTEP' : 'false'
 			});
 
-			testView = new GDP.ADVANCED.view.AlgorithmConfigView({
+			testView = new GDP.PROCESS_CLIENT.view.AlgorithmConfigView({
 				template : templateSpy,
 				model : jobModel,
 				el : 'test-div'
@@ -258,10 +258,10 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 		});
 
 		it('Expects that updateProcessVariables will be called with each defined process variable in jobModel', function() {
-			expect(GDP.ADVANCED.view.AlgorithmConfigView.prototype.updateProcessVariable.calls.length).toBe(2);
-			expect(GDP.ADVANCED.view.AlgorithmConfigView.prototype.updateProcessVariable).toHaveBeenCalledWith(
+			expect(GDP.PROCESS_CLIENT.view.AlgorithmConfigView.prototype.updateProcessVariable.calls.length).toBe(2);
+			expect(GDP.PROCESS_CLIENT.view.AlgorithmConfigView.prototype.updateProcessVariable).toHaveBeenCalledWith(
 				jobModel.get('processVariables'), 'STATISTICS');
-			expect(GDP.ADVANCED.view.AlgorithmConfigView.prototype.updateProcessVariable).toHaveBeenCalledWith(
+			expect(GDP.PROCESS_CLIENT.view.AlgorithmConfigView.prototype.updateProcessVariable).toHaveBeenCalledWith(
 				jobModel.get('processVariables'), 'SUMMARIZE_TIMESTEP');
 		});
 	});
@@ -279,7 +279,7 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 
 			$('body').append('<div id="test-div"><input type="text" id="input-DATASET_ID"><input type="checkbox" id="input-SUMMARIZE_TIMESTEP" /></div>');
 
-			testView = new GDP.ADVANCED.view.AlgorithmConfigView({
+			testView = new GDP.PROCESS_CLIENT.view.AlgorithmConfigView({
 				template : templateSpy,
 				model : jobModel,
 				el : 'test-div'
@@ -322,7 +322,7 @@ describe('GDP.ADVANCED.view.AlgorithmConfigView', function() {
 				'SUMMARIZE_TIMESTEP' : 'false',
 				'DATASET_ID' : 'abc'
 			});
-			testView = new GDP.ADVANCED.view.AlgorithmConfigView({
+			testView = new GDP.PROCESS_CLIENT.view.AlgorithmConfigView({
 				template : templateSpy,
 				model : jobModel,
 				el : 'test-div'

@@ -7,6 +7,8 @@
 		<link rel="stylesheet" type="text/css" href="webjars/openlayers/<%= versionOpenLayers%>/theme/default/style.css" />
 		<link rel="stylesheet" type="text/css" href="webjars/jquery-file-upload/<%= versionJqueryFileUpload%>/css/jquery.fileupload.css">
 		<link rel="stylesheet" type="text/css" href="css/gdp_custom.css">
+		<link type="text/css" rel="stylesheet" href="webjars/bootstrap-datepicker/<%= versionBsDatePicker%>/css/bootstrap-datepicker3<%= development ? "" : ".min"%>.css" />
+
 	</head>
     <body>
 		<div class="container">
@@ -18,7 +20,7 @@
 				</jsp:include>
 			</header>
 
-			<div class="row" id="advanced-page-content">
+			<div id="advanced-page-content">
 			</div>
 			
 			<footer class="row">
@@ -49,18 +51,18 @@
 		<script type="text/javascript" src="js/util/mapUtils<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/ogc/wfs<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/ogc/wps<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/models/Process<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/models/DataSourceModels<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/collections/Processes<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/models/ProcessVariablesModel<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/models/JobModel<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/views/HubSpatialMapView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/views/HubView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/views/SpatialView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/views/AlgorithmConfigView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/views/ProcessView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/views/DataDetailsView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/controller/AdvancedRouter<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/advanced/init<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/models/Process<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/models/DataSourceModels<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/collections/Processes<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/models/ProcessVariablesModel<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/models/JobModel<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/views/HubSpatialMapView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/views/HubView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/views/SpatialView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/views/AlgorithmConfigView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/views/ProcessView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/views/DataDetailsView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/controller/AdvancedRouter<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/init<%= resourceSuffix %>.js"></script>
     </body>
 </html>

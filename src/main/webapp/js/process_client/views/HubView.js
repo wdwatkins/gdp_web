@@ -1,12 +1,12 @@
 var GDP = GDP || {};
 
-GDP.ADVANCED = GDP.ADVANCED || {};
+GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
 
-GDP.ADVANCED.view = GDP.ADVANCED.view || {};
+GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 (function() {
 	"use strict";
-	GDP.ADVANCED.view.HubView = GDP.util.BaseView.extend({
+	GDP.PROCESS_CLIENT.view.HubView = GDP.util.BaseView.extend({
 
 		EMAIL_WHEN_FINISHED_ALGORITHM : 'gov.usgs.cida.gdp.wps.algorithm.communication.EmailWhenFinishedAlgorithm',
 
@@ -36,7 +36,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		initialize : function(options) {
 			this.wps = options.wps;
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
-			this.spatialMapView = new GDP.ADVANCED.view.HubSpatialMapView({
+			this.spatialMapView = new GDP.PROCESS_CLIENT.view.HubSpatialMapView({
 				model : this.model,
 				mapDiv : 'hub-spatial-inset-map'
 			});

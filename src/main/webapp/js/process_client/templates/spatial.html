@@ -5,19 +5,19 @@
 </div>
 <div id="spatial-area-selection-div">
 	<div id="upload-draw-container-div" class="row">
-		<div class="col-sm-3 form-group" id="upload-container-div">
+		<div class="form-group" id="upload-container-div">
 			<span class="btn btn-primary fileinput-button">
-				<i class="glyphicon glyphicon-plus"></i>
+				<i class="fa fa-plus"></i>
 				<span>Select shapefile to upload...</span>
 				<!-- The file input field used as target for the file upload widget -->
 				<input id="upload-shapefile-input" type="file" name="qqfile">
 			</span>
 			<i id="upload-indicator" class="fa fa-2x fa-spinner fa-spin"></i>
 		</div>
-		<div id="spatial-selection-text-div" class="col-sm-1 text-center">Or</div>
-		<div class="col-sm-8" id="draw-container-div">
-			<button id="draw-polygon-btn" class="col-sm-3 btn btn-primary">Draw Polygon(s)</button>
-			<div class="col-sm-9" id="draw-polygon-div">
+		<div id="spatial-selection-text-div" >Or</div>
+		<div id="draw-container-div">
+			<button id="draw-polygon-btn" class="btn btn-primary">Draw Polygon(s)</button>
+			<div id="draw-polygon-div">
 				<label for="polygon-name-input">Feature Name:</label>
 				<input type="text" id="polygon-name-input" name="polygon-name-input">
 				<button id="draw-submit-btn" class="btn btn-info">Submit</button>
@@ -27,7 +27,7 @@
 		<div class="col-sm-12" id="messages-div"></div>
 	</div>
 	
-	<form action="#/" id="shapefile-selection-div">
+	<form id="feature-selection-div">
 		<div id="aoi-selection-div" class="form-group">
 			<label for="select-aoi">Select Area of Interest</label>
 			<select required="required" class="form-control" id="select-aoi">
@@ -45,7 +45,7 @@
 			<select required="required" class="form-control" multiple id="select-values">
 			</select>
 			<div id="attribute-values-exceeded-div">
-				Feature has too many polygons. All will be used for processing.
+				Selected attribute has too many polygons. All will be used for processing.
 			</div>
 		</div>
 		<div>

@@ -1,4 +1,4 @@
-describe('GDP.ADVANCED.view.ProcessView', function() {
+describe('GDP.PROCESS_CLIENT.view.ProcessView', function() {
 	var templateSpy, algorithmTemplateSpy, algorithmRemoveSpy;
 	var jobModel;
 	var testView;
@@ -161,10 +161,10 @@ describe('GDP.ADVANCED.view.ProcessView', function() {
 		templateSpy = jasmine.createSpy('templateSpy');
 		algorithmTemplateSpy = jasmine.createSpy('algorithmTemplateSpy');
 		algorithmRemoveSpy = jasmine.createSpy('algorithmRemoveSpy');
-		spyOn(GDP.ADVANCED.view, 'AlgorithmConfigView').andReturn({
+		spyOn(GDP.PROCESS_CLIENT.view, 'AlgorithmConfigView').andReturn({
 			remove : algorithmRemoveSpy
 		});
-		jobModel = new GDP.ADVANCED.model.Job({
+		jobModel = new GDP.PROCESS_CLIENT.model.Job({
 			algorithmId : '',
 			processes : new Backbone.Collection({
 				model : Backbone.Model
@@ -177,8 +177,8 @@ describe('GDP.ADVANCED.view.ProcessView', function() {
 	    $('#container-process-description').append('<div id="process-description-FeatureCoverageIntersectionAlgorithm"></div>');
 		$('#container-process-description').append('<div id="process-description-FeatureWeightedGridStatisticsAlgorithm"></div>');
 
-		spyOn(GDP.ADVANCED.view.ProcessView.prototype, 'displayAlgorithmDescription').andCallThrough();
-		testView = new GDP.ADVANCED.view.ProcessView({
+		spyOn(GDP.PROCESS_CLIENT.view.ProcessView.prototype, 'displayAlgorithmDescription').andCallThrough();
+		testView = new GDP.PROCESS_CLIENT.view.ProcessView({
 			template : templateSpy,
 			model : jobModel,
 			algorithmTemplate : algorithmTemplateSpy
@@ -195,9 +195,9 @@ describe('GDP.ADVANCED.view.ProcessView', function() {
 
 	it('Expects the algorithmConfigView to be instantiated', function() {
 		expect(testView.algorithmConfigView).toBeDefined();
-		expect(GDP.ADVANCED.view.AlgorithmConfigView).toHaveBeenCalled();
-		expect(GDP.ADVANCED.view.AlgorithmConfigView.mostRecentCall.args[0].template).toBe(algorithmTemplateSpy);
-		expect(GDP.ADVANCED.view.AlgorithmConfigView.mostRecentCall.args[0].model).toBe(jobModel);
+		expect(GDP.PROCESS_CLIENT.view.AlgorithmConfigView).toHaveBeenCalled();
+		expect(GDP.PROCESS_CLIENT.view.AlgorithmConfigView.mostRecentCall.args[0].template).toBe(algorithmTemplateSpy);
+		expect(GDP.PROCESS_CLIENT.view.AlgorithmConfigView.mostRecentCall.args[0].model).toBe(jobModel);
 	});
 
 	describe('Tests for displayAlgorithmDescription', function() {
@@ -231,7 +231,7 @@ describe('GDP.ADVANCED.view.ProcessView', function() {
 		testView.selectProcess(evt);
 		expect(jobModel.get('algorithmId')).toEqual('gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm');
 		expect(algorithmRemoveSpy).toHaveBeenCalled();
-		expect(GDP.ADVANCED.view.AlgorithmConfigView.calls.length).toBe(2);
+		expect(GDP.PROCESS_CLIENT.view.AlgorithmConfigView.calls.length).toBe(2);
 	});
 
 	it('Expects that remove removes the algorithmConfigView', function() {

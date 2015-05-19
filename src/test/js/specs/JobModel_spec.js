@@ -1,4 +1,4 @@
-describe('GDP.ADVANCED.model.Job', function() {
+describe('GDP.PROCESS_CLIENT.model.Job', function() {
 	var PROCESSES = [{
 			"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageIntersectionAlgorithm",
 			"name" : "FeatureCoverageIntersectionAlgorithm",
@@ -157,7 +157,7 @@ describe('GDP.ADVANCED.model.Job', function() {
 	var server;
 
 	beforeEach(function() {
-		jobModel = new GDP.ADVANCED.model.Job();
+		jobModel = new GDP.PROCESS_CLIENT.model.Job();
 		jobModel.get('processes').reset(PROCESSES);
 		server = sinon.fakeServer.create();
 	});
@@ -180,9 +180,9 @@ describe('GDP.ADVANCED.model.Job', function() {
 	});
 
 	it('Expects getSelectedDataSourceVariables to return an array of DataSourceVariables for those in jobModel whose selected attribute is true', function() {
-			var var1 = new GDP.ADVANCED.model.DataSourceVariable({text : 'Text1', value : 'value1', selected : true});
-			var var2 = new GDP.ADVANCED.model.DataSourceVariable({text : 'Text2', value : 'value2', selected : true});
-			var var3 = new GDP.ADVANCED.model.DataSourceVariable({text : 'Text3', value : 'value3', selected : false});
+			var var1 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text1', value : 'value1', selected : true});
+			var var2 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text2', value : 'value2', selected : true});
+			var var3 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text3', value : 'value3', selected : false});
 
 			jobModel.get('dataSourceVariables').reset([var1, var2, var3]);
 			var result = jobModel.getSelectedDataSourceVariables();
@@ -306,9 +306,9 @@ describe('GDP.ADVANCED.model.Job', function() {
 		});
 
 		it('Expects DATASET_ID to be assigned to the values in the selected DataSourceVariables', function() {
-			var var1 = new GDP.ADVANCED.model.DataSourceVariable({text : 'Text1', value : 'value1', selected : true});
-			var var2 = new GDP.ADVANCED.model.DataSourceVariable({text : 'Text2', value : 'value2', selected : true});
-			var var3 = new GDP.ADVANCED.model.DataSourceVariable({text : 'Text3', value : 'value3', selected : false});
+			var var1 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text1', value : 'value1', selected : true});
+			var var2 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text2', value : 'value2', selected : true});
+			var var3 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text3', value : 'value3', selected : false});
 
 			jobModel.get('dataSourceVariables').reset([var1, var2, var3]);
 			var result = getWPSStringInputsResult();
@@ -354,7 +354,7 @@ describe('GDP.ADVANCED.model.Job', function() {
 			]);
 		});
 
-		it('Expects that is aoiAttributeValues is the empty array that getSelectFeatureIds returns the empty array', function() {
+		it('Expects that if aoiAttributeValues is the empty array that getSelectFeatureIds returns the empty array', function() {
 			jobModel.set('aoiAttributeValues', []);
 			expect(jobModel.getSelectedFeatureIds()).toEqual([]);
 		});

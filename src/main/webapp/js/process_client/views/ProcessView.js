@@ -2,17 +2,18 @@
 /*global _*/
 /*global $*/
 var GDP = GDP || {};
-GDP.ADVANCED = GDP.ADVANCED || {};
-GDP.ADVANCED.view = GDP.ADVANCED.view || {};
+GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
+GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 (function() {
 	"use strict";
-	GDP.ADVANCED.view.ProcessView = GDP.util.BaseView.extend({
+	GDP.PROCESS_CLIENT.view.ProcessView = GDP.util.BaseView.extend({
 
 		algorithmConfigView : null,
 
 		events : {
-			"click .menu-dropdown-select-process" : "selectProcess"
+			"click .menu-dropdown-select-process" : "selectProcess",
+			"submit form" : "goToHubPage"
 		},
 
 		/*
@@ -37,7 +38,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.displayAlgorithmDescription();
 			this.$el.show();
 
-			this.algorithmConfigView = new GDP.ADVANCED.view.AlgorithmConfigView({
+			this.algorithmConfigView = new GDP.PROCESS_CLIENT.view.AlgorithmConfigView({
 				template : this.algorithmTemplate,
 				model : this.model,
 				el : '#container-process-configuration'
@@ -92,7 +93,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			});
 			this.model.get('processVariables').set(processVars);
 
-			this.algorithmConfigView = new GDP.ADVANCED.view.AlgorithmConfigView({
+			this.algorithmConfigView = new GDP.PROCESS_CLIENT.view.AlgorithmConfigView({
 				template : this.algorithmTemplate,
 				model : this.model,
 				el : '#container-process-configuration'
@@ -102,6 +103,16 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		remove : function() {
 			this.algorithmConfigView.remove();
 			GDP.util.BaseView.prototype.remove.apply(this, arguments);
+		},
+
+		/*
+		 * Route back to the hub page.
+		 * @param {Jquery event} ev
+		 * @returns {undefined}
+		 */
+		goToHubPage : function(ev) {
+			ev.preventDefault();
+			this.router.navigate('', {trigger : true});
 		}
 	});
 }());

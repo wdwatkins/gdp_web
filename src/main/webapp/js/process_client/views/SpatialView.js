@@ -10,14 +10,14 @@
 
 var GDP = GDP || {};
 
-GDP.ADVANCED = GDP.ADVANCED || {};
+GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
 
-GDP.ADVANCED.view = GDP.ADVANCED.view || {};
+GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 
 (function() {
 	"use strict";
-	GDP.ADVANCED.view.SpatialView = GDP.util.BaseView.extend({
+	GDP.PROCESS_CLIENT.view.SpatialView = GDP.util.BaseView.extend({
 
 		_DRAW_FEATURE_NS : 'draw',
 		_DRAW_FEATURE_ATTRIBUTE : 'ID',
@@ -28,7 +28,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			'change #select-values' : 'changeValues',
 			'click #draw-polygon-btn' : 'toggleDrawControl',
 			'click #draw-submit-btn' : 'saveDrawnPolygons',
-			'click #draw-clear-btn' : 'clearDrawnPolygons'
+			'click #draw-clear-btn' : 'clearDrawnPolygons',
+			'submit form' : 'goToHubPage'
 		},
 
 		render : function() {
@@ -305,6 +306,16 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		/*
+		 * Route back to the hub page.
+		 * @param {Jquery event} ev
+		 * @returns {undefined}
+		 */
+		goToHubPage : function(ev) {
+			ev.preventDefault();
+			this.router.navigate('', {trigger : true});
+		},
+
+		/*
 		 * Returns true when the user must specify attribute values to select features.
 		 * @returns {Boolean}
 		 */
@@ -415,6 +426,8 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					var featureInfo = GDP.util.findXMLNamespaceTags($(data), name);
 					var optionValues;
 					var optionObjects;
+					// Create a list of values with associate ids. Rather than
+					// repeat values, push the id onto the id key for that value
 					featureInfo.each(function(){
 						var value = GDP.util.findXMLNamespaceTags($(this), ns_attribute + ':' + attribute).text();
 						var id = $(this).attr('gml:id');
@@ -647,7 +660,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		},
 
 		/*
-		 * Set the visiblity of $el and remove/add required attribute from any inputs.
+		 * Set the visiblity of $el and remove/add required attribute from $el or any of its child inputs.
 		 * @param {Jquery.element} $el
 		 * @param {Boolean} isVisible
 		 */

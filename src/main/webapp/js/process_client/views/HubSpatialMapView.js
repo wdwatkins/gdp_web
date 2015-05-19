@@ -3,14 +3,14 @@
 /*global Backbone*/
 var GDP = GDP || {};
 
-GDP.ADVANCED = GDP.ADVANCED || {};
+GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
 
-GDP.ADVANCED.view = GDP.ADVANCED.view || {};
+GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 (function() {
 	"use strict";
 
-	GDP.ADVANCED.view.HubSpatialMapView = Backbone.View.extend({
+	GDP.PROCESS_CLIENT.view.HubSpatialMapView = Backbone.View.extend({
 
 		/**
 		 * @constructs

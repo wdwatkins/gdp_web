@@ -4,7 +4,7 @@
 /*global log4javascript*/
 var GDP = GDP || {};
 
-GDP.ADVANCED = GDP.ADVANCED || {};
+GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
 
 $(document).ready(function() {
 	"use strict";
@@ -20,7 +20,7 @@ $(document).ready(function() {
 
 	var PARTIALS = [];
 
-	GDP.ADVANCED.templates = GDP.util.templateLoader('js/advanced/templates/');
+	GDP.PROCESS_CLIENT.templates = GDP.util.templateLoader('js/process_client/templates/');
 
 	var loadConfigModel = $.when($.ajax('config', {
 			success: function (data) {
@@ -34,22 +34,22 @@ $(document).ready(function() {
 	// I need to load up my config model since one of the views I load depends on it
 	// Load up the process collection based on incoming model definitions from the config object
 
-	var loadTemplates = GDP.ADVANCED.templates.loadTemplates(TEMPLATES);
-	var loadPartials = GDP.ADVANCED.templates.registerPartials(PARTIALS);
+	var loadTemplates = GDP.PROCESS_CLIENT.templates.loadTemplates(TEMPLATES);
+	var loadPartials = GDP.PROCESS_CLIENT.templates.registerPartials(PARTIALS);
 
 	$.when(loadTemplates, loadPartials, loadConfigModel).always(function () {
 		initializeLogging({
 			LOG4JS_LOG_THRESHOLD: GDP.config.get('application').development === 'true' ? 'debug' : 'info'
 		});
 
-		GDP.ADVANCED.templates.registerHelpers();
+		GDP.PROCESS_CLIENT.templates.registerHelpers();
 		GDP.logger = log4javascript.getLogger();
 
-		var jobModel = new GDP.ADVANCED.model.Job();
+		var jobModel = new GDP.PROCESS_CLIENT.model.Job();
 		jobModel.get('processes').reset(GDP.config.get('process').processes);
 
 		var wps = GDP.OGC.WPS(GDP.logger);
-		GDP.ADVANCED.router = new GDP.ADVANCED.controller.AdvancedRouter(jobModel, wps);
+		GDP.PROCESS_CLIENT.router = new GDP.PROCESS_CLIENT.controller.AdvancedRouter(jobModel, wps);
 		Backbone.history.start();
 	});
 

@@ -6,9 +6,9 @@ var GDP = GDP || {};
 (function(){
 	"use strict";
 
-    GDP.ADVANCED = GDP.ADVANCED || {};
+    GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
 
-    GDP.ADVANCED.model = GDP.ADVANCED.model || {};
+    GDP.PROCESS_CLIENT.model = GDP.PROCESS_CLIENT.model || {};
 
 	var GET_FEATURE_XML_TEMPLATE = '<wfs:GetFeature ' +
                   'service="WFS" ' +
@@ -34,7 +34,7 @@ var GDP = GDP || {};
 			//data details
 			dataSourceUrl : null,
 			invalidDataSourceUrl : true,
-			dataSourceVariables : new GDP.ADVANCED.model.DataSourceVariables(),
+			dataSourceVariables : new GDP.PROCESS_CLIENT.model.DataSourceVariables(),
 
 			//the earliest date the user can select
 			minDate: null,
@@ -54,10 +54,10 @@ var GDP = GDP || {};
 			aoiAttributeFeatureIds : [], // Array of objects with {String} value property and {Array of String} ids property associated with that value.
 
 			//ows identifier for the algorithm. Ex: gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm
-			processes: new GDP.ADVANCED.collection.Processes(),
+			processes: new GDP.PROCESS_CLIENT.collection.Processes(),
 			algorithmId: null,
 
-			processVariables : new GDP.ADVANCED.model.ProcessVariablesModel(), // These will vary depending on the process algorithm selected
+			processVariables : new GDP.PROCESS_CLIENT.model.ProcessVariablesModel(), // These will vary depending on the process algorithm selected
 
 			email : '',
 			filename : ''
@@ -65,7 +65,7 @@ var GDP = GDP || {};
 
 		/*
 		 * Returns the process model for the model's algorithmId. If nothing matches, will return undefined
-		 * @returns {GDP.ADVANCED.model.Process}
+		 * @returns {GDP.PROCESS_CLIENT.model.Process}
 		 */
 		getSelectedAlgorithmProcess : function() {
 			return this.get('processes').findWhere({'id' : this.get('algorithmId')});
@@ -126,7 +126,7 @@ var GDP = GDP || {};
 
 		/*
 		 * Return the data source variables whose selected attribute is true.
-		 * @returns {Array of GDP.ADVANCED.model.DataSourceVariables}
+		 * @returns {Array of GDP.PROCESS_CLIENT.model.DataSourceVariables}
 		 */
 		getSelectedDataSourceVariables : function() {
 			return this.get('dataSourceVariables').where({'selected' : true});
@@ -315,5 +315,5 @@ var GDP = GDP || {};
 			return result;
 		}
     });
-    GDP.ADVANCED.model.Job = Job;
+    GDP.PROCESS_CLIENT.model.Job = Job;
 }());
