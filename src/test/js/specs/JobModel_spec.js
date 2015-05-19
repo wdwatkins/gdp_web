@@ -354,7 +354,7 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 			]);
 		});
 
-		it('Expects that is aoiAttributeValues is the empty array that getSelectFeatureIds returns the empty array', function() {
+		it('Expects that if aoiAttributeValues is the empty array that getSelectFeatureIds returns the empty array', function() {
 			jobModel.set('aoiAttributeValues', []);
 			expect(jobModel.getSelectedFeatureIds()).toEqual([]);
 		});

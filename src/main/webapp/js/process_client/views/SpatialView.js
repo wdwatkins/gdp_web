@@ -426,6 +426,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 					var featureInfo = GDP.util.findXMLNamespaceTags($(data), name);
 					var optionValues;
 					var optionObjects;
+					// Create a list of values with associate ids. Rather than
+					// repeat values, push the id onto the id key for that value
 					featureInfo.each(function(){
 						var value = GDP.util.findXMLNamespaceTags($(this), ns_attribute + ':' + attribute).text();
 						var id = $(this).attr('gml:id');
@@ -658,7 +660,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		},
 
 		/*
-		 * Set the visiblity of $el and remove/add required attribute from any inputs.
+		 * Set the visiblity of $el and remove/add required attribute from $el or any of its child inputs.
 		 * @param {Jquery.element} $el
 		 * @param {Boolean} isVisible
 		 */
