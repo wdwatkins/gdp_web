@@ -333,62 +333,56 @@ describe('GDP.ADVANCED.model.Job', function() {
 	});
 
 	describe('Tests for getSelectedFeatureIds', function() {
-		var GET_FEATURE_RESULT =
-			'<wfs:FeatureCollection numberOfFeatures="2" timeStamp="2015-05-05T20:12:53.928Z" xsi:schemaLocation="gov.usgs.cida.gdp.derivative http://cida-eros-gdpdev.er.usgs.gov:8082/geoserver/wfs?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;typeName=derivative%3ACONUS_States http://www.opengis.net/wfs http://cida-eros-gdpdev.er.usgs.gov:8082/geoserver/schemas/wfs/1.1.0/wfs.xsd" xmlns:ogc="http://www.opengis.net/ogc" xmlns:draw="gov.usgs.cida.gdp.draw" xmlns:wfs="http://www.opengis.net/wfs" xmlns:waters="http://waters" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sample="gov.usgs.cida.gdp.sample" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:derivative="gov.usgs.cida.gdp.derivative" xmlns:upload="gov.usgs.cida.gdp.upload" xmlns:xlink="http://www.w3.org/1999/xlink">' +
-			'<gml:featureMembers>' +
-			'<derivative:CONUS_States gml:id="CONUS_States.39">' +
-			'<derivative:STATE>South Carolina</derivative:STATE>' +
-			'</derivative:CONUS_States>' +
-			'<derivative:CONUS_States gml:id="CONUS_States.40"><derivative:STATE>South Dakota</derivative:STATE></derivative:CONUS_States>' +
-			'</gml:featureMembers></wfs:FeatureCollection>';
-
-		var mockWFSDeferred;
-		var resolveSpy;
-
 		beforeEach(function() {
-			mockWFSDeferred = $.Deferred();
-			spyOn(GDP.OGC.WFS, 'callWFS').andReturn(mockWFSDeferred.promise())
-			spyOn(GDP.util.mapUtils, 'createCQLFilter').andReturn("Fake filter")
-			GDP.logger = {
-				error : jasmine.createSpy('errorLoggerSpy'),
-			};
-
-			resolveSpy = jasmine.createSpy('resolveSpy');
-			jobModel.set({
-				aoiName : 'derivative:CONUS_States',
-				aoiAttribute : 'FeatureAttribute',
-				aoiAttributeValues : ['A1', 'A2']
-			});
+			jobModel.set('aoiAttributeFeatureIds', [
+				{
+					value : 'v1',
+					ids : ['id1']
+				},
+				{
+					value : 'v2',
+					ids : ['id2', 'id3']
+				},
+				{
+					value : 'v3',
+					ids : ['id4', 'id5', 'id6']
+				},
+				{
+					value : 'v4',
+					ids : ['id7']
+				}
+			]);
 		});
 
-		it('Expects a callWFS to be issued with the appropriate typename, propertyname and cql_filter', function() {
-			jobModel.getSelectedFeatureIds();
-			expect(GDP.OGC.WFS.callWFS).toHaveBeenCalled();
-			expect(GDP.OGC.WFS.callWFS.calls[0].args[0].typename).toEqual('derivative:CONUS_States');
-			expect(GDP.OGC.WFS.callWFS.calls[0].args[0].propertyname).toEqual('FeatureAttribute');
-			expect(GDP.OGC.WFS.callWFS.calls[0].args[0].cql_filter).toEqual('Fake filter');
+		it('Expects that is aoiAttributeValues is the empty array that getSelectFeatureIds returns the empty array', function() {
+			jobModel.set('aoiAttributeValues', []);
+			expect(jobModel.getSelectedFeatureIds()).toEqual([]);
 		});
 
-		it('Expects a successful callWFS to resolve the promise with an array of features', function() {
-			jobModel.getSelectedFeatureIds().done(resolveSpy);
-			expect(resolveSpy).not.toHaveBeenCalled();
+		it('Expects that getSelectedFeatureIds will return the ids that correspond to the values in aoiAttributeValues', function() {
+			var r;
+			jobModel.set('aoiAttributeValues', ['v2']);
+			r = jobModel.getSelectedFeatureIds();
+			expect(r.length).toBe(2);
+			expect(r).toContain('id2');
+			expect(r).toContain('id3');
 
-			mockWFSDeferred.resolve($.parseXML(GET_FEATURE_RESULT));
-			expect(resolveSpy).toHaveBeenCalledWith(["CONUS_States.39", "CONUS_States.40"]);
+			jobModel.set('aoiAttributeValues', ['v2', 'v4']);
+			r = jobModel.getSelectedFeatureIds();
+			expect(r.length).toBe(3);
+			expect(r).toContain('id2');
+			expect(r).toContain('id3');
+			expect(r).toContain('id7');
 		});
 
-		it('Expects a failed callWFS to resolve the promise with an empty array', function() {
-			jobModel.getSelectedFeatureIds().done(resolveSpy);
-			expect(resolveSpy).not.toHaveBeenCalled();
+		it('Expects that if all values are selected, then the empty array is returned', function() {
+			jobModel.set('aoiAttributeValues', ['v1', 'v2', 'v3', 'v4']);
+			expect(jobModel.getSelectedFeatureIds()).toEqual([]);
+		})
 
-			mockWFSDeferred.reject();
-			expect(resolveSpy).toHaveBeenCalledWith([]);
-		});
-
-		it('Expects if aoiAttributeValues first array element contains "*" then an empty array is returned', function() {
+		it('Expects that if the first element of aoiAttributeValues is "*", then an empty array is returned', function() {
 			jobModel.set('aoiAttributeValues', ['*']);
-			jobModel.getSelectedFeatureIds().done(resolveSpy);
-			expect(resolveSpy).toHaveBeenCalledWith([]);
+			expect(jobModel.getSelectedFeatureIds()).toEqual([]);
 		});
 	});
 });

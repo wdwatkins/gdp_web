@@ -10,11 +10,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 
 	beforeEach(function() {
 		server = sinon.fakeServer.create();
-		model = new Backbone.Model({
-			aoiName : '',
-			aoiAttribute : '',
-			aoiAttributeValues : []
-		});
+		model = new GDP.ADVANCED.model.Job();
 		GDP.config = new GDP.model.Config({
 			application : {
 				endpoints : {

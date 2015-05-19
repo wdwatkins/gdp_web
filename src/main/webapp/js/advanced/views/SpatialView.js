@@ -177,7 +177,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 				});
 			}
 			else {
-				self.model.set('aoiAttributeValues', ['*']);
+				self.model.set('aoiAttributeValues', self.model.SELECT_ALL_AOI_ATTRIBUTE_VALUES);
 			}
 		},
 
@@ -392,6 +392,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		 */
 		_updateValues : function(name, attribute) {
 			var self = this;
+			var messageDiv = $('#attribute-values-exceeded-div');
 			var deferred = $.Deferred();
 			var getFeatureDeferred;
 			var ns_attribute = name.slice(0, name.indexOf(':'));
@@ -400,6 +401,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.attributeValuesSelectMenuView.updateMenuOptions([]);
 
 			if ((name) && (attribute)) {
+				this.model.set('aoiAttributeFeatureIds', []);
 				getFeatureDeferred = GDP.OGC.WFS.callWFS(
 					{
 						request : 'GetFeature',
@@ -409,29 +411,62 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 					}
 				);
 				getFeatureDeferred.done(function(data) {
-					// Don't repeat values in the list
-					var optionValues = _.uniq(
-						_.map(GDP.util.findXMLNamespaceTags($(data), ns_attribute + ':' + attribute), function(datum) {
-							return $(datum).text();
-						})
-					);
-
-					var optionObjects = _.map(optionValues, function(optionValue){
-						return {
-							text: optionValue,
-							value: optionValue
-						};
+					var aoiAttributeFeatureIds = [];
+					var featureInfo = GDP.util.findXMLNamespaceTags($(data), name);
+					var optionValues;
+					var optionObjects;
+					featureInfo.each(function(){
+						var value = GDP.util.findXMLNamespaceTags($(this), ns_attribute + ':' + attribute).text();
+						var id = $(this).attr('gml:id');
+						var index = _.findIndex(aoiAttributeFeatureIds, function(e) {
+							return e.value === value;
+						});
+						// Don't repeat values in the list
+						if (index > -1) {
+							aoiAttributeFeatureIds[index].ids.push(id);
+						}
+						else {
+							aoiAttributeFeatureIds.push({
+								value : value,
+								ids : [id]
+							});
+						}
 					});
-					self.attributeValuesSelectMenuView.updateMenuOptions(optionObjects);
-					self.attributeValuesSelectMenuView.$el.val(optionValues);
 
+					// Limits the number of polygons that can be sent in a processing request - GDP-205
+					if (featureInfo.length < parseInt(GDP.config.get('application').maxPolygonsToShowAttributeValues)) {
+						self._setVisibility(self.attributeValuesSelectMenuView.$el, true);
+						messageDiv.hide();
+						optionObjects = _.map(aoiAttributeFeatureIds, function(e){
+							return {
+								text: e.value,
+								value: e.value
+							};
+						});
+						optionValues = _.pluck(optionObjects, 'value');
+						self.attributeValuesSelectMenuView.updateMenuOptions(optionObjects);
+						self.attributeValuesSelectMenuView.$el.val(optionValues);
+
+						self.model.set('aoiAttributeFeatureIds', aoiAttributeFeatureIds);
+					}
+					else {
+						// We have exceeded the limit so we won't show the attribute value selection. Instead show a message indicating why.
+						self._setVisibility(self.attributeValuesSelectMenuView.$el, false);
+						messageDiv.show();
+						optionValues = self.model.SELECT_ALL_AOI_ATTRIBUTE_VALUES;
+
+					}
+				    self.model.set('aoiAttributeFeatureIds', aoiAttributeFeatureIds);
 					deferred.resolve(optionValues);
+
 				}).fail(function(message) {
 					GDP.logger.error(message);
 					deferred.resolve([]);
 				});
 			}
 			else {
+				this._setVisibility(this.attributeValuesSelectMenuView.$el, true);
+				messageDiv.hide();
 				deferred.resolve([]);
 			}
 
@@ -617,7 +652,14 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 		 * @param {Boolean} isVisible
 		 */
 		_setVisibility : function($el, isVisible) {
-			var $inputs = $el.find(':input');
+			var $inputs;
+			if ($el.is(':input')) {
+				$inputs = $el;
+			}
+			else {
+				$inputs = $el.find(':input');
+			}
+
 			if (isVisible) {
 				$el.show();
 				$inputs.attr('required', 'required');

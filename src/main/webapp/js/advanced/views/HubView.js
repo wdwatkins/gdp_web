@@ -25,6 +25,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			var invalidJob = (messages.spatial.length !== 0) || (messages.dataDetails.length !== 0) || (messages.algorithm.length !== 0);
 			this.$el.html(this.template({
 				jobModel: this.model.attributes,
+				areAllAOIVariablesSelected : this.model.attributes.aoiAttributeValues === this.model.SELECT_ALL_AOI_ATTRIBUTE_VALUES,
 				selectedProcess : (process) ? process.attributes : '',
 				processInputs : this.model.getProcessInputs(),
 				messages : messages,
@@ -76,7 +77,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 
 			var self = this;
 
-			var getWPSXMLInputs = this.model.getWPSXMLInputs();
+			var xmlInputs = this.model.getWPSXMLInputs();
 			var getWPSStringInputs = this.model.getWPSStringInputs();
 
 			var submitDone = $.Deferred();
@@ -86,7 +87,7 @@ GDP.ADVANCED.view = GDP.ADVANCED.view || {};
 			this.setEditable(false);
 			$('#submit-job-btn').prop('disabled', true);
 
-			$.when(getWPSXMLInputs, getWPSStringInputs).done(function(xmlInputs, wpsStringInputs) {
+			$.when(getWPSStringInputs).done(function(wpsStringInputs) {
 				self.alertView.show('alert-info', 'Process status: started');
 
 				executePromise = self.wps.sendWpsExecuteRequest(
