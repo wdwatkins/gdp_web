@@ -6,9 +6,22 @@
 		<%@include file="/WEB-INF/jsp/head.jsp" %>			
 		<link rel="stylesheet" type="text/css" href="webjars/openlayers/<%= versionOpenLayers%>/theme/default/style.css" />
 		<link rel="stylesheet" type="text/css" href="webjars/jquery-file-upload/<%= versionJqueryFileUpload%>/css/jquery.fileupload.css">
-		<link rel="stylesheet" type="text/css" href="css/gdp_custom.css">
+		<link rel="stylesheet" type="text/css" href="css/process_client_custom.css">
 		<link type="text/css" rel="stylesheet" href="webjars/bootstrap-datepicker/<%= versionBsDatePicker%>/css/bootstrap-datepicker3<%= development ? "" : ".min"%>.css" />
 
+		<jsp:include page="template/USGSHead.jsp">
+			<jsp:param name="relPath" value="" />
+			<jsp:param name="shortName" value="USGS Geo Data Portal" />
+			<jsp:param name="title" value="USGS Geo Data Portal" />
+			<jsp:param name="description" value="" />
+			<jsp:param name="author" value="Ivan Suftin, Mary Bucknell, Carl Schroedl" />
+			<jsp:param name="keywords" value="" />
+			<jsp:param name="publisher" value="" />
+			<jsp:param name="revisedDate" value="" />
+			<jsp:param name="nextReview" value="" />
+			<jsp:param name="expires" value="never" />
+			<jsp:param name="development" value="<%=development%>" />
+		</jsp:include>
 	</head>
     <body>
 		<div class="container">

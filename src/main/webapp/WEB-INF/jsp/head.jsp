@@ -27,6 +27,7 @@ String versionUnderscore = props.get("version.underscore");
 String versionBsDatePicker= props.get("version.bsDatePicker");
 String versionJqueryFileUpload = props.get("version.jqueryFileUpload");
 String versionJqueryUI = props.get("version.jqueryUI");
+String versionSelect2 = props.get("version.select2");
 String resourceSuffix = development ? "" : "-" + versionProject + "-min";
 %>
 
