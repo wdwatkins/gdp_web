@@ -138,6 +138,10 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 							GDP.logger.warn('GDP: STATUS: Process failed: ' + message);
 							submitDone.reject();
 						}
+                                                else if ($(xml).find('wps\\:ProcessAccepted, ProcessAccepted').length > 0) {
+							window.clearInterval(intervalId);
+							self.alertView.show('alert-info', 'Process status: in queue. Last checked: ' + (new Date()).toTimeString());
+						}
 						else {
 							GDP.logger.warn('GDP: Status: Bad response received');
 							self.alertView.show('alert-info', 'Process status: Unknown response received. Retrying, Last checked: ' + (new Date()).toTimeString());
