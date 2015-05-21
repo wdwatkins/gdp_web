@@ -120,6 +120,10 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 							GDP.logger.debug('GDP Status: Process started');
 							self.alertView.show('alert-info', 'Process status: in progess. Last checked: ' + (new Date()).toTimeString());
 						}
+                                                else if ($(xml).find('wps\\:ProcessAccepted, ProcessAccepted').length > 0) {
+                                                        GDP.logger.debug('GDP Status: Process accepted');
+							self.alertView.show('alert-info', 'Process status: in queue. Last checked: ' + (new Date()).toTimeString());
+						}
 						else if ($(xml).find('wps\\:ProcessSucceeded, ProcessSucceeded').length > 0) {
 							window.clearInterval(intervalId);
 							self.alertView.show('alert-success', 'Process status: complete');
