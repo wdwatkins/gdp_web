@@ -12,13 +12,18 @@ GDP.LANDING.controller = GDP.LANDING.CONTROLLER || {};
 	GDP.LANDING.controller.LandingRouter = Backbone.Router.extend({
 		applicationContextDiv : '#home-page-content',
 
+		initialize : function(options) {
+			this.dataSets = options.dataSets;
+		},
+
 		routes : {
 			'' : 'home'
 		},
 
 		home : function() {
 			this.showView(GDP.LANDING.views.DataSourceSelectionView, {
-				template : GDP.LANDING.templates.getTemplate('datasource_select')
+				template : GDP.LANDING.templates.getTemplate('datasource_select'),
+				collection : this.dataSets
 			});
 		},
 

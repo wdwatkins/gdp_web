@@ -4,7 +4,6 @@
 
     <head>
 		<%@include file="/WEB-INF/jsp/head.jsp" %>
-		<link rel="stylesheet" type="text/css" href="webjars/select2/<%= versionSelect2%>/dist/css/select2<%= development ? "" : ".min"%>.css" />
 		<link rel="stylesheet" type="text/css" href="css/gdp_custom.css">
 		
 		<jsp:include page="template/USGSHead.jsp">
@@ -47,14 +46,18 @@
 			</footer>
 		</div>
 		<%@include file="/WEB-INF/jsp/scripts.jsp" %>
-		<script type="text/javascript" src="webjars/select2/<%= versionSelect2%>/dist/js/select2<%= development ? "" : ".min"%>.js"></script>
 		
+		<script type="text/javascript" src="webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? ".debug" :"" %>.js"></script>
+		<script type="text/javascript" src="openlayers/extensions/format/csw/v2_0_2.js"></script>		
 		<script type="text/javascript" src="js/util/templateLoader<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/BaseView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/landing/controller/LandingRouter<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/landing/views/DataSourceSelectionView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/landing/init<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/ogc/csw<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/models/Config<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/landing/models/DataSetModel<%= resourceSuffix %>.js"></script>		
+		<script type="text/javascript" src="js/landing/views/DataSourceSelectionView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/landing/views/DataSetTileView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/landing/controller/LandingRouter<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/landing/init<%= resourceSuffix %>.js"></script>
 	
     </body>
 </html>

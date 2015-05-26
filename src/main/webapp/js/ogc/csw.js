@@ -1,21 +1,20 @@
 // JSLint fixes
 /*jslint plusplus: true */
-/*global $ */
+/*global _*/
 /*global OpenLayers */
-/*global Sarissa */
-/*global CSWClient */
+/*global Sarissa */ //Maybe can take this out
+/*global CSWClient */ //Maybe can take this out too
 
 var GDP = GDP || {};
 
 GDP.OGC = GDP.OGC || {};
 
-GDP.OGW.CSW = function (args) {
+GDP.OGC.CSW = function (args) {
 	"use strict";
 	args = args || {};
 	this.url = args.url;
-	this.proxy = args.proxy;
 	this.capabilitiesDocument = args.capabilitiesDocument;
-	this.cswClient = new CSWClient(this.url);
+//	this.cswClient = new CSWClient(this.url);
 	/**
 	 * Create a CSW GetCapabilities request
 	 * @param args {Object}
@@ -67,25 +66,88 @@ GDP.OGW.CSW = function (args) {
 				}
 			});
 		}
-	},
-		getCapabilitiesKeywords = function (capablitiesXmlDoc) {
+	};
+
+	/*
+	 *
+	 * @param {Object} args
+	 *     @prop {String} outputSchema (optional) - output schema to be used to in the response.
+	 *     @prop {Number} maxRecords - defaults to 1000
+	 * @returns {jquery.Promise} - Resolves when request is successful and return the response object. Rejected
+	 * if the request fails with the error message.
+	 */
+	var requestGetRecords = function(args) {
+		var outputSchema = args.outputSchema ? args.outputSchema : 'http://www.opengis.net/cat/csw/2.0.2';
+		var maxRecords = args.maxRecords || 1000;
+		var deferred = $.Deferred();
+
+		var cswGetRecFormat = new OpenLayers.Format.CSWGetRecords.v2_0_2();
+		var getRecRequest = cswGetRecFormat.write({
+			resultType: "results",
+			maxRecords: String(maxRecords),
+			outputSchema: outputSchema,
+			Query: {
+				ElementSetName: {
+					value: "full"
+				}
+			}
+		});
+
+		OpenLayers.Request.POST({
+			url: this.url,
+			data: getRecRequest,
+			success: function (response) {
+				var cswGetRecRespObj = cswGetRecFormat.read(response.responseXML || response.responseText);
+				deferred.resolve(cswGetRecRespObj);
+				//	scbInd;
+
+				//if (cswGetRecRespObj.success !== false) {
+				//	if (callbacks.success && callbacks.success.length) {
+				//		for (scbInd = 0; scbInd < callbacks.success.length; scbInd++) {
+				//			callbacks.success[scbInd].call(scope, cswGetRecRespObj);
+				//		}
+				//	}
+				//} else {
+				//	GDP.CONFIG.ui.errorEncountered({
+				//		data: 'Unfortunately the metadata catalog is ' +
+				//			'experiencing technical difficulties. For more information, ' +
+				//			'go to <a href="https://my.usgs.gov/confluence/display/GeoDataPortal/GDP+Home">' +
+				//			'The Geo Data Portal Wiki</a> ',
+				//		recoverable: false
+				//	});
+				//}
+			},
+			failure: function (response) {
+				deferred.reject(response);
+				//var scbInd;
+				//if (callbacks.error) {
+				//	for (scbInd = 0; scbInd < callbacks.error.length; scbInd++) {
+				//		callbacks.error[scbInd].call(scope, response);
+				//	}
+				//}
+			}
+		});
+		return deferred.promise();
+	};
+
+	var	getCapabilitiesKeywords = function (capablitiesXmlDoc) {
 			if (!capablitiesXmlDoc && this.capabilitiesDocument) {
 				capablitiesXmlDoc = this.capabilitiesDocument;
 			} else if (!capablitiesXmlDoc && !this.capabilitiesDocument) {
 				throw "missing capabilities xml document";
 			}
-
-			var oDomDoc = Sarissa.getDomDocument(),
-				keywordNodes,
+			// I don't see how this is used so commenting
+//			var oDomDoc = Sarissa.getDomDocument();
+			var keywordNodes,
 				keywords = [],
 				kwInd;
 
-			oDomDoc.setProperty("SelectionLanguage", "XPath");
-			oDomDoc.setProperty("SelectionNamespaces",
-				"xmlns:xhtml='http://www.w3.org/1999/xhtml' " +
-				"xmlns:xsl='http://www.w3.org/1999/XSL/Transform' " +
-				"xmlns:ows='http://www.opengis.net/ows' " +
-				"xmlns:csw='http://www.opengis.net/cat/csw/2.0.2'");
+//			oDomDoc.setProperty("SelectionLanguage", "XPath");
+//			oDomDoc.setProperty("SelectionNamespaces",
+//				"xmlns:xhtml='http://www.w3.org/1999/xhtml' " +
+//				"xmlns:xsl='http://www.w3.org/1999/XSL/Transform' " +
+//				"xmlns:ows='http://www.opengis.net/ows' " +
+//				"xmlns:csw='http://www.opengis.net/cat/csw/2.0.2'");
 			keywordNodes = capablitiesXmlDoc.selectNodes('//ows:Keywords/ows:Keyword');
 
 			for (kwInd = 0; kwInd < keywordNodes.length; kwInd++) {
@@ -178,11 +240,11 @@ GDP.OGW.CSW = function (args) {
 					success: [],
 					error: []
 				},
-			maxRecords = args.maxRecords || 1000,
+				maxRecords = args.maxRecords || 1000,
 				scope = args.scope || this,
 				fInd,
 				kwInd,
-				cswGetRecFormat = new OpenLayers.Format.CSWGetRecords(),
+				cswGetRecFormat = new OpenLayers.Format.CSWGetRecords.v2_0_2(),
 				filters = [],
 				filter,
 				andFilter = new OpenLayers.Filter.Logical({
@@ -190,10 +252,7 @@ GDP.OGW.CSW = function (args) {
 					filters: filters[fInd]
 				}),
 				orFilter,
-				getRecRequest,
-				getRecordsResponse = new OpenLayers.Protocol.Response({
-					requestType: "read"
-				});
+				getRecRequest
 
 			if (!keywords.length || !keywords[0].length) {
 				filters.push(
@@ -236,19 +295,19 @@ GDP.OGW.CSW = function (args) {
 			getRecRequest = cswGetRecFormat.write({
 				resultType: "results",
 				maxRecords: String(maxRecords),
-				outputSchema: "http://www.isotc211.org/2005/gmd",
+//				outputSchema: "http://www.isotc211.org/2005/gmd",
 				Query: {
 					ElementSetName: {
 						value: "full"
-					},
-					Constraint: {
-						"version": "1.1.0",
-						"Filter": andFilter
-					}
+					}//,
+					//Constraint: {
+					//	"version": "1.1.0",
+					//	"Filter": andFilter
+					//}
 				}
 			});
 
-			getRecordsResponse.priv = OpenLayers.Request.POST({
+			OpenLayers.Request.POST({
 				url: this.url,
 				data: getRecRequest,
 				success: function (response) {
@@ -342,11 +401,13 @@ GDP.OGW.CSW = function (args) {
 					idInfoElement = record.identificationInfo[idInfoIdx];
 					if (idInfoElement.hasOwnProperty('descriptiveKeywords')) {
 						for (dkIdx = 0; dkIdx < idInfoElement.descriptiveKeywords.length; dkIdx++) {
-							kwArray = idInfoElement.descriptiveKeywords[dkIdx].keyword;
-							for (kwIdx = 0; kwIdx < kwArray.length; kwIdx++) {
-								keyword = kwArray[kwIdx].CharacterString.value;
-								if (keyword.toLowerCase().indexOf('gov.usgs.cida.gdp.wps') !== -1) {
-									algorithmArray.push(keyword);
+							if (idInfoElement.descriptiveKeywords[dkIdx].hasOwnProperty('keyword')) {
+								kwArray = idInfoElement.descriptiveKeywords[dkIdx].keyword;
+								for (kwIdx = 0; kwIdx < kwArray.length; kwIdx++) {
+									keyword = kwArray[kwIdx].CharacterString.value;
+									if (keyword.toLowerCase().indexOf('gov.usgs.cida.gdp.wps') !== -1) {
+										algorithmArray.push(keyword);
+									}
 								}
 							}
 						}
@@ -637,7 +698,16 @@ GDP.OGW.CSW = function (args) {
 			cswResponse = this.client.sendCSWRequest(getrecordXML);
 			this.client.handleCSWResponse("getrecordbyid", cswResponse, "html");
 		},
-		createOptionFromRecord = function (args) {
+
+		/*
+		 * @param {Object} args
+		 *     @prop {Object} record
+		 * @returns {Object}
+		 *     @prop {Object} operations - key value pairs where the key is an url and value
+		 *			is an object with properties metaDataName and serviceIdTitle
+		 *     @prop {String} ident - fileIdentifier from record
+		 */
+		getDataFromRecord = function (args) {
 			args = args || {};
 			if (!args.record) {
 				throw "undefined record passed in";
@@ -655,9 +725,8 @@ GDP.OGW.CSW = function (args) {
 				transferOptionName,
 				parentTitle,
 				opt,
-				$option,
-				optionsCount = 0,
-				options = {},
+				result,
+				ops = {},
 				url,
 				title,
 				idiIdx,
@@ -669,7 +738,7 @@ GDP.OGW.CSW = function (args) {
 			// no urls and only record identification stuff (name, title, etc)
 			if (record.hasOwnProperty('identificationInfo') && record.identificationInfo.length > 1) {
 				identificationInfos = record.identificationInfo;
-				parentTitle = identificationInfos[0].citation.title.CharacterString.value;
+	//			parentTitle = identificationInfos[0].citation.title.CharacterString.value;
 				for (idiIdx = 0; idiIdx < identificationInfos.length; idiIdx++) {
 					identificationInfo = identificationInfos[idiIdx];
 					if (identificationInfo.hasOwnProperty('serviceIdentification')) {
@@ -680,19 +749,18 @@ GDP.OGW.CSW = function (args) {
 						title = serviceIdentification.citation.title.CharacterString.value;
 
 						if ((operationMetadataName.toLowerCase() === 'opendap') ||
-							(operationMetadataName.toLowerCase().indexOf('wcs') !== -1 && optionsCount === 0)) {
-							options[url] = {
-								name: operationMetadataName,
-								title: title
+							(operationMetadataName.toLowerCase().indexOf('wcs') !== -1 && _.size(ops) === 0)) {
+							ops[url] = {
+								metaDataName: operationMetadataName,
+								serviceIdTitle: title
 							};
-							optionsCount++;
 						}
 					}
 				}
 			}
 
 			// We didn't get a value out of identificationInfo. Try distributionsInfo
-			if (Object.keys(options).length === 0 && record.hasOwnProperty('distributionInfo')) {
+			if (_.size(ops) === 0 && record.hasOwnProperty('distributionInfo')) {
 				distributionInfo = record.distributionInfo;
 				// try tranferOptions
 				if (distributionInfo.hasOwnProperty('transferOptions')) {
@@ -704,45 +772,25 @@ GDP.OGW.CSW = function (args) {
 						operationMetadataName = transferOption.onLine[0].name.CharacterString.value;
 						title = record.identificationInfo[0].citation.title.CharacterString.value;
 						if (transferOptionName.toLowerCase() === 'opendap' ||
-							(transferOptionName.toLowerCase().indexOf('wcs') !== -1 && optionsCount === 0)) {
-							options[url] = {
-								name: operationMetadataName,
-								title: title
+							(transferOptionName.toLowerCase().indexOf('wcs') !== -1 && _.size(ops) === 0)) {
+							ops[url] = {
+								metaDataName: operationMetadataName,
+								serviceIdTitle: title
 							};
-							optionsCount++;
 						}
 					}
 				}
 			}
+			return {
+				operations : ops,
+				ident : ident
 
-			if (optionsCount === 1) {
-				for (opt in options) {
-					if (options.hasOwnProperty(opt)) {
-						$option = $('<option>').
-							attr({
-								value: opt + ';' + ident
-							}).
-							addClass('top-lvl-opt').
-							html(options[opt].title);
-					}
-				}
-			} else if (optionsCount > 1) {
-				$option = $('<option>').
-					addClass('top-lvl-opt opt-haschildren').
-					html(parentTitle + '&nbsp;&darr;');
-
-				// This options object is used if this option is selected in order to create a secondary dropdown
-				// list using this options object
-				options.ident = ident;
-				$option.data('suboptions', options);
-			}
-
-			return $option;
-
+			};
 		};
 
 	return {
 		requestGetCapabilities: requestGetCapabilities,
+		requestGetRecords : requestGetRecords,
 		getCapabilitiesKeywords: getCapabilitiesKeywords,
 		getRecordsByKeywordsFromServer: getRecordsByKeywordsFromServer,
 		getRecordsByKeywords: getRecordsByKeywords,
@@ -753,7 +801,7 @@ GDP.OGW.CSW = function (args) {
 		getAbstractFromRecord: getAbstractFromRecord,
 		getEndpointFromRecord: getEndpointFromRecord,
 		getUrlToIdentifierFromRecords: getUrlToIdentifierFromRecords,
-		createOptionFromRecord: createOptionFromRecord,
+		getDataFromRecord: getDataFromRecord, // was createOptionFromRecord
 		getCswIdentToRecordMapFromRecordsArray: getCswIdentToRecordMapFromRecordsArray,
 		createFullRecordView: createFullRecordView,
 		getKeywordsForRecord: getKeywordsForRecord,
