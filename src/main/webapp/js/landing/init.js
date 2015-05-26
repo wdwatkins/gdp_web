@@ -40,6 +40,8 @@ $(document).ready(function() {
 	var loadTemplates = GDP.LANDING.templates.loadTemplates(TEMPLATES);
 
 	$.when(loadTemplates, loadConfigModel).always(function () {
+		GDP.LANDING.templates.registerHelpers();
+
 		var dataSets = new GDP.LANDING.models.DataSetCollection();
 		GDP.LANDING.router = new GDP.LANDING.controller.LandingRouter({
 			dataSets : dataSets

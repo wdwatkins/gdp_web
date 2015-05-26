@@ -1,5 +1,8 @@
-<div data-datasetid="{{identifier}}">
-	<h4>{{title}}</h4>
-	<h6>Abstract</h6>
-	<p>{{abstract}}</p>
+<div data-datasetid="{{identifier}}" class="dataset-tile-div panel panel-default">
+	<div class="panel-heading"><h4>{{title}}</h4></div>
+	<div class="panel-body">
+		<h5>Abstract</h5>
+		<p>{{truncate abstract 100}}</p>
+	</div>
 </div>
+      

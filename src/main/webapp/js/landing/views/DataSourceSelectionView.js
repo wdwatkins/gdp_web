@@ -18,7 +18,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
-			this.$dataSetTileContainer = $('#dataset-tile-div');
+			this.$dataSetTileContainer = $('#dataset-tile-container');
 
 			getCswRecords.done(function(response) {
 				GDP.logger.debug('Got CSW GetRequest response');
