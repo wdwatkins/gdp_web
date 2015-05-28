@@ -16,6 +16,16 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			'click .dataset-tile-div' : 'showDetails'
 		},
 
+		/*
+		 * @constructs
+		 * @param {Object} options
+		 *     @prop router {Backbone.Router instance} - defaults to null
+		 *	   @prop template {Handlerbars template function} - defaults to loading the template from NWC.templates - this is useful for testing
+		 *	   @prop model {GDP.LANDING.models.DataSetModel}
+		 *	   @prop dialogEl {Jquery element} - The jquery element for the modal dialog
+		 *	   @prop el {Jquery element} - optional
+		 * @returns {GDP.LANDING.views.DataSetTileView}
+		 */
 		initialize : function(options) {
 			var bounds;
 			this.context = this.model.attributes.csw;
@@ -35,7 +45,10 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			this.map.zoomToExtent(bounds);
 		},
 
-		showDetails : function(ev) {
+		/*
+		 * Creates a DataSetDialogView for this view's model
+		 */
+		showDetails : function() {
 			this.detailView = new GDP.LANDING.views.DataSetDialogView({
 				model : this.model,
 				template : GDP.LANDING.templates.getTemplate('data_set_dialog'),

@@ -17,6 +17,10 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			'click .process-btn' : 'goToProcessClient'
 		},
 
+		/*
+		 * Renders the template using a context that is created from the model and GDP.algorithms and places
+		 * the contents in the .modal-content element within the passed in el.
+		 */
 		render : function() {
 			var context = this.model.get('csw');
 			context.dataSources = this.model.getDataSources();
@@ -30,6 +34,14 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			return this;
 		},
 
+		/*
+		 * @param {Object} options
+		 *     @prop {Function} template - returns the rendered html.
+		 *     @prop {GDP.LANDING.models.DataSetModel} model
+		 *     @prop {Jquery element} el - This is expected to contain the framework for a bootstrap
+		 *         modal where el represents the div with the modal class and within that div is a modal-content
+		 *         class.
+		 */
 		initialize : function(options) {
 			var self = this;
 			options = options || {};
@@ -39,30 +51,44 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			else {
 				this.template = function() { return 'No template specified'; };
 			}
-
-			var getRecord = GDP.cswClient.requestGetRecordById({
-				outputSchema : 'http://www.isotc211.org/2005/gmd',
-				id : this.model.get('csw').identifier
-			});
+			var getRecord = $.Deferred();
+			var isoMetadata = self.model.get('isoMetadata');
+			if (_.isEmpty(isoMetadata)) {
+				GDP.cswClient.requestGetRecordById({
+					outputSchema : 'http://www.isotc211.org/2005/gmd',
+					id : this.model.get('csw').identifier
+				}).done(function(response) {
+					self.model.set('isoMetadata', response.records[0]);
+					getRecord.resolve(response.records[0]);
+				}).fail(function(error) {
+					GDP.logger.error('GetRecordsById failed');
+					getRecord.reject(error);
+				});
+			}
+			else {
+				getRecord.resolve(isoMetadata);
+			}
 
 			Backbone.View.prototype.initialize.apply(this, arguments);
 
 			getRecord.done(function(response) {
-				GDP.logger.debug('Get Record');
-				self.model.set('isoMetadata', response.records[0]);
 				self.render();
 				self.$el.modal({});
 
-			}).fail(function(error) {
-				GDP.logger.error('GetRecords failed when getting a single record');
 			});
 		},
 
+		/*
+		 * Hide dialog and remove the view
+		 */
 		removeDialog : function() {
 			this.$el.modal('hide');
 			this.remove();
 		},
 
+		/*
+		 * Go to the process_client using the dataset identifier in the url.
+		 */
 		goToProcessClient : function() {
 			window.location.assign('process_client/' + this.model.get('csw').identifier);
 			this.remove();

@@ -64,6 +64,13 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 			return results;
 		},
 
+		/*
+		 * @return {Object} or null.
+		 *     @prop {Array of String or null} emails
+		 *     @prop {String or null} name
+		 *     @prop {String or null} orgName
+		 *     @prop {Object or null} role
+		 */
 		getContactInfo : function() {
 			var metadata = this.get('isoMetadata');
 			var getCharValue = this._getCharValue;
@@ -97,6 +104,11 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 			});
 		},
 
+		/*
+		 * returns {Object or null}
+		 *     @prop {String} start
+		 *     @prop {String} end
+		 */
 		getDataSetTimeRange : function() {
 			var metadata = this.get('isoMetadata');
 
@@ -115,6 +127,12 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 			}
 		},
 
+		/*
+		 * @return {Object or null}
+		 *     @prop {String} description
+		 *	   @prop {String} url
+		 *	   @prop {String} name
+		 */
 		getDistributionTransferOptions : function() {
 			var metadata = this.get('isoMetadata');
 			var online;

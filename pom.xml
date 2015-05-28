@@ -338,8 +338,7 @@
 					<sourceIncludes>
 						<include>util/**.js</include>
 						<include>models/Config.js</include>
-						<include>ogc/wfs.js</include>
-						<include>ogc/wps.js</include>
+						<include>ogc/**.js</include>
 						<include>process_client/models/Process.js</include>
 						<include>process_client/models/DataSourceModels.js</include>
 						<include>process_client/collections/Processes.js</include>
@@ -348,9 +347,14 @@
 						<include>process_client/views/AlgorithmConfigView.js</include>
 						<include>process_client/views/*.js</include>
 						<include>process_client/controller/AdvancedRouter.js</include>
+						<include>landing/models/*.js</include>
+						<include>landing/views/DataSetDialogView.js</include>
+						<include>landing/views/DataSetTileView.js</include>
+						<include>landing/views/DataSourceSelectionView.js</include>
 					</sourceIncludes>
 					<sourceExcludes>
 						<include>process_client/init.js</include>
+						<include>landing/init.js</include>
 					</sourceExcludes>
 				</configuration>		
 			</plugin>
