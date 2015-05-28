@@ -26,14 +26,20 @@
 		</dl>
 		<dl>
 			<dt>Time Range</dt>
-			<dd>{{timeRange.start}} - {{timeRange.end}}</dd>
+			<dd>
+				{{#if timeRange}}{{timeRange.start}} - {{timeRange.end}}</dd>
+				{{else}}Not Available
+				{{/if}}
+			</dd>
 		</dl>
 		<dl>
 			<dt>Distribution Info</dt>
+			<dd>
 			{{#if distributionInfo}}
-			<dd>{{distributionInfo.name}} - <a href="{{distributionInfo.url}}">{{distributionInfo.url}}</a></dd>
+			{{distributionInfo.name}} - <a href="{{distributionInfo.url}}">{{distributionInfo.url}}</a>
 			{{else}}Not Available
 			{{/if}}
+			</dd>
 		</dl>
 		<div id="data-sources-div">
 			<strong>Data Sources available for GDP processing</strong>

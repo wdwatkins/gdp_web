@@ -68,11 +68,31 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 			var metadata = this.get('isoMetadata');
 			var getCharValue = this._getCharValue;
 			return _.map(metadata.contact, function(c) {
-				return {
-					emails : _.map(c.contactInfo.address.electronicMailAddress, getCharValue),
-					name : getCharValue(c.individualName),
-					orgName : getCharValue(c.organisationName),
-					role : c.role
+				if (_.isEmpty(c)) {
+					return null;
+				}
+				else {
+					var emails, name, orgName, role;
+					if (_.has(c, 'contactInfo') &&
+						_.has(c.contactInfo, 'address') &&
+						_.has(c.contactInfo.address, 'electronciMailAddress')) {
+						emails = _.map(c.contactInfo.address.electronicMailAddress, getCharValue);
+					}
+					if (_.has(c, 'individualName')) {
+						name = getCharValue(c.individualName);
+					}
+					if (_.has(c, 'organisationName')) {
+						orgName = getCharValue(c.organisationName);
+					}
+					if (_.has(c, 'role')) {
+						role = c.role;
+					}
+					return {
+						emails : emails,
+						name : name,
+						orgName : orgName,
+						role : role
+					};
 				}
 			});
 		},
@@ -82,6 +102,7 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 
 			if (_.has(metadata, 'identificationInfo') && (metadata.identificationInfo.length > 0) &&
 				(metadata.identificationInfo[0].extent.length > 0) &&
+				(_.has(metadata.identificationInfo[0].extent[0], 'temporalElement')) &&
 				(metadata.identificationInfo[0].extent[0].temporalElement.length > 0)){
 				var time = metadata.identificationInfo[0].extent[0].temporalElement[0].extent.TimePeriod;
 				return {
@@ -97,7 +118,10 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 		getDistributionTransferOptions : function() {
 			var metadata = this.get('isoMetadata');
 			var online;
-			if (_.has(metadata, 'distributionInfo') && (metadata.distributionInfo.distributor.length > 0) &&
+			if (_.has(metadata, 'distributionInfo') &&
+				(_.has(metadata.distributionInfo, 'distributor')) &&
+				(metadata.distributionInfo.distributor.length > 0) &&
+				(_.has(metadata.distributionInfo.distributor[0], 'distributoTransferOptions')) &&
 				(metadata.distributionInfo.distributor[0].distributorTransferOptions.length > 0)  &&
 				(metadata.distributionInfo.distributor[0].distributorTransferOptions[0].onLine.length > 0)) {
 				online = metadata.distributionInfo.distributor[0].distributorTransferOptions[0].onLine[0];
@@ -113,7 +137,13 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 		},
 
 		_getCharValue : function(obj) {
-			return obj.CharacterString.value;
+			if (obj) {
+				return obj.CharacterString.value;
+			}
+			else {
+				return null;
+			}
+
 		}
 	});
 
