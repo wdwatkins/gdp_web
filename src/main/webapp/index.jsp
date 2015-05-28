@@ -51,11 +51,13 @@
 		<script type="text/javascript" src="openlayers/extensions/format/csw/v2_0_2.js"></script>		
 		<script type="text/javascript" src="js/util/templateLoader<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/BaseView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/util/mapUtils<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/ogc/csw<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/models/Config<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/landing/models/DataSetModel<%= resourceSuffix %>.js"></script>		
+		<script type="text/javascript" src="js/landing/models/DataSetModel<%= resourceSuffix %>.js"></script>	
 		<script type="text/javascript" src="js/landing/views/DataSourceSelectionView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/landing/views/DataSetTileView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/landing/views/DataSetDialogView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/landing/controller/LandingRouter<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/landing/init<%= resourceSuffix %>.js"></script>
 	

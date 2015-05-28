@@ -24,6 +24,15 @@
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>algorithms</servlet-name>
+		<jsp-file>/WEB-INF/jsp/algorithms.json</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>algorithms</servlet-name>
+		<url-pattern>/algorithms</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
         <servlet-name>GeoServerProxyServlet</servlet-name>
         <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
         <init-param>

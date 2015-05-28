@@ -12,7 +12,8 @@ $(document).ready(function() {
 
 	var TEMPLATES = [
 		'datasource_select',
-		'data_set_tile'
+		'data_set_tile',
+		'data_set_dialog'
 	];
 
 	GDP.LANDING.templates = GDP.util.templateLoader('js/landing/templates/');
@@ -34,12 +35,21 @@ $(document).ready(function() {
 			}
 		}));
 
+	var loadAlgorithms = $.ajax('algorithms', {
+		success : function(data) {
+			GDP.algorithms = new Backbone.Model($.parseJSON(data));
+		},
+		error : function(jqXHR, textStatus) {
+			console.log('Can\'t load algorithms ' + textStatus);
+		}
+	})
+
 	// I need to load up my config model since one of the views I load depends on it
 	// Load up the process collection based on incoming model definitions from the config object
 
 	var loadTemplates = GDP.LANDING.templates.loadTemplates(TEMPLATES);
 
-	$.when(loadTemplates, loadConfigModel).always(function () {
+	$.when(loadTemplates, loadConfigModel, loadAlgorithms).always(function () {
 		GDP.LANDING.templates.registerHelpers();
 
 		var dataSets = new GDP.LANDING.models.DataSetCollection();
