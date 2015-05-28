@@ -22,6 +22,8 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			context.dataSources = this.model.getDataSources();
 			context.contactInfo = this.model.getContactInfo();
 			context.algorithms = GDP.algorithms.get('gdpAlgorithms')[context.identifier];
+			context.timeRange = this.model.getDataSetTimeRange();
+			context.distributionInfo = this.model.getDistributionTransferOptions();
 			var html = this.template(context);
 			this.$el.find('.modal-content').html(html);
 

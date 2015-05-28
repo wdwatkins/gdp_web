@@ -77,6 +77,41 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 			});
 		},
 
+		getDataSetTimeRange : function() {
+			var metadata = this.get('isoMetadata');
+
+			if (_.has(metadata, 'identificationInfo') && (metadata.identificationInfo.length > 0) &&
+				(metadata.identificationInfo[0].extent.length > 0) &&
+				(metadata.identificationInfo[0].extent[0].temporalElement.length > 0)){
+				var time = metadata.identificationInfo[0].extent[0].temporalElement[0].extent.TimePeriod;
+				return {
+					start : time.beginPosition,
+					end : time.endPosition
+				};
+			}
+			else {
+				return null;
+			}
+		},
+
+		getDistributionTransferOptions : function() {
+			var metadata = this.get('isoMetadata');
+			var online;
+			if (_.has(metadata, 'distributionInfo') && (metadata.distributionInfo.distributor.length > 0) &&
+				(metadata.distributionInfo.distributor[0].distributorTransferOptions.length > 0)  &&
+				(metadata.distributionInfo.distributor[0].distributorTransferOptions[0].onLine.length > 0)) {
+				online = metadata.distributionInfo.distributor[0].distributorTransferOptions[0].onLine[0];
+				return {
+					description : this._getCharValue(online.description),
+					url : online.linkage.URL,
+					name : this._getCharValue(online.name)
+				}
+			}
+			else {
+				return null;
+			}
+		},
+
 		_getCharValue : function(obj) {
 			return obj.CharacterString.value;
 		}

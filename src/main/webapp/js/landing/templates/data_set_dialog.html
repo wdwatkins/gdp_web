@@ -4,15 +4,15 @@
 	</div>
 	<div class="modal-body .container-fluid">
 		<dl>
-			<dt>Title:&nbsp;</dt>
+			<dt>Title</dt>
 			<dd>{{title}}</dd>
 		</dl>
 		<dl>
-			<dt>Abstract:</dt>
+			<dt>Abstract</dt>
 			<dd>{{abstrct}}</dd>
 		</dl>
 		<dl>
-			<dt>Point of Contacts:</dt>
+			<dt>Point of Contacts</dt>
 			{{#each contactInfo}}
 			<dd>{{this.name}}</dd>
 			<dd>
@@ -24,6 +24,17 @@
 			{{#if @last}}{{else}}<br/>{{/if}}
 			{{/each}}
 		</dl>
+		<dl>
+			<dt>Time Range</dt>
+			<dd>{{timeRange.start}} - {{timeRange.end}}</dd>
+		</dl>
+		<dl>
+			<dt>Distribution Info</dt>
+			{{#if distributionInfo}}
+			<dd>{{distributionInfo.name}} - <a href="{{distributionInfo.url}}">{{distributionInfo.url}}</a></dd>
+			{{else}}Not Available
+			{{/if}}
+		</dl>
 		<div id="data-sources-div">
 			<strong>Data Sources available for GDP processing</strong>
 			<ul>
@@ -33,7 +44,7 @@
 			</ul>
 		</div>
 		<div>
-			<strong>Available algorithms for data soures</strong>
+			<strong>Available algorithms for data sources</strong>
 			<ul>
 				{{#each algorithms}}
 				<li>{{this}}</li>
