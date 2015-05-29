@@ -270,6 +270,8 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 			spyOn(jobModel, 'getWCSDataSourceUrl').andReturn(mockGetWCSDataDeferred);
 
 			resolveSpy = jasmine.createSpy('resolveSpy');
+
+			jobModel.set('algorithmId', 'gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageIntersectionAlgorithm');
 		});
 
 		it('Expects that the promise returned is not resolved until getWCSDataSourceUrl\'s promise has been resolved', function() {
@@ -319,16 +321,16 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 
 		it('Expects that process variables are included in the result', function() {
 			jobModel.get('processVariables').set({
+				'REQUIRE_FULL_COVERAGE' : 'True',
 				"VAR1" : "value1",
 				"VAR2" : "value2"
 			});
 
 			var result = getWPSStringInputsResult();
 
-			expect(result.VAR1.length).toBe(1);
-			expect(result.VAR2.length).toBe(1);
-			expect(result.VAR1).toEqual(['value1']);
-			expect(result.VAR2).toEqual(['value2']);
+			expect(result.REQUIRE_FULL_COVERAGE).toEqual(['True']);
+			expect(result.VAR1).not.toBeDefined();
+			expect(result.VAR2).not.toBeDefined();
 		});
 	});
 
