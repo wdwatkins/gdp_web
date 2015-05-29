@@ -24,6 +24,15 @@
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>algorithms</servlet-name>
+		<jsp-file>/WEB-INF/jsp/algorithms.json</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>algorithms</servlet-name>
+		<url-pattern>/algorithms</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
         <servlet-name>GeoServerProxyServlet</servlet-name>
         <servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
         <init-param>
@@ -72,6 +81,23 @@
 	<servlet-mapping>
 		<servlet-name>ProcessWpsProxyServlet</servlet-name>
 		<url-pattern>/processWps/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>CWSProxyServlet</servlet-name>
+		<servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+		<init-param>
+			<param-name>forward-url-param</param-name>
+			<param-value>gdp.endpoint.csw</param-value>
+		</init-param>
+		<init-param>
+			<param-name>readTimeout</param-name>
+			<param-value>300000</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CWSProxyServlet</servlet-name>
+		<url-pattern>/csw/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>

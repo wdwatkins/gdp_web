@@ -135,6 +135,14 @@ GDP.util.templateLoader = function(templateDir) {
 				else {
 					return '';
 				}
+			},
+			'truncate' : function(str, length) {
+				if (str.length > length) {
+					return str.substr(0, length) + '...';
+				}
+				else {
+					return str;
+				}
 			}
 		});
 	};
