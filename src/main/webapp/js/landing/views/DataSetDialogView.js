@@ -44,6 +44,9 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		 */
 		initialize : function(options) {
 			var self = this;
+
+			this.$el.find('.modal-content').html('<div class="text-center"><i class=" fa fa-5x fa-spin fa-refresh"></i></div>');
+			this.$el.modal({});
 			options = options || {};
 			if (_.has(options, 'template')) {
 				this.template = options.template;
@@ -73,8 +76,6 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 			getRecord.done(function(response) {
 				self.render();
-				self.$el.modal({});
-
 			});
 		},
 
