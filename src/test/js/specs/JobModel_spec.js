@@ -16,6 +16,15 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 					"maxOccurs" : "1"
 				},
 				{
+					"identifier" : "FEATURE_ATTRIBUTE_NAME",
+					"title" : "Feature Attribute Name",
+					"abstract" : "The attribute that will be used to label column headers in processing output.",
+					"input-type" : "literal",
+					"data-type" : "attribute_name",
+					"minOccurs" : "1",
+					"maxOccurs" : "1"
+				},
+				{
 					"identifier" : "FEATURE_COLLECTION",
 					"title" : "Feature Collection",
 					"abstract" : "A feature collection encoded as a WFS request or one of the supported GML profiles.",
