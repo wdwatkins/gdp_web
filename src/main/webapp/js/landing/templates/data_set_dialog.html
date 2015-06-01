@@ -1,64 +1,55 @@
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		<h4 class="modal-title" id="myModalLabel">Select Data Source</h4>
-	</div>
-	<div class="modal-body .container-fluid">
-		<dl>
-			<dt>Title</dt>
-			<dd>{{title}}</dd>
-		</dl>
-		<dl>
-			<dt>Abstract</dt>
-			<dd>{{abstrct}}</dd>
-		</dl>
-		<dl>
-			<dt>Point of Contacts</dt>
-			{{#each contactInfo}}
-			<dd>{{this.name}}</dd>
-			<dd>
-				{{#each this.emails}}
-					{{#if @last}}{{this}}{{else}}{{this}},&nbsp;{{/if}}
-				{{/each}}
-			</dd>
-			<dd>{{this.orgName}}</dd>
-			{{#if @last}}{{else}}<br/>{{/if}}
-			{{/each}}
-		</dl>
-		<dl>
-			<dt>Time Range</dt>
-			<dd>
-				{{#if timeRange}}{{timeRange.start}} - {{timeRange.end}}</dd>
-				{{else}}Not Available
-				{{/if}}
-			</dd>
-		</dl>
-		<dl>
-			<dt>Distribution Info</dt>
-			<dd>
-			{{#if distributionInfo}}
-			{{distributionInfo.name}} - <a href="{{distributionInfo.url}}">{{distributionInfo.url}}</a>
-			{{else}}Not Available
-			{{/if}}
-			</dd>
-		</dl>
-		<div>
-			<strong>Data Sources available for GDP processing</strong>
-			<ul>
-				{{#each dataSources}}
-				<li>{{this.title}}</li>
-				{{/each}}
-			</ul>
-		</div>
-		<div>
-			<strong>Available algorithms for data sources</strong>
-			<ul>
-				{{#each algorithms}}
-				<li>{{this}}</li>
-				{{/each}}
-			</ul>
-		</div>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-default cancel-btn">Cancel</button>
-		<button type="button" class="btn btn-primary process-btn">Process Data Source</button>
-	</div>
+	
+<dl>
+	<dt>Title</dt>
+	<dd>{{title}}</dd>
+</dl>
+<dl>
+	<dt>Abstract</dt>
+	<dd>{{abstrct}}</dd>
+</dl>
+<dl>
+	<dt>Point of Contacts</dt>
+	{{#each contactInfo}}
+	<dd>{{this.name}}</dd>
+	<dd>
+		{{#each this.emails}}
+			{{#if @last}}{{this}}{{else}}{{this}},&nbsp;{{/if}}
+		{{/each}}
+	</dd>
+	<dd>{{this.orgName}}</dd>
+	{{#if @last}}{{else}}<br/>{{/if}}
+	{{/each}}
+</dl>
+<dl>
+	<dt>Time Range</dt>
+	<dd>
+		{{#if timeRange}}{{timeRange.start}} - {{timeRange.end}}</dd>
+		{{else}}Not Available
+		{{/if}}
+	</dd>
+</dl>
+<dl>
+	<dt>Distribution Info</dt>
+	<dd>
+	{{#if distributionInfo}}
+	{{distributionInfo.name}} - <a href="{{distributionInfo.url}}">{{distributionInfo.url}}</a>
+	{{else}}Not Available
+	{{/if}}
+	</dd>
+</dl>
+<div>
+	<strong>Data Sources available for GDP processing</strong>
+	<ul>
+		{{#each dataSources}}
+		<li>{{this.title}}</li>
+		{{/each}}
+	</ul>
+</div>
+<div>
+	<strong>Available algorithms for data sources</strong>
+	<ul>
+		{{#each algorithms}}
+		<li>{{this}}</li>
+		{{/each}}
+	</ul>
+</div>
