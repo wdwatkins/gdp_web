@@ -69,6 +69,8 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			}).fail(function(error) {
 				self.$dataSetTileContainer.html('CSW service is unavailable:' & error);
 				GDP.logger.debug('Got CSW GetRequest error');
+			}).always(function() {
+				self.$el.find('.tile-loading-indicator').hide();
 			});
 
 		}
