@@ -31,7 +31,8 @@
 		"endpoints" : {
 			"geoserver" : "geoserver",
 			"utilityWps" : "utilityWps",
-			"processWps" : "processWps"
+			"processWps" : "processWps",
+			"csw" : "csw"
 		},
 		"serviceEndpoints" : {
 			"geoserver" : "<%= geoserverEndpoint %>"
