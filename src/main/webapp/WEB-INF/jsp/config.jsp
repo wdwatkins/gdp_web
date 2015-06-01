@@ -281,15 +281,6 @@
 							"TAB",
 							"SPACE"
 						]
-					},
-					{
-						"identifier" : "TIME_END",
-						"title" : "Time End",
-						"abstract" : "The date to end analysis.",
-						"input-type" : "literal",
-						"data-type" : "dateTime",
-						"minOccurs" : "0",
-						"maxOccurs" : "1"
 					}
 				],
 				"outputs" : [

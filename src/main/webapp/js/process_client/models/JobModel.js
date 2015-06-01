@@ -154,6 +154,9 @@ var GDP = GDP || {};
 		 * @returns $.Deferred.promise.
 		 */
 		getWPSStringInputs : function() {
+			var selectedAlgorithm = this.getSelectedAlgorithmProcess();
+			var validInputs = _.pluck(selectedAlgorithm.get('inputs'), 'identifier');
+
 			var getISODate = function(dateStr){
 				var date = new Date(dateStr);
 				return (new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))).toISOString();
@@ -165,22 +168,35 @@ var GDP = GDP || {};
 
 			var getDataSourceUrl = this.getWCSDataSourceUrl();
 
+			/* The following property always need to be specified */
 			var result = {
-				FEATURE_ATTRIBUTE_NAME : [aoiAttribute ],
 				DATASET_ID : _.map(this.getSelectedDataSourceVariables(), function(model) {
 					return model.get('value');
-				}),
-				TIME_START : [getISODate(this.get('startDate'))],
-				TIME_END : [getISODate(this.get('endDate'))]
+				})
 			};
+
+			/* The rest of the properties should only be specified if in validInputs */
+			if (_.contains(validInputs, 'FEATURE_ATTRIBUTE_NAME')) {
+				result.FEATURE_ATTRIBUTE_NAME = [aoiAttribute ];
+			}
+
+			if (_.contains(validInputs, 'TIME_START')) {
+				result.TIME_START = [getISODate(this.get('startDate'))];
+			}
+
+			if (_.contains(validInputs, 'TIME_END')) {
+				result.TIME_END = [getISODate(this.get('endDate'))];
+			}
 
 			var processVars = {};
 			_.each(this.get('processVariables').attributes, function(value, key) {
-				if (_.isArray(value)) {
-					processVars[key] = value;
-				}
-				else {
-					return processVars[key] = [value];
+				if (_.contains(validInputs, key)) {
+					if (_.isArray(value)) {
+						processVars[key] = value;
+					}
+					else {
+						return processVars[key] = [value];
+					}
 				}
 			});
 			_.extend(result, processVars);
