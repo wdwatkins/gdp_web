@@ -40,6 +40,8 @@ describe('GDP.LANDING.views.DataSetDialogView', function() {
 			error : jasmine.createSpy('logErrorSpy')
 		};
 
+		spyOn($.fn, 'modal');
+
 		spyOn(GDP.LANDING.views.DataSetDialogView.prototype, 'render').andCallThrough();
 		testView = new GDP.LANDING.views.DataSetDialogView({
 			template : templateSpy,
@@ -47,9 +49,6 @@ describe('GDP.LANDING.views.DataSetDialogView', function() {
 			el : $('.modal')
 		});
 		spyOn(testView, 'remove');
-
-		spyOn($.fn, 'modal');
-
 	});
 
 	afterEach(function() {
@@ -61,14 +60,17 @@ describe('GDP.LANDING.views.DataSetDialogView', function() {
 		expect(GDP.cswClient.requestGetRecordById.calls[0].args[0].id).toEqual('ID1');
 	});
 
-	it('Expects that when GetRecordById is resolved, the model is updated, rendered is called and the modal initialized', function() {
+	it('Expects that the modal is initialized before GetRecordBydId is resolved', function() {
+		expect($.fn.modal).toHaveBeenCalled();
+	});
+
+	it('Expects that when GetRecordById is resolved, the model is updated and rendered is called', function() {
 		expect(testView.render).not.toHaveBeenCalled();
 		getDeferred.resolve({
 			records : [{fake_data : 'Fake data'}, {fake_data : 'Fake data2'}]
 		});
 		expect(testModel.attributes.isoMetadata).toEqual({fake_data : 'Fake data'});
 		expect(testView.render).toHaveBeenCalled();
-		expect($.fn.modal).toHaveBeenCalled();
 	});
 
 	it('Expects template to be rendered  with the information returned from the model after a successful GetRecordById', function() {
@@ -92,7 +94,7 @@ describe('GDP.LANDING.views.DataSetDialogView', function() {
 		expect(testModel.set).not.toHaveBeenCalled();
 	});
 
-	it('Expects removeDialog to his the dialog and remove the view', function() {
+	it('Expects removeDialog to hide the dialog and remove the view', function() {
 		testView.removeDialog();
 		expect($.fn.modal).toHaveBeenCalledWith('hide');
 		expect(testView.remove).toHaveBeenCalled();

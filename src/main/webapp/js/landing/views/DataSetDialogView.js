@@ -29,7 +29,8 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			context.timeRange = this.model.getDataSetTimeRange();
 			context.distributionInfo = this.model.getDistributionTransferOptions();
 			var html = this.template(context);
-			this.$el.find('.modal-content').html(html);
+			this.$el.find('.modal-body').html(html);
+			this.$el.find('.modal-footer').show();
 
 			return this;
 		},
@@ -45,7 +46,8 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		initialize : function(options) {
 			var self = this;
 
-			this.$el.find('.modal-content').html('<div class="text-center"><i class=" fa fa-5x fa-spin fa-refresh"></i></div>');
+			this.$el.find('.modal-body').html('<div class="text-center"><i class=" fa fa-5x fa-spin fa-refresh"></i></div>');
+			this.$el.find('.modal-footer').hide();
 			this.$el.modal({});
 			options = options || {};
 			if (_.has(options, 'template')) {
@@ -76,6 +78,8 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 			getRecord.done(function(response) {
 				self.render();
+			}).fail(function(error) {
+				self.$el.find('.modal-body').html('Retrieving meta data failed with error: ' + error);
 			});
 		},
 
