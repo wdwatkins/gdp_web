@@ -28,7 +28,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		 */
 		initialize : function(options) {
 			var bounds;
-			this.context = this.model.attributes.csw;
+			this.context = this.model.attributes;
 			this.$dialogEl = options.dialogEl;
 
 			var baseLayers = [GDP.util.mapUtils.createWorldStreetMapLayer()];

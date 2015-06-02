@@ -35,21 +35,10 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			getCswRecords.done(function(response) {
 				var dataSetModels = _.chain(response.records)
 					.map(function(record) {
-						return new self.collection.model({
-							csw : {
-								abstrct : record['abstract'][0],
-								bounds : record.bounds,
-								identifier : record.identifier[0].value,
-								modified : record.modified[0],
-								subject : record.subject,
-								title : record.title[0].value,
-								type : record.type[0].value
-							},
-							isoMetadata : {}
-						});
+						return new self.collection.model(record);
 					})
 					.sortBy(function(model) {
-						return model.attributes.csw.title
+						return model.attributes.title
 					})
 					.value();
 				self.dataSetViews = _.map(dataSetModels, function(model) {
