@@ -69,6 +69,11 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 		},
 
+		/*
+		 * For each dataset tile view created by this view, determine if the text in ev is in
+		 * the title or abstract field of the associated model. If so make it visible, if not hide it.
+		 * @param {Jquery event}ev
+		 */
 		filterByText : function(ev) {
 			var text = ev.target.value.toLowerCase();
 			if (text) {

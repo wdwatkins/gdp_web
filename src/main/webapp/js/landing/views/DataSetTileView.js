@@ -57,6 +57,10 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			});
 		},
 
+		/*
+		 * Sets the visibility of the view to isVisible.
+		 * @param {Boolean} isVisible
+		 */
 		setVisibility : function(isVisible) {
 			if (isVisible) {
 				this.$el.show();
