@@ -33,6 +33,16 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 			this.dataSetViews = [];
 
+			this.context = {
+				algorithms : _.map(GDP.config.get('process').processes, function(process) {
+					return {
+						id : process.id,
+						name : process.name,
+						title : process.title
+					};
+				})
+			};
+
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
 			this.$dataSetTileContainer = $('.dataset-tile-container');

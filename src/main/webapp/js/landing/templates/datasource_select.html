@@ -6,9 +6,18 @@
 		</div>
 		<div class="panel-body">
 			<div class="dataset-filter-container">
-				<div>
-					<label>Search&nbsp;</label>
+				<div class="dataset-filter">
+					<div>Search&nbsp;</div>
 					<input type="text" class="dataset-search-input" />
+				</div>
+				<div class="dataset-filter">
+					<div>Algorithms</div>
+					{{#each algorithms}}
+					<div class="algorithm-filter-container">
+						<input type="checkbox" id="algorithm{{@index}}" class="algorithm-type-filter" value="{{name}}" />
+						<label for="algorithm{{@index}}">{{title}}
+					</div>
+					{{/each}}
 				</div>
 			</div>
 			<div class="dataset-tile-container">

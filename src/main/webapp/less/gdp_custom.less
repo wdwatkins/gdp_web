@@ -12,17 +12,25 @@
 	background-color : @brand-primary;
 
 	.dataset-tile-container {
-		.make-sm-column(10, 0);
+		.make-sm-column(9, 0);
 		margin-bottom : 0;
 		border-radius : 0;
 	}
 	.dataset-filter-container {
-		.make-sm-column(2, 0);
+		.make-sm-column(3, 0);
 		color : white;
 		input {
 			color: black;
 		}
-		
+		.dataset-filter {
+			margin-bottom: 10px;
+			div {
+				font-weight: bold;
+			}
+			label {
+				font-weight: normal;
+			}
+		}
 	}
 }
 .tile-loading-indicator {
@@ -31,7 +39,6 @@
 
 .dataset-tile-div {
 	.make-md-column(6, 0);
-	.make-lg-column(4, 0);
 	height : 560px;
 }
 .dataset-tile-div:hover {
