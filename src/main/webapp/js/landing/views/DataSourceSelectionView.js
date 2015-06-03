@@ -30,7 +30,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
-			this.$dataSetTileContainer = $('#dataset-tile-container');
+			this.$dataSetTileContainer = $('.dataset-tile-container');
 
 			getCswRecords.done(function(response) {
 				var dataSetModels = _.chain(response.records)

@@ -1,16 +1,35 @@
 @import "webjars/META-INF/resources/webjars/bootstrap/3.3.4/less/bootstrap.less";
-
+@brand-primary : #345280;
 #banner-area {
 	font-family : Verdana, Arial, Helvetica, sans-serif;
 	font-size : small;
 }
+.jumbotron {
+	.make-row();
+}
+.dataset-tile-panel-div {
+	.make-row();
+	background-color : @brand-primary;
+
+	.dataset-tile-container {
+		.make-sm-column(10, 0);
+		margin-bottom : 0;
+		border-radius : 0;
+	}
+	.dataset-filter-container {
+		.make-sm-column(2, 0);
+		color : white;
+		
+	}
+}
 .tile-loading-indicator {
 	margin-top : 15px;
 }
+
 .dataset-tile-div {
-	.make-sm-column(6, 0);
-	.make-md-column(4, 0);
-	height : 540px;
+	.make-md-column(6, 0);
+	.make-lg-column(4, 0);
+	height : 560px;
 }
 .dataset-tile-div:hover {
 	background-color : lightgray;
