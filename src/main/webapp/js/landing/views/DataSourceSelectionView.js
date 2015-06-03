@@ -1,5 +1,6 @@
 /*jslint browser: true*/
 /*global $*/
+/*global _*/
 
 var GDP = GDP || {};
 
@@ -11,6 +12,10 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 	"use strict";
 
 	GDP.LANDING.views.DataSourceSelectionView = GDP.util.BaseView.extend({
+
+		events : {
+			'change .dataset-search-input' : 'filterByText'
+		},
 
 		/*
 		 * @constructs
@@ -38,7 +43,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 						return new self.collection.model(record);
 					})
 					.sortBy(function(model) {
-						return model.attributes.title
+						return model.attributes.title;
 					})
 					.value();
 				self.dataSetViews = _.map(dataSetModels, function(model) {
@@ -62,6 +67,24 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 				self.$el.find('.tile-loading-indicator').hide();
 			});
 
+		},
+
+		filterByText : function(ev) {
+			var text = ev.target.value.toLowerCase();
+			if (text) {
+				_.each(this.dataSetViews, function(view) {
+					var title = view.model.get('title').toLowerCase();
+					var abstrct = view.model.get('abstrct').toLowerCase();
+
+					var isVisible = (title.search(text) !== -1) || (abstrct.search(text) !== -1);
+					view.setVisibility(isVisible);
+				});
+			}
+			else {
+				_.each(this.dataSetViews, function(view) {
+					view.setVisibility(true);
+				});
+			}
 		}
 	});
 }());

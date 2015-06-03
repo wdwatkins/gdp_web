@@ -23,7 +23,7 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 			var datasetInfo = (metadata.identificationInfo.length  > 0) ? metadata.identificationInfo[0] : {};
 			result.identifier = this._getCharValue(metadata.fileIdentifier);
 			if (datasetInfo) {
-				result.abstrct = _.has(datasetInfo, 'abstract') ? this._getCharValue(datasetInfo.abstract) : '';
+				result.abstrct = _.has(datasetInfo, 'abstract') ? this._getCharValue(datasetInfo['abstract']) : '';
 				result.title = (_.has(datasetInfo, 'citation') && _.has(datasetInfo.citation, 'title')) ? this._getCharValue(datasetInfo.citation.title) : '';
 				if (_.has(datasetInfo, 'extent') &&
 					(datasetInfo.extent.length > 0) &&
@@ -59,7 +59,6 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 		 *	@prop {String} title - identifying title of data source.
 		 */
 		_getDataSources : function(metadata) {
-			var metadata = this.get('isoMetadata');
 			var getCharValue = this._getCharValue;
 
 			var isOpeNDAP = function(charValue) {
@@ -145,7 +144,7 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 		 */
 		_getDataSetTimeRange : function(metadata) {
 			if (_.has(metadata, 'identificationInfo') && (metadata.identificationInfo.length > 0) &&
-				(_.has(metadata.identificationInfo[0], 'extent')) && 
+				(_.has(metadata.identificationInfo[0], 'extent')) &&
 				(metadata.identificationInfo[0].extent.length > 0) &&
 				(_.has(metadata.identificationInfo[0].extent[0], 'temporalElement')) &&
 				(metadata.identificationInfo[0].extent[0].temporalElement.length > 0)){

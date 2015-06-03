@@ -14,7 +14,7 @@ describe('GDP.LANDING.views.DataSetDialogView', function() {
 		datasetTimeRange : {start : 'now', end: 'then'},
 		distributionInfo : {url : 'fakeserver.com'}
 	};
-	var TEST_ALGORITHMS = {ID1 : ['L1', 'L2'], {ID2 : ['l3']};
+	var TEST_ALGORITHMS = {ID1 : ['L1', 'L2'], ID2 : ['l3']};
 
 	beforeEach(function() {
 		$('body').append('<div class="modal"><div class="modal-dialog"><div class="modal-content"></div></div></div>');

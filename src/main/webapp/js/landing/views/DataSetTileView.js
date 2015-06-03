@@ -55,6 +55,15 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 				router : this.router,
 				el : this.$dialogEl
 			});
+		},
+
+		setVisibility : function(isVisible) {
+			if (isVisible) {
+				this.$el.show();
+			}
+			else {
+				this.$el.hide();
+			}
 		}
 	});
 }());
