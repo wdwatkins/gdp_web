@@ -22,6 +22,7 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 
 			var datasetInfo = (metadata.identificationInfo.length  > 0) ? metadata.identificationInfo[0] : {};
 			result.identifier = this._getCharValue(metadata.fileIdentifier);
+			result.algorithms = GDP.algorithms.get('gdpAlgorithms')[result.identifier];
 			if (datasetInfo) {
 				result.abstrct = _.has(datasetInfo, 'abstract') ? this._getCharValue(datasetInfo['abstract']) : '';
 				result.title = (_.has(datasetInfo, 'citation') && _.has(datasetInfo.citation, 'title')) ? this._getCharValue(datasetInfo.citation.title) : '';
@@ -51,6 +52,30 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 			result.datasetTimeRange = this._getDataSetTimeRange(metadata);
 			result.distributionInfo = this._getDistributionTransferOptions(metadata);
 			return result;
+		},
+
+		/*
+		 * @param {Object}
+		 *     @prop {String} text - used to filter by matching text to properties in the model
+		 *     @prop {Array of String} algorithms - algorithm ids to match
+		 * @returns {Boolean} - True if model is in the filter, false if not.
+		 */
+		isInFilter: function(datasetFilter) {
+			if (_.has(datasetFilter, 'algorithms') &&
+				(datasetFilter.algorithms.length > 0) &&
+				(this.get('algorithms'))) {
+				if (_.intersection(datasetFilter.algorithms, this.get('algorithms')).length === 0) {
+					return false;
+				}
+			}
+
+			if (_.has(datasetFilter, 'text') && (datasetFilter.text)) {
+				if ((this.get('title').toLowerCase().search(datasetFilter.text) === -1) &&
+					(this.get('abstrct').toLowerCase().search(datasetFilter.text) === -1)) {
+					return false;
+				}
+			}
+			return true;
 		},
 		/*
 		 * @return {Array of Object} where
@@ -206,6 +231,7 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 	GDP.LANDING.models.DataSetCollection = Backbone.Collection.extend({
 		model : GDP.LANDING.models.DataSetModel
 	});
+
 }());
 
 

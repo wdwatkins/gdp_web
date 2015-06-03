@@ -14,7 +14,8 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 	GDP.LANDING.views.DataSourceSelectionView = GDP.util.BaseView.extend({
 
 		events : {
-			'change .dataset-search-input' : 'filterByText'
+			'change .dataset-search-input' : 'filterByText',
+			'change .algorithm-type-filter' : 'filterByAlgorithm'
 		},
 
 		/*
@@ -33,6 +34,11 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 			this.dataSetViews = [];
 
+			this.filters = {
+				text : '',
+				algorithms : []
+			};
+
 			this.context = {
 				algorithms : _.map(GDP.config.get('process').processes, function(process) {
 					return {
@@ -42,6 +48,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 					};
 				})
 			};
+
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
@@ -79,28 +86,39 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 		},
 
+		updateFilteredViews : function() {
+			_.each(this.dataSetViews, function(view) {
+				view.setVisibility(view.model.isInFilter(this.filters));
+			}, this);
+		},
+
 		/*
 		 * For each dataset tile view created by this view, determine if the text in ev is in
 		 * the title or abstract field of the associated model. If so make it visible, if not hide it.
 		 * @param {Jquery event}ev
 		 */
 		filterByText : function(ev) {
-			var text = ev.target.value.toLowerCase();
-			if (text) {
-				_.each(this.dataSetViews, function(view) {
-					var title = view.model.get('title').toLowerCase();
-					var abstrct = view.model.get('abstrct').toLowerCase();
+			this.filters.text = ev.target.value.toLowerCase();
+			this.updateFilteredViews();
+		},
 
-					var isVisible = (title.search(text) !== -1) || (abstrct.search(text) !== -1);
-					view.setVisibility(isVisible);
-				});
+		filterByAlgorithm : function(ev) {
+			var algorithm = ev.target.value;
+			if (ev.target.checked) {
+				if (!_.contains(this.filters.algorithms, algorithm)) {
+					this.filters.algorithms.push(algorithm);
+				}
 			}
 			else {
-				_.each(this.dataSetViews, function(view) {
-					view.setVisibility(true);
+				this.filters.algorithms = _.reject(this.filters.algorithms, function(filter) {
+					return filter === algorithm;
 				});
 			}
+
+			this.updateFilteredViews();
 		}
+
+
 	});
 }());
 

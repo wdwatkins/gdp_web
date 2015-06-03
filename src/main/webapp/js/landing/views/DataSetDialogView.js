@@ -23,7 +23,6 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		 */
 		render : function() {
 			var context = this.model.attributes;
-			context.algorithms = GDP.algorithms.get('gdpAlgorithms')[context.identifier];
 			var html = this.template(context);
 			this.$el.find('.dataset-dialog-contents').html(html);
 
