@@ -10,6 +10,9 @@ describe('GDP.LANDING.views.DataSetTileView', function() {
 		renderSpy = jasmine.createSpy('renderSpy');
 		zoomToExtentSpy = jasmine.createSpy('zoomToExtentSpy');
 
+		GDP.algorithms = {
+			get : jasmine.createSpy('algorithmsGetSpy').andReturn({'ID1' : ['Alg1', 'Alg2']})
+		};
 		GDP.LANDING.templates = {
 			getTemplate : jasmine.createSpy('getTemplateSpy').andReturn(templateSpy)
 		};
@@ -21,17 +24,15 @@ describe('GDP.LANDING.views.DataSetTileView', function() {
 
 		spyOn(GDP.LANDING.views, 'DataSetDialogView');
 
-		testModel = new GDP.LANDING.models.DataSetModel({
-			csw : {
-				abstrct : 'Abstract1',
-				bounds : new OpenLayers.Bounds([1, 2, 3, 4]),
-				identifier : 'ID1',
-				modified : 'yes',
-				subject : 'Subject1',
-				title : 'Title1',
-				type : 'value1'
-			},
-			isoMetadata : {}
+		testModel = new GDP.LANDING.models.DataSetModel({identificationInfo : []});
+		testModel.set({
+			abstrct : 'Abstract1',
+			bounds : new OpenLayers.Bounds([1, 2, 3, 4]),
+			identifier : 'ID1',
+			modified : 'yes',
+			subject : 'Subject1',
+			title : 'Title1',
+			type : 'value1'
 		});
 
 		$('body').append('<div id="test-dialog"></div>');
@@ -47,8 +48,8 @@ describe('GDP.LANDING.views.DataSetTileView', function() {
 		$('#test-dialog').remove();
 	});
 
-	it('Expects that the template is created using the model\'s csw attribute as the context', function() {
-		expect(templateSpy).toHaveBeenCalledWith(testModel.attributes.csw);
+	it('Expects that the template is created using the model\'s attributes as the context', function() {
+		expect(templateSpy).toHaveBeenCalledWith(testModel.attributes);
 	});
 
 	it('Expects a map to be create with a layer representing the bounds in the model', function() {

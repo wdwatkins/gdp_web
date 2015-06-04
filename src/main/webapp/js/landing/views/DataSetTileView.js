@@ -28,7 +28,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		 */
 		initialize : function(options) {
 			var bounds;
-			this.context = this.model.attributes.csw;
+			this.context = this.model.attributes;
 			this.$dialogEl = options.dialogEl;
 
 			var baseLayers = [GDP.util.mapUtils.createWorldStreetMapLayer()];
@@ -55,6 +55,19 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 				router : this.router,
 				el : this.$dialogEl
 			});
+		},
+
+		/*
+		 * Sets the visibility of the view to isVisible.
+		 * @param {Boolean} isVisible
+		 */
+		setVisibility : function(isVisible) {
+			if (isVisible) {
+				this.$el.show();
+			}
+			else {
+				this.$el.hide();
+			}
 		}
 	});
 }());

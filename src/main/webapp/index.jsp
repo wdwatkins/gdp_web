@@ -21,7 +21,7 @@
 		</jsp:include>
 	</head>
     <body>
-		<div class="container">
+		<div class="container-fluid">
 			<header class="row">
 				<jsp:include page="template/USGSHeader.jsp">
 					<jsp:param name="relPath" value="" />

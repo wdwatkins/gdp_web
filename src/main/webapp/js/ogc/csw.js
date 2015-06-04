@@ -9,26 +9,34 @@ GDP.OGC = GDP.OGC || {};
 GDP.OGC.CSW = function (args) {
 	"use strict";
 	args = args || {};
+
+	this.SCHEMA = {
+		ISO_19115 : 'http://www.isotc211.org/2005/gmd',
+		CSW_2_0_2 : 'http://www.opengis.net/cat/csw/2.0.2'
+	};
+
 	this.url = args.url;
 
 	/*
 	 * @param {Object} args
-	 *     @prop {String} outputSchema (optional) - output schema to be used to in the response.
+	 *     @prop {String} outputSchema (optional) - output schema to be used to in the response. Defaults to ISO_19115
 	 *     @prop {Number} maxRecords (optional) - defaults to 1000
+	 *     @prop {String} elementSetName (optional) - defaults to summary
 	 *     @prop {String} title (optional) - Filter by title property if this is set.
 	 * @returns {jquery.Promise} - Resolves when request is successful and return the response object. Rejected
 	 * if the request fails with the error message.
 	 */
 	this.requestGetRecords = function(args) {
-		var outputSchema = args.outputSchema ? args.outputSchema : 'http://www.opengis.net/cat/csw/2.0.2';
+		var outputSchema = args.outputSchema ? args.outputSchema : this.SCHEMA.ISO_19115;
 		var maxRecords = args.maxRecords || 1000;
+		var elementSetName = args.elementSetName || 'full';
 		var title = args.title || '';
 		var deferred = $.Deferred();
 
 		var cswGetRecFormat = new OpenLayers.Format.CSWGetRecords.v2_0_2();
 		var query = {
 			ElementSetName: {
-				value: "full"
+				value: elementSetName
 			}
 		};
 		var getRecRequest;
@@ -65,8 +73,16 @@ GDP.OGC.CSW = function (args) {
 		return deferred.promise();
 	};
 
+	/*
+*
+	 * @param {Object} args
+	 *     @prop {String} outputSchema (optional) - output schema to be used to in the response. Defaults to ISO_19115
+	 *     @prop {String} id - identifier of the record to retrieve.
+	 * @returns {jquery.Promise} - Resolves when request is successful and return the response object. Rejected
+	 * if the request fails with the error message.
+	 */
 	this.requestGetRecordById = function(args) {
-		var outputSchema = args.outputSchema ? args.outputSchema : 'http://www.opengis.net/cat/csw/2.0.2';
+		var outputSchema = args.outputSchema ? args.outputSchema : this.SCHEMA.ISO_19115;
 		var id = args.id;
 		var cswGetRecFormat = new OpenLayers.Format.CSWGetRecords.v2_0_2();
 		var deferred = $.Deferred();

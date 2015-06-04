@@ -1,5 +1,6 @@
 /*jslint browser: true*/
 /*global $*/
+/*global _*/
 
 var GDP = GDP || {};
 
@@ -11,6 +12,11 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 	"use strict";
 
 	GDP.LANDING.views.DataSourceSelectionView = GDP.util.BaseView.extend({
+
+		events : {
+			'change .dataset-search-input' : 'filterByText',
+			'change .algorithm-type-filter' : 'filterByAlgorithm'
+		},
 
 		/*
 		 * @constructs
@@ -28,28 +34,33 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 			this.dataSetViews = [];
 
+			this.filters = {
+				text : '',
+				algorithms : []
+			};
+
+			this.context = {
+				algorithms : _.map(GDP.config.get('process').processes, function(process) {
+					return {
+						id : process.id,
+						name : process.name,
+						title : process.title
+					};
+				})
+			};
+
+
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
-			this.$dataSetTileContainer = $('#dataset-tile-container');
+			this.$dataSetTileContainer = $('.dataset-tile-container');
 
 			getCswRecords.done(function(response) {
 				var dataSetModels = _.chain(response.records)
 					.map(function(record) {
-						return new self.collection.model({
-							csw : {
-								abstrct : record['abstract'][0],
-								bounds : record.bounds,
-								identifier : record.identifier[0].value,
-								modified : record.modified[0],
-								subject : record.subject,
-								title : record.title[0].value,
-								type : record.type[0].value
-							},
-							isoMetadata : {}
-						});
+						return new self.collection.model(record);
 					})
 					.sortBy(function(model) {
-						return model.attributes.csw.title
+						return model.attributes.title;
 					})
 					.value();
 				self.dataSetViews = _.map(dataSetModels, function(model) {
@@ -73,7 +84,50 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 				self.$el.find('.tile-loading-indicator').hide();
 			});
 
+		},
+
+		/*
+		 * Set the visibility of each dataSetView by applying this.filters to it's model.
+		 * @returns {undefined}
+		 */
+		updateFilteredViews : function() {
+			_.each(this.dataSetViews, function(view) {
+				view.setVisibility(view.model.isInFilter(this.filters));
+			}, this);
+		},
+
+		/*
+		 * Update the text filter with the target's value and then update the visibility of each
+		 * dataset's view.
+		 * @param {Jquery event}ev
+		 */
+		filterByText : function(ev) {
+			this.filters.text = ev.target.value;
+			this.updateFilteredViews();
+		},
+
+		/*
+		 * Add/remove the target's value from the algorithms filter and then update the
+		 * visibility of each dataset's view.
+		 * @param {Jquery event} ev
+		 */
+		filterByAlgorithm : function(ev) {
+			var algorithm = ev.target.value;
+			if (ev.target.checked) {
+				if (!_.contains(this.filters.algorithms, algorithm)) {
+					this.filters.algorithms.push(algorithm);
+				}
+			}
+			else {
+				this.filters.algorithms = _.reject(this.filters.algorithms, function(filter) {
+					return filter === algorithm;
+				});
+			}
+
+			this.updateFilteredViews();
 		}
+
+
 	});
 }());
 
