@@ -1,0 +1,77 @@
+describe('GDP.LANDING.models.DataSetModel', function() {
+
+	describe('Tests for isInFilter function', function() {
+		var testModel;
+
+		beforeEach(function (){
+			GDP.algorithms = {
+				get : jasmine.createSpy('algorithmsGetSpy').andReturn({'1234' : ['Alg1', 'Alg2']})
+			};
+			testModel = new GDP.LANDING.models.DataSetModel({
+				identificationInfo : [],
+				fileIdentifier : {
+					CharacterString : {
+						value : '1234'
+					}
+				}
+			});
+			testModel.set('abstrct', 'This is an Abstract');
+			testModel.set('title', 'title of dataset');
+		});
+
+		it('Expects isInFilter to return true if no filters are specified', function() {
+			expect(testModel.isInFilter({text : '', algorithms : []})).toBe(true);
+			expect(testModel.isInFilter({})).toBe(true);
+		});
+
+		it('Expects isInFilter to return true if algorithm is in the algorithms filter', function() {
+			expect(testModel.isInFilter({
+				text : '',
+				algorithms : ['Alg1', 'Alg3']
+			})).toBe(true);
+		});
+
+		it('Expects isInFilter to return false if algorith is not in the algorithms filter', function() {
+			expect(testModel.isInFilter({
+				text : '',
+				algorithms : ['Alg3', 'Alg4']
+			})).toBe(false);
+		});
+
+		it('Expects isInFilter to return true if text is is title or abstrct, case insensitive', function() {
+			expect(testModel.isInFilter({
+				text : 'Title',
+				algorithms : []
+			})).toBe(true);
+
+			expect(testModel.isInFilter({
+				text : 'abstract',
+				algorithms : []
+			})).toBe(true);
+		});
+
+		it('Expects isInFilter to return false if text is not in title or abstrct', function() {
+			expect(testModel.isInFilter({
+				text : 'hello',
+				algorithms : []
+			})).toBe(false);
+		});
+
+		it('Expects that if all filters are specified, isInFilter return true if all tests pass, otherwise false', function() {
+			expect(testModel.isInFilter({
+				text : 'abstract',
+				algorithms : ['Alg1', 'Alg3']
+			})).toBe(true);
+
+			expect(testModel.isInFilter({
+				text : 'hello',
+				algorithms : ['Alg1', 'Alg3']
+			})).toBe(false);
+
+			expect(testModel.isInFilter({
+				text : 'Title',
+				algorithms : ['Alg3', 'Alg4']
+			})).toBe(false);
+		})
+	});
+});

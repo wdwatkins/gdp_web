@@ -14,19 +14,24 @@ describe('GDP.LANDING.views.DataSetDialogView', function() {
 		datasetTimeRange : {start : 'now', end: 'then'},
 		distributionInfo : {url : 'fakeserver.com'}
 	};
-	var TEST_ALGORITHMS = {ID1 : ['L1', 'L2'], ID2 : ['l3']};
 
 	beforeEach(function() {
 		$('body').append('<div class="modal"><div class="modal-dialog"><div class="modal-content"></div></div></div>');
 
 		templateSpy = jasmine.createSpy('templateSpy');
-
-		testModel = new GDP.LANDING.models.DataSetModel({identificationInfo : []});
+		GDP.algorithms = {
+			get : jasmine.createSpy('algorithmsGetSpy').andReturn({'ID1' : ['Alg1', 'Alg2']})
+		};
+		testModel = new GDP.LANDING.models.DataSetModel({
+			identificationInfo : [],
+			fileIdentifier : {
+				CharacterString : {
+					value : 'ID1'
+				}
+			}
+		});
 		testModel.set(TEST_DATA);
 
-		GDP.algorithms = {
-			get : jasmine.createSpy('getSpy').andReturn(TEST_ALGORITHMS)
-		};
 		GDP.logger = {
 			error : jasmine.createSpy('logErrorSpy')
 		};
@@ -54,7 +59,7 @@ describe('GDP.LANDING.views.DataSetDialogView', function() {
 		expect(testView.render).toHaveBeenCalled();
 		expect(context.abstrct).toEqual(TEST_DATA.abstrct);
 		expect(context.dataSources).toEqual(TEST_DATA.dataSources);
-		expect(context.algorithms).toEqual(TEST_ALGORITHMS[TEST_DATA.identifier]);
+		expect(context.algorithms).toEqual(['Alg1', 'Alg2']);
 	});
 
 	it('Expects removeDialog to hide the dialog and remove the view', function() {

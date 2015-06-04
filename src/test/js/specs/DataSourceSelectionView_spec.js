@@ -11,6 +11,9 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 			requestGetRecords : jasmine.createSpy('requestGetRecordsSpy').andReturn(getDeferred.promise())
 		};
 
+		GDP.algorithms = {
+			get : jasmine.createSpy('algorithmsGetSpy').andReturn({'1234' : ['Alg1', 'Alg2']})
+		};
 		templateSpy = jasmine.createSpy('templateSpy');
 		GDP.LANDING.templates = {
 			getTemplate : jasmine.createSpy('getTemplateSpy').andReturn(templateSpy)
@@ -22,6 +25,33 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 		GDP.logger = {
 			debug : jasmine.createSpy('debugSpy')
 		};
+
+		GDP.config = {
+			get : function(prop) {
+				if (prop === 'process') {
+					return [
+						{
+							id : 'ALG1',
+							name : 'NAME1',
+							title : 'TITLE1'
+						},
+						{
+							id : 'ALG2',
+							name : 'NAME2',
+							title : 'TITLE2'
+						},
+						{
+							id : 'ALG3',
+							name : 'NAME3',
+							title : 'TITLE3'
+						}
+					]
+				}
+				else {
+					return null;
+				}
+			}
+		}
 
 		testView = new GDP.LANDING.views.DataSourceSelectionView({
 			template : templateSpy,
@@ -86,9 +116,11 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 		expect(testView.dataSetViews.length).toBe(0);
 	});
 
-	describe('Tests for filterByText', function() {
+	describe('Tests for filterBy* methods', function() {
 
 		beforeEach(function() {
+			spyOn(GDP.LANDING.models.DataSetModel.prototype, 'isInFilter');
+
 			var response = {
 				records : [
 					{
@@ -116,41 +148,43 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 			getDeferred.resolve(response);
 		});
 
-		it('Expects a calling filterByText with an empty value to call setVisibility on each dataSetView', function() {
+		it('Expects a call to filterByText to update the text filter and call isInFilter for each model in the collection', function() {
+			testView.filterByText({target : {value : 'This'}});
+
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls.length).toBe(3);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[0].args[0].text).toEqual('This');
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[1].args[0].text).toEqual('This');
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[2].args[0].text).toEqual('This');
+
 			testView.filterByText({target : {value : ''}});
-			expect(GDP.LANDING.views.DataSetTileView.prototype.setVisibility).toHaveBeenCalled();
-			expect(GDP.LANDING.views.DataSetTileView.prototype.setVisibility.calls.length).toBe(3);
-			_.each(GDP.LANDING.views.DataSetTileView.prototype.setVisibility.calls, function(call) {
-				expect(call.args[0]).toBe(true);
-			});
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls.length).toBe(6);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[3].args[0].text).toEqual('');
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[4].args[0].text).toEqual('');
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[5].args[0].text).toEqual('');
 		});
 
-		it('Expects a call to filterByText with a value to call setVisibility with true on views where the model\'s title or abstract contains the value', function() {
-			testView.filterByText({target : {value : 'Title1'}});
-			var calls = GDP.LANDING.views.DataSetTileView.prototype.setVisibility.calls;
-			expect(calls.length).toBe(3);
-			expect(calls[0].args[0]).toBe(true);
-			expect(calls[1].args[0]).toBe(false);
-			expect(calls[2].args[0]).toBe(false);
+		it('Expects a call to filterByAlgorithm to update the algorithms call and call isInFilter for each model in the collection', function() {
+			testView.filterByAlgorithm({target : {checked : true, value : 'ALG1'}});
 
-			testView.filterByText({target : {value : 'Abstract2'}});
-			calls = GDP.LANDING.views.DataSetTileView.prototype.setVisibility.calls;
-			expect(calls[3].args[0]).toBe(false);
-			expect(calls[4].args[0]).toBe(true);
-			expect(calls[5].args[0]).toBe(false);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls.length).toBe(3);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[0].args[0].algorithms).toEqual(['ALG1']);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[1].args[0].algorithms).toEqual(['ALG1']);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[2].args[0].algorithms).toEqual(['ALG1']);
 
-			testView.filterByText({target: {value : 'ID'}});
-			calls = GDP.LANDING.views.DataSetTileView.prototype.setVisibility.calls;
-			expect(calls[6].args[0]).toBe(false);
-			expect(calls[7].args[0]).toBe(false);
-			expect(calls[8].args[0]).toBe(false);
+			testView.filterByAlgorithm({target : {checked : true, value : 'ALG2'}});
 
-			testView.filterByText({target : {value :'Title'}});
-			calls = GDP.LANDING.views.DataSetTileView.prototype.setVisibility.calls;
-			expect(calls[9].args[0]).toBe(true);
-			expect(calls[10].args[0]).toBe(true);
-			expect(calls[11].args[0]).toBe(true);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls.length).toBe(6);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[3].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[4].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[5].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
+
+			testView.filterByAlgorithm({target : {checked : false, value : 'ALG1'}});
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls.length).toBe(9);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[6].args[0].algorithms).toEqual(['ALG2']);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[7].args[0].algorithms).toEqual(['ALG2']);
+			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[8].args[0].algorithms).toEqual(['ALG2']);
 		});
+
 	});
 
 });

@@ -17,6 +17,11 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 			Backbone.Model.prototype.constructor.call(this, attributes, {parse : true});
 		},
 
+		/*
+		 * Assign the properties for this model from metadata.
+		 * @param {Object} metadata - a record element from the response from a CSW GetRecords call using the iso-19115 schema.
+		 * @param {Object} options
+		 */
 		parse : function(metadata, options) {
 			var result = {};
 
@@ -70,8 +75,9 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 			}
 
 			if (_.has(datasetFilter, 'text') && (datasetFilter.text)) {
-				if ((this.get('title').toLowerCase().search(datasetFilter.text) === -1) &&
-					(this.get('abstrct').toLowerCase().search(datasetFilter.text) === -1)) {
+				var textFilter = datasetFilter.text.toLowerCase();
+				if ((this.get('title').toLowerCase().search(textFilter) === -1) &&
+					(this.get('abstrct').toLowerCase().search(textFilter) === -1)) {
 					return false;
 				}
 			}

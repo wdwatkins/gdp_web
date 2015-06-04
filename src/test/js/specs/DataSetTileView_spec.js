@@ -10,6 +10,9 @@ describe('GDP.LANDING.views.DataSetTileView', function() {
 		renderSpy = jasmine.createSpy('renderSpy');
 		zoomToExtentSpy = jasmine.createSpy('zoomToExtentSpy');
 
+		GDP.algorithms = {
+			get : jasmine.createSpy('algorithmsGetSpy').andReturn({'ID1' : ['Alg1', 'Alg2']})
+		};
 		GDP.LANDING.templates = {
 			getTemplate : jasmine.createSpy('getTemplateSpy').andReturn(templateSpy)
 		};

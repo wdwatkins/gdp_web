@@ -86,6 +86,10 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 		},
 
+		/*
+		 * Set the visibility of each dataSetView by applying this.filters to it's model.
+		 * @returns {undefined}
+		 */
 		updateFilteredViews : function() {
 			_.each(this.dataSetViews, function(view) {
 				view.setVisibility(view.model.isInFilter(this.filters));
@@ -93,15 +97,20 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		},
 
 		/*
-		 * For each dataset tile view created by this view, determine if the text in ev is in
-		 * the title or abstract field of the associated model. If so make it visible, if not hide it.
+		 * Update the text filter with the target's value and then update the visibility of each
+		 * dataset's view.
 		 * @param {Jquery event}ev
 		 */
 		filterByText : function(ev) {
-			this.filters.text = ev.target.value.toLowerCase();
+			this.filters.text = ev.target.value;
 			this.updateFilteredViews();
 		},
 
+		/*
+		 * Add/remove the target's value from the algorithms filter and then update the
+		 * visibility of each dataset's view.
+		 * @param {Jquery event} ev
+		 */
 		filterByAlgorithm : function(ev) {
 			var algorithm = ev.target.value;
 			if (ev.target.checked) {
