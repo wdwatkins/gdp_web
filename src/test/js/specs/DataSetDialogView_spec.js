@@ -22,7 +22,7 @@ describe('GDP.LANDING.views.DataSetDialogView', function() {
 		GDP.algorithms = {
 			get : jasmine.createSpy('algorithmsGetSpy').andReturn({'ID1' : ['Alg1', 'Alg2']})
 		};
-		testModel = new GDP.LANDING.models.DataSetModel({
+		testModel = new GDP.models.DataSetModel({
 			identificationInfo : [],
 			fileIdentifier : {
 				CharacterString : {

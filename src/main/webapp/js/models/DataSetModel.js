@@ -5,14 +5,12 @@
 
 var GDP = GDP || {};
 
-GDP.LANDING = GDP.LANDING || {};
-
-GDP.LANDING.models = GDP.LANDING.models || {};
+GDP.models = GDP.models || {};
 
 (function() {
 	"use strict";
 
-	GDP.LANDING.models.DataSetModel = Backbone.Model.extend({
+	GDP.models.DataSetModel = Backbone.Model.extend({
 		constructor : function(attributes) {
 			Backbone.Model.prototype.constructor.call(this, attributes, {parse : true});
 		},
@@ -234,8 +232,8 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 		}
 	});
 
-	GDP.LANDING.models.DataSetCollection = Backbone.Collection.extend({
-		model : GDP.LANDING.models.DataSetModel
+	GDP.models.DataSetCollection = Backbone.Collection.extend({
+		model : GDP.models.DataSetModel
 	});
 
 }());

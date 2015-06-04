@@ -49,7 +49,7 @@ $(document).ready(function() {
 		jobModel.get('processes').reset(GDP.config.get('process').processes);
 
 		var wps = GDP.OGC.WPS(GDP.logger);
-		GDP.PROCESS_CLIENT.router = new GDP.PROCESS_CLIENT.controller.AdvancedRouter(jobModel, wps);
+		GDP.PROCESS_CLIENT.router = new GDP.PROCESS_CLIENT.controller.ProcessClientRouter(jobModel, wps);
 		Backbone.history.start();
 	});
 

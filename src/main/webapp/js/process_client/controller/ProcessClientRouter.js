@@ -18,10 +18,15 @@ GDP.PROCESS_CLIENT.controller.AdvancedRouter = Backbone.Router.extend({
 		'' : 'hub',
 		'spatial' : 'spatial',
 		'datadetail' : 'datadetail',
-		'process' : 'process'
+		'process' : 'process',
+
+		'gdp/dataset/:datasetid' : 'hub',
+		'gdp/dataset/:datasetid/spatial' : 'spatial',
+		'gdp/dataset/:datasetid/datadetail' : 'datadetail',
+		'gdp/dataset/:datasetid/process' : 'process'
 	},
 
-	hub : function() {
+	hub : function(datasetid) {
 		this.showView(GDP.PROCESS_CLIENT.view.HubView, {
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('hub'),
 			model: this.jobModel,
@@ -29,7 +34,7 @@ GDP.PROCESS_CLIENT.controller.AdvancedRouter = Backbone.Router.extend({
 		});
 	},
 
-	spatial : function() {
+	spatial : function(datasetid) {
 		this.showView(GDP.PROCESS_CLIENT.view.SpatialView, {
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('spatial'),
 			model : this.jobModel,
@@ -37,7 +42,7 @@ GDP.PROCESS_CLIENT.controller.AdvancedRouter = Backbone.Router.extend({
 		});
 	},
 
-	datadetail : function() {
+	datadetail : function(datasetid) {
 		this.showView(GDP.PROCESS_CLIENT.view.DataDetailsView, {
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('datadetail'),
 			model: this.jobModel,
@@ -46,7 +51,7 @@ GDP.PROCESS_CLIENT.controller.AdvancedRouter = Backbone.Router.extend({
 		});
 	},
 
-	process : function() {
+	process : function(datasetid) {
 		this.showView(GDP.PROCESS_CLIENT.view.ProcessView, {
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('process'),
 			algorithmTemplate : GDP.PROCESS_CLIENT.templates.getTemplate('algorithm-config'),

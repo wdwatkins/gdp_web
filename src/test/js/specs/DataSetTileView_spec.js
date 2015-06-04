@@ -24,7 +24,7 @@ describe('GDP.LANDING.views.DataSetTileView', function() {
 
 		spyOn(GDP.LANDING.views, 'DataSetDialogView');
 
-		testModel = new GDP.LANDING.models.DataSetModel({identificationInfo : []});
+		testModel = new GDP.models.DataSetModel({identificationInfo : []});
 		testModel.set({
 			abstrct : 'Abstract1',
 			bounds : new OpenLayers.Bounds([1, 2, 3, 4]),

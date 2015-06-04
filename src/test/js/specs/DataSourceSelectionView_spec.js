@@ -18,7 +18,7 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 		GDP.LANDING.templates = {
 			getTemplate : jasmine.createSpy('getTemplateSpy').andReturn(templateSpy)
 		};
-		collection = new GDP.LANDING.models.DataSetCollection();
+		collection = new GDP.models.DataSetCollection();
 		spyOn(GDP.LANDING.views.DataSetTileView.prototype, 'initialize');
 		spyOn(GDP.LANDING.views.DataSetTileView.prototype, 'setVisibility');
 
@@ -119,7 +119,7 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 	describe('Tests for filterBy* methods', function() {
 
 		beforeEach(function() {
-			spyOn(GDP.LANDING.models.DataSetModel.prototype, 'isInFilter');
+			spyOn(GDP.models.DataSetModel.prototype, 'isInFilter');
 
 			var response = {
 				records : [
@@ -151,38 +151,38 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 		it('Expects a call to filterByText to update the text filter and call isInFilter for each model in the collection', function() {
 			testView.filterByText({target : {value : 'This'}});
 
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls.length).toBe(3);
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[0].args[0].text).toEqual('This');
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[1].args[0].text).toEqual('This');
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[2].args[0].text).toEqual('This');
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls.length).toBe(3);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[0].args[0].text).toEqual('This');
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[1].args[0].text).toEqual('This');
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[2].args[0].text).toEqual('This');
 
 			testView.filterByText({target : {value : ''}});
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls.length).toBe(6);
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[3].args[0].text).toEqual('');
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[4].args[0].text).toEqual('');
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[5].args[0].text).toEqual('');
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls.length).toBe(6);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[3].args[0].text).toEqual('');
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[4].args[0].text).toEqual('');
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[5].args[0].text).toEqual('');
 		});
 
 		it('Expects a call to filterByAlgorithm to update the algorithms call and call isInFilter for each model in the collection', function() {
 			testView.filterByAlgorithm({target : {checked : true, value : 'ALG1'}});
 
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls.length).toBe(3);
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[0].args[0].algorithms).toEqual(['ALG1']);
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[1].args[0].algorithms).toEqual(['ALG1']);
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[2].args[0].algorithms).toEqual(['ALG1']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls.length).toBe(3);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[0].args[0].algorithms).toEqual(['ALG1']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[1].args[0].algorithms).toEqual(['ALG1']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[2].args[0].algorithms).toEqual(['ALG1']);
 
 			testView.filterByAlgorithm({target : {checked : true, value : 'ALG2'}});
 
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls.length).toBe(6);
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[3].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[4].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[5].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls.length).toBe(6);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[3].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[4].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[5].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
 
 			testView.filterByAlgorithm({target : {checked : false, value : 'ALG1'}});
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls.length).toBe(9);
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[6].args[0].algorithms).toEqual(['ALG2']);
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[7].args[0].algorithms).toEqual(['ALG2']);
-			expect(GDP.LANDING.models.DataSetModel.prototype.isInFilter.calls[8].args[0].algorithms).toEqual(['ALG2']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls.length).toBe(9);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[6].args[0].algorithms).toEqual(['ALG2']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[7].args[0].algorithms).toEqual(['ALG2']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[8].args[0].algorithms).toEqual(['ALG2']);
 		});
 
 	});

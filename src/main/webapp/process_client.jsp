@@ -75,7 +75,7 @@
 		<script type="text/javascript" src="js/process_client/views/AlgorithmConfigView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/process_client/views/ProcessView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/process_client/views/DataDetailsView<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/process_client/controller/AdvancedRouter<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/process_client/controller/ProcessClientRouter<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/process_client/init<%= resourceSuffix %>.js"></script>
     </body>
 </html>

@@ -54,7 +54,7 @@
 		<script type="text/javascript" src="js/util/mapUtils<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/ogc/csw<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/models/Config<%= resourceSuffix %>.js"></script>
-		<script type="text/javascript" src="js/landing/models/DataSetModel<%= resourceSuffix %>.js"></script>	
+		<script type="text/javascript" src="js/models/DataSetModel<%= resourceSuffix %>.js"></script>	
 		<script type="text/javascript" src="js/landing/views/DataSourceSelectionView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/landing/views/DataSetTileView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/landing/views/DataSetDialogView<%= resourceSuffix %>.js"></script>
