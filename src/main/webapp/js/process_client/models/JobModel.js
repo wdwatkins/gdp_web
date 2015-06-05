@@ -74,14 +74,17 @@ var GDP = GDP || {};
 						id : datasetId
 					}).done(function(response) {
 						if (response.records.length > 0){
+							dataSetModel.clear();
 							dataSetModel.set(dataSetModel.parse(response.records[0]));
 							deferred.resolve();
 						}
 						else {
+							dataSetModel.clear();
 							deferred.reject();
 						}
 					}).fail(function() {
 						GDP.logger.error('Could not GetRecordsById for ' + datasetId);
+						dataSetModel.clear();
 						deferred.reject();
 					});
 				}
@@ -90,7 +93,7 @@ var GDP = GDP || {};
 				}
 			}
 			else {
-				dataSetModel.set({});
+				dataSetModel.clear();
 				deferred.resolve();
 			}
 			return deferred.promise();

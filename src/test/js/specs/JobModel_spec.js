@@ -396,4 +396,77 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 			expect(jobModel.getSelectedFeatureIds()).toEqual([]);
 		});
 	});
+
+	describe('Tests for updateDataSetModel', function() {
+		var cswDeferred;
+		var successSpy, failureSpy;
+
+		beforeEach(function() {
+			cswDeferred = $.Deferred();
+
+			GDP.cswClient = {
+				requestGetRecordById : jasmine.createSpy('requestSpy').andReturn(cswDeferred.promise())
+			};
+
+			GDP.algorithms = {
+				get : jasmine.createSpy('algorithmsGetSpy').andReturn({'1234' : ['Alg1', 'Alg2']})
+			};
+
+			GDP.logger = {
+				error : jasmine.createSpy('logErrorSpy')
+			};
+
+			jobModel.get('dataSetModel').set({identifier : 'ID1'});
+		});
+
+		it('Expects that if the datasetId id is null the dataSetModel is cleared', function() {
+			var promise = jobModel.updateDataSetModel();
+
+			expect(GDP.cswClient.requestGetRecordById).not.toHaveBeenCalled();
+			expect(promise.state()).toBe("resolved");
+			expect(jobModel.get('dataSetModel').attributes).toEqual({});
+		});
+
+		it('Expects that if the datasetId is the same as the current dataSetModel that the model is not updated', function() {
+			var promise = jobModel.updateDataSetModel('ID1');
+			expect(GDP.cswClient.requestGetRecordById).not.toHaveBeenCalled();
+			expect(promise.state()).toBe('resolved');
+			expect(jobModel.get('dataSetModel').attributes.identifier).toBe('ID1');
+		});
+
+		it('Expect that if a new datasetId is specified, the record is retrieved and updated if the retrieval is successful', function() {
+			var promise = jobModel.updateDataSetModel('ID2');
+			expect(GDP.cswClient.requestGetRecordById).toHaveBeenCalledWith({id : 'ID2'});
+			expect(promise.state()).toBe('pending');
+			cswDeferred.resolve({
+				records : [
+					{
+						identificationInfo : [],
+						fileIdentifier : {
+							CharacterString : {value : 'ID2'}
+						}
+					}
+				]
+			});
+			expect(promise.state()).toBe('resolved');
+			expect(jobModel.get('dataSetModel').attributes.identifier).toBe('ID2');
+		});
+
+		it('Expects that if a new datasetId is specified but the response has not records than reject the promise and clear the dataSetModel', function() {
+			var promise = jobModel.updateDataSetModel('ID2');
+			cswDeferred.resolve({
+				records : []
+			});
+			expect(promise.state()).toBe('rejected');
+			expect(jobModel.get('dataSetModel').attributes).toEqual({});
+		});
+
+		it('Expects that is a new datasetId is specified but the response fails, the promise is rejected and the dataset cleared', function() {
+			var promise = jobModel.updateDataSetModel('ID2');
+			cswDeferred.reject();
+
+			expect(promise.state()).toBe('rejected');
+			expect(jobModel.get('dataSetModel').attributes).toEqual({});
+		});
+	});
 });
