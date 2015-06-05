@@ -31,6 +31,7 @@ var GDP = GDP || {};
     var Job = Backbone.Model.extend({
 		SELECT_ALL_AOI_ATTRIBUTE_VALUES : ['*'],
 		defaults: {
+			dataSetModel : new GDP.models.DataSetModel(),
 			//data details
 			dataSourceUrl : null,
 			invalidDataSourceUrl : true,
@@ -61,6 +62,33 @@ var GDP = GDP || {};
 
 			email : '',
 			filename : ''
+		},
+
+		updateDataSetModel : function(datasetId) {
+			var dataSetModel = this.get('dataSetModel');
+			var deferred = $.Deferred();
+			if (datasetId) {
+				if (!dataSetModel.has('identifier') || (dataSetModel.get('identifier') !== datasetId)) {
+					// Need to retrieve it
+					GDP.cswClient.requestGetRecordById({
+						id : datasetId
+					}).done(function(response) {
+						dataSetModel.parse(response.records[0]);
+						deferred.resolve();
+					}).fail(function(response) {
+						GDP.logger.error('Could not GetRecordsById for ' + datasetId);
+						deferred.reject();
+					});
+				}
+				else { // Already set
+					deferred.resolve();
+				}
+			}
+			else {
+				dataSetModel.parse();
+				deferred.resolve();
+			}
+			return deferred.promise();
 		},
 
 		/*

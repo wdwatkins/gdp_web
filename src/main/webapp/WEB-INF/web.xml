@@ -11,11 +11,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>process_client</servlet-name>
-		<url-pattern>/advanced</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>process_client</servlet-name>
-		<url-pattern>/catalog</url-pattern>
+		<url-pattern>/catalog/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>

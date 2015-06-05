@@ -6,7 +6,7 @@ GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
 
 GDP.PROCESS_CLIENT.controller = GDP.PROCESS_CLIENT.controller || {};
 
-GDP.PROCESS_CLIENT.controller.AdvancedRouter = Backbone.Router.extend({
+GDP.PROCESS_CLIENT.controller.ProcessClientRouter = Backbone.Router.extend({
 
 	applicationContextDiv : '#advanced-page-content',
 	jobModel: null,
@@ -30,6 +30,7 @@ GDP.PROCESS_CLIENT.controller.AdvancedRouter = Backbone.Router.extend({
 		this.showView(GDP.PROCESS_CLIENT.view.HubView, {
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('hub'),
 			model: this.jobModel,
+			datasetId : datasetid,
 			wps : this.wps
 		});
 	},
@@ -38,6 +39,7 @@ GDP.PROCESS_CLIENT.controller.AdvancedRouter = Backbone.Router.extend({
 		this.showView(GDP.PROCESS_CLIENT.view.SpatialView, {
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('spatial'),
 			model : this.jobModel,
+			datasetId : datasetid,
 			wps : this.wps
 		});
 	},
@@ -46,6 +48,7 @@ GDP.PROCESS_CLIENT.controller.AdvancedRouter = Backbone.Router.extend({
 		this.showView(GDP.PROCESS_CLIENT.view.DataDetailsView, {
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('datadetail'),
 			model: this.jobModel,
+			datasetId : datasetid,
 			wps: this.wps,
 			wpsEndpoint: GDP.config.get('application').endpoints.utilityWps
 		});
@@ -55,7 +58,8 @@ GDP.PROCESS_CLIENT.controller.AdvancedRouter = Backbone.Router.extend({
 		this.showView(GDP.PROCESS_CLIENT.view.ProcessView, {
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('process'),
 			algorithmTemplate : GDP.PROCESS_CLIENT.templates.getTemplate('algorithm-config'),
-			model: this.jobModel
+			model: this.jobModel,
+			datasetId : datasetid
 		});
 	},
 

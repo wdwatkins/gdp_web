@@ -20,11 +20,18 @@ $(document).ready(function() {
 
 	var PARTIALS = [];
 
-	GDP.PROCESS_CLIENT.templates = GDP.util.templateLoader('js/process_client/templates/');
+	GDP.PROCESS_CLIENT.templates = GDP.util.templateLoader(GDP.BASE_URL + 'js/process_client/templates/');
 
-	var loadConfigModel = $.when($.ajax('config', {
+	var loadConfigModel = $.when($.ajax(GDP.BASE_URL + 'config', {
 			success: function (data) {
 				GDP.config = new GDP.model.Config(data);
+				var applicationConfig = GDP.config.get('application');
+				initializeLogging({
+					LOG4JS_LOG_THRESHOLD: applicationConfig.development === 'true' ? 'debug' : 'info'
+				});
+				GDP.cswClient = new GDP.OGC.CSW({
+					url : applicationConfig.endpoints.csw
+				});
 			},
 			error : function (jqXHR, textStatus) {
 				console.log('Can not read config ' + textStatus);
@@ -38,9 +45,7 @@ $(document).ready(function() {
 	var loadPartials = GDP.PROCESS_CLIENT.templates.registerPartials(PARTIALS);
 
 	$.when(loadTemplates, loadPartials, loadConfigModel).always(function () {
-		initializeLogging({
-			LOG4JS_LOG_THRESHOLD: GDP.config.get('application').development === 'true' ? 'debug' : 'info'
-		});
+
 
 		GDP.PROCESS_CLIENT.templates.registerHelpers();
 		GDP.logger = log4javascript.getLogger();
@@ -50,7 +55,7 @@ $(document).ready(function() {
 
 		var wps = GDP.OGC.WPS(GDP.logger);
 		GDP.PROCESS_CLIENT.router = new GDP.PROCESS_CLIENT.controller.ProcessClientRouter(jobModel, wps);
-		Backbone.history.start();
+		Backbone.history.start({pushState : true, root: '/gdp_web/catalog/'});
 	});
 
 });

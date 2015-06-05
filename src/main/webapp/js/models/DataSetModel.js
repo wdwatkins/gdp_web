@@ -21,6 +21,9 @@ GDP.models = GDP.models || {};
 		 * @param {Object} options
 		 */
 		parse : function(metadata, options) {
+			if (_.isEmpty(metadata)) {
+				return {};
+			}
 			var result = {};
 
 			var datasetInfo = (metadata.identificationInfo.length  > 0) ? metadata.identificationInfo[0] : {};

@@ -52,7 +52,7 @@ $(document).ready(function() {
 	$.when(loadTemplates, loadConfigModel, loadAlgorithms).always(function () {
 		GDP.LANDING.templates.registerHelpers();
 
-		var dataSets = new GDP.LANDING.models.DataSetCollection();
+		var dataSets = new GDP.models.DataSetCollection();
 		GDP.LANDING.router = new GDP.LANDING.controller.LandingRouter({
 			dataSets : dataSets
 		});

@@ -1,3 +1,6 @@
+/*jslint browser: true*/
+/*global Backbone*/
+
 var GDP = GDP || {};
 
 GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
@@ -35,6 +38,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 		initialize : function(options) {
 			this.wps = options.wps;
+
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 			this.spatialMapView = new GDP.PROCESS_CLIENT.view.HubSpatialMapView({
 				model : this.model,
@@ -46,6 +50,12 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 			// Used to store retrieval results id
 			this.resultsModel = new Backbone.Model();
+
+			this.model.updateDataSetModel(options.datasetId).done(function() {
+				console.log('Updated data set model');
+			}).fail(function() {
+				this.$el.html('Can\'t retrieve information about dataset with id ' + options.datasetId);
+			});
 		},
 
 		remove : function() {
@@ -111,7 +121,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 						var xml;
 
 						if (!xmlText || xmlText === '') {
-							logger.warn('GDP: RetrieveResultServlet returned empty response. Retrying.');
+							GDP.logger.warn('GDP: RetrieveResultServlet returned empty response. Retrying.');
 							return;
 						}
 						xml = $.parseXML(xmlText);
@@ -221,6 +231,5 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			var data = 'id=' + statusId + '&attachment=true';
 			$.download(url, data, 'get');
 		}
-
 	});
 }());

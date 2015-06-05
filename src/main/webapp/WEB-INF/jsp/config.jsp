@@ -22,6 +22,7 @@
 	String maxPolygonsToShowAttributeValues = props.get("gdp.application.maxPolygonsToShowAttributeValues");
 	maxPolygonsToShowAttributeValues = (maxPolygonsToShowAttributeValues == null) ? "1000" : maxPolygonsToShowAttributeValues;
 	String geoserverEndpoint = props.get("gdp.geoserver.endpoint");
+	String baseUrl = props.getProperty("gdp.base.url");
 	/* serviceEndpoints below point at the actual endpoints versus endpoints which can be proxies */
 %>
 {
@@ -29,10 +30,10 @@
 		"development" : "<%= development %>",
 		"maxPolygonsToShowAttributeValues" : <%= maxPolygonsToShowAttributeValues%>,
 		"endpoints" : {
-			"geoserver" : "geoserver",
-			"utilityWps" : "utilityWps",
-			"processWps" : "processWps",
-			"csw" : "csw"
+			"geoserver" : "<%= baseUrl %>geoserver",
+			"utilityWps" : "<%= baseUrl %>utilityWps",
+			"processWps" : "<%= baseUrl %>processWps",
+			"csw" : "<%= baseUrl %>csw"
 		},
 		"serviceEndpoints" : {
 			"geoserver" : "<%= geoserverEndpoint %>"
