@@ -23,8 +23,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 *    @prop {Backbone.model} model
 		 */
 		initialize : function(options) {
-			var process;
 			this.algorithmTemplate = options.algorithmTemplate;
+			this.routePrefix = options.datasetId ? 'gdp/dataset/' + options.datasetId + '/' : '';
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
 			this.listenTo(this.model, 'change:algorithmId', this.displayAlgorithmDescription);
@@ -34,7 +34,15 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			// Hiding the rendered template until the selected algorithm description is shown so that
 			// there isn't flashing when an algorithm has already been selected
 			this.$el.hide();
-			this.$el.html(this.template(this.model.attributes));
+			var context = this.model.clone().attributes;
+			var algorithms = this.model.get('dataSetModel').get('algorithms');
+			context.allowedAlgorithms = _.map(algorithms, function(alg) {
+				return _.find(context.processes.models, function(p) {
+					return p.attributes.id === alg;
+				});
+			});
+
+			this.$el.html(this.template(context));
 			this.displayAlgorithmDescription();
 			this.$el.show();
 
@@ -112,7 +120,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 */
 		goToHubPage : function(ev) {
 			ev.preventDefault();
-			this.router.navigate('', {trigger : true});
+			this.router.navigate(this.routePrefix, {trigger : true});
 		}
 	});
 }());

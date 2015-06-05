@@ -16,11 +16,11 @@ GDP.PROCESS_CLIENT.controller.ProcessClientRouter = Backbone.Router.extend({
 	},
 	routes : {
 		'' : 'hub',
-		'spatial' : 'spatial',
-		'datadetail' : 'datadetail',
-		'process' : 'process',
+		'/spatial' : 'spatial',
+		'/datadetail' : 'datadetail',
+		'/process' : 'process',
 
-		'gdp/dataset/:datasetid' : 'hub',
+		'gdp/dataset/:datasetid/' : 'hub',
 		'gdp/dataset/:datasetid/spatial' : 'spatial',
 		'gdp/dataset/:datasetid/datadetail' : 'datadetail',
 		'gdp/dataset/:datasetid/process' : 'process'

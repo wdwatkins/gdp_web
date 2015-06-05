@@ -16,8 +16,12 @@ var GDP = GDP || {};
 			selector: '#end-date'
 		}
 	};
-	var urlPicker = {
+	var urlTextPicker = {
 		selector: '#data-source-url'
+	};
+
+	var dataSourcePicker = {
+		selector : '#data-source-select'
 	};
 
 	var VARIABLE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.ListOpendapGrids';
@@ -27,7 +31,8 @@ var GDP = GDP || {};
 	'events' : (function(){
 		var ret = {};
 		ret['change ' + variablePicker.selector] = 'setSelectedVariables';
-		ret['change ' + urlPicker.selector] = 'setUrl';
+		ret['change ' + urlTextPicker.selector] = 'setUrl';
+		ret['change ' + dataSourcePicker.selector] = 'setUrl';
 		ret['changeDate ' + datePickers.start.selector] = 'setStartDate';
 		ret['changeDate ' + datePickers.end.selector] = 'setEndDate';
 		ret['submit form'] = 'goToHubPage';
@@ -35,11 +40,18 @@ var GDP = GDP || {};
 	}()),
 	'wps' : null,
 	'initialize': function(options) {
+		var dataSetModel = this.model.get('dataSetModel');
 	    this.wps = options.wps;
+		this.routePrefix = options.datasetId ? 'gdp/dataset/' + options.datasetId + '/' : '';
 	    this.wpsEndpoint = options.wpsEndpoint;
+
+		this.context = {
+			dataSources : dataSetModel.get('dataSources')
+		};
 	    //super
 		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
-		$(urlPicker.selector).val(this.model.get('dataSourceUrl'));
+
+		$(urlTextPicker.selector).val(this.model.get('dataSourceUrl'));
 		this.listenTo(this.model, 'change:dataSourceUrl', this.changeUrl);
 		this.listenTo(this.model.get('dataSourceVariables'), 'reset', this.changeAvailableVariables);
 		this.listenTo(this.model, 'change:invalidDataSourceUrl', this.changeInvalidUrl);
@@ -77,7 +89,7 @@ var GDP = GDP || {};
 	 */
 	goToHubPage : function(ev) {
 		ev.preventDefault();
-		this.router.navigate('', {trigger : true});
+		this.router.navigate(this.routePrefix, {trigger : true});
 	},
 
 	'changeMinDate' : function(){
@@ -109,8 +121,9 @@ var GDP = GDP || {};
 		}
 	},
 	'selectMenuView' : null,
+
 	'render' : function () {
-		this.$el.html(this.template());
+		this.$el.html(this.template(this.context));
 		this.selectMenuView = new GDP.util.SelectMenuView({
 				el : variablePicker.selector,
 				emptyPlaceholder : false,
@@ -120,6 +133,13 @@ var GDP = GDP || {};
 		$(datePickers.end.selector).datepicker();
 		return this;
 	},
+
+	remove : function() {
+		this.selectMenuView.remove();
+		GDP.util.BaseView.prototype.remove.apply(this, arguments);
+
+	},
+
 	'dateModelProperties' : ['minDate', 'startDate', 'maxDate', 'endDate'],
 	'resetDates': function(){
 		var self = this;

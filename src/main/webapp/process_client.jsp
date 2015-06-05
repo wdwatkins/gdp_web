@@ -54,11 +54,13 @@
 		<%@include file="/WEB-INF/jsp/scripts.jsp" %>
 		
 		<script type="text/javascript" src="<%= baseUrl %>webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? "" : ".debug"%>.js"></script>
+		<script type="text/javascript" src="<%= baseUrl %>openlayers/extensions/format/csw/v2_0_2.js"></script>		
 		<script type="text/javascript" src="<%= baseUrl %>webjars/jquery-ui/<%= versionJqueryUI%>/jquery-ui<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>webjars/jquery-file-upload/<%= versionJqueryFileUpload%>/js/jquery.fileupload.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>webjars/bootstrap-datepicker/<%= versionBsDatePicker%>/js/bootstrap-datepicker<%= development ? "" : ".min"%>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/vendor/jQuery.download<%= resourceSuffix %>.js"></script>
 		
+		<script type="text/javascript" src="<%= baseUrl %>js/util/pushStateRouter<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/util/jqueryUtils<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/util/templateLoader<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/util/BaseView<%= resourceSuffix %>.js"></script>

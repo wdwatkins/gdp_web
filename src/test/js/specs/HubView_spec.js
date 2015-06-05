@@ -3,6 +3,7 @@ describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 	var templateSpy, spatialViewRemoveSpy;
 	var server;
 	var testView;
+	var datasetDeferred;
 
 	beforeEach(function() {
 		server = sinon.fakeServer.create();
@@ -14,6 +15,9 @@ describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 			dataDetails : [],
 			algorithm : []
 		});
+		datasetDeferred = $.Deferred();
+		spyOn(model, 'updateDataSetModel').andReturn(datasetDeferred.promise());
+		datasetDeferred.resolve();
 		templateSpy = jasmine.createSpy('templateSpy');
 
 		spyOn(GDP.OGC, 'WPS').andReturn({});

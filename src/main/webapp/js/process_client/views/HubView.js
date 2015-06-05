@@ -37,7 +37,9 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		},
 
 		initialize : function(options) {
+			var self = this;
 			this.wps = options.wps;
+			this.routePrefix = options.datasetId ? 'gdp/dataset/' + options.datasetId + '/' : '';
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 			this.spatialMapView = new GDP.PROCESS_CLIENT.view.HubSpatialMapView({
@@ -52,9 +54,9 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			this.resultsModel = new Backbone.Model();
 
 			this.model.updateDataSetModel(options.datasetId).done(function() {
-				console.log('Updated data set model');
-			}).fail(function() {
-				this.$el.html('Can\'t retrieve information about dataset with id ' + options.datasetId);
+				console.log('Got dataset for id ' + self.model.get('dataSetModel').get('identifier'));
+			}).fail(function(response) {
+				GDP.logger.error('Could not GetRecordsById for ' + options.datasetId);
 			});
 		},
 
@@ -63,16 +65,19 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			GDP.util.BaseView.prototype.remove.apply(this, arguments);
 		},
 
-		goToSpatialPage : function() {
-			this.router.navigate('/spatial', {trigger : true});
+		goToSpatialPage : function(ev) {
+			ev.preventDefault();
+			this.router.navigate(this.routePrefix + 'spatial', {trigger : true});
 		},
 
-		goToDataDetailsPage : function() {
-			this.router.navigate('/datadetail', {trigger : true});
+		goToDataDetailsPage : function(ev) {
+			ev.preventDefault();
+			this.router.navigate(this.routePrefix + 'datadetail', {trigger : true});
 		},
 
-		goToProcessPage : function() {
-			this.router.navigate('/process', {trigger: true});
+		goToProcessPage : function(ev) {
+			ev.preventDefault();
+			this.router.navigate(this.routePrefix + 'process', {trigger: true});
 		},
 
 		setEditable : function(editable) {

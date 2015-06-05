@@ -44,9 +44,16 @@ $(document).ready(function() {
 	var loadTemplates = GDP.PROCESS_CLIENT.templates.loadTemplates(TEMPLATES);
 	var loadPartials = GDP.PROCESS_CLIENT.templates.registerPartials(PARTIALS);
 
-	$.when(loadTemplates, loadPartials, loadConfigModel).always(function () {
+	var loadAlgorithms = $.ajax(GDP.BASE_URL + 'algorithms', {
+		success : function(data) {
+			GDP.algorithms = new Backbone.Model($.parseJSON(data));
+		},
+		error : function(jqXHR, textStatus) {
+			console.log('Can\'t load algorithms ' + textStatus);
+		}
+	});
 
-
+	$.when(loadTemplates, loadPartials, loadConfigModel, loadAlgorithms).always(function () {
 		GDP.PROCESS_CLIENT.templates.registerHelpers();
 		GDP.logger = log4javascript.getLogger();
 

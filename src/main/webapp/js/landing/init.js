@@ -42,7 +42,7 @@ $(document).ready(function() {
 		error : function(jqXHR, textStatus) {
 			console.log('Can\'t load algorithms ' + textStatus);
 		}
-	})
+	});
 
 	// I need to load up my config model since one of the views I load depends on it
 	// Load up the process collection based on incoming model definitions from the config object
