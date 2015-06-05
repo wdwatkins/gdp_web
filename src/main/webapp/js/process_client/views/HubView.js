@@ -42,10 +42,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			this.routePrefix = options.datasetId ? 'gdp/dataset/' + options.datasetId + '/' : '';
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
-			this.spatialMapView = new GDP.PROCESS_CLIENT.view.HubSpatialMapView({
-				model : this.model,
-				mapDiv : 'hub-spatial-inset-map'
-			});
+
 			this.alertView = new GDP.util.AlertView({
 				el : '#job-processing-messages-div'
 			});
@@ -53,10 +50,16 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			// Used to store retrieval results id
 			this.resultsModel = new Backbone.Model();
 
-			this.model.updateDataSetModel(options.datasetId).done(function() {
-				console.log('Got dataset for id ' + self.model.get('dataSetModel').get('identifier'));
-			}).fail(function(response) {
+			this.model.updateDataSetModel(options.datasetId).fail(function(response) {
+				self.alertView.show('alert-danger', 'Unable to load information about the dataset, ' + options.datasetId);
 				GDP.logger.error('Could not GetRecordsById for ' + options.datasetId);
+			}).always(function() {
+				self.$el.find('.loading-indicator').hide();
+				self.$el.find('.hub-tile').show();
+				self.spatialMapView = new GDP.PROCESS_CLIENT.view.HubSpatialMapView({
+					model : self.model,
+					mapDiv : 'hub-spatial-inset-map'
+				});
 			});
 		},
 

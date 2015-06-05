@@ -73,9 +73,14 @@ var GDP = GDP || {};
 					GDP.cswClient.requestGetRecordById({
 						id : datasetId
 					}).done(function(response) {
-						dataSetModel.set(dataSetModel.parse(response.records[0]));
-						deferred.resolve();
-					}).fail(function(response) {
+						if (response.records.length > 0){
+							dataSetModel.set(dataSetModel.parse(response.records[0]));
+							deferred.resolve();
+						}
+						else {
+							deferred.reject();
+						}
+					}).fail(function() {
 						GDP.logger.error('Could not GetRecordsById for ' + datasetId);
 						deferred.reject();
 					});
