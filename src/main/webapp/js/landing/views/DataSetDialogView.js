@@ -65,7 +65,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		 * Go to the process_client using the dataset identifier in the url.
 		 */
 		goToProcessClient : function() {
-			window.location.assign('catalog/gdp/dataset/' + this.model.get('identifier') + '/');
+			window.location.assign('client/catalog/gdp/dataset/' + this.model.get('identifier') + '');
 			this.remove();
 		}
 
