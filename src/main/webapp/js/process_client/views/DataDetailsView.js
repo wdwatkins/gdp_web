@@ -54,7 +54,7 @@ var GDP = GDP || {};
 			};
 			//super
 			GDP.util.BaseView.prototype.initialize.apply(self, initArguments);
-			
+
 			self.listenTo(self.model, 'change:dataSourceUrl', self.changeUrl);
 			self.listenTo(self.model.get('dataSourceVariables'), 'reset', self.changeAvailableVariables);
 			self.listenTo(self.model, 'change:invalidDataSourceUrl', self.changeInvalidUrl);
