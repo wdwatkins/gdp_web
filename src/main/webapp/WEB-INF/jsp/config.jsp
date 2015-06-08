@@ -37,7 +37,8 @@
 		},
 		"serviceEndpoints" : {
 			"geoserver" : "<%= geoserverEndpoint %>"
-		}
+		},
+		"baseUrl" : "<%= baseUrl %>"
 	},
 	"process" : {
 		"processes" : [

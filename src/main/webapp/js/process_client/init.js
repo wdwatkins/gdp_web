@@ -62,7 +62,8 @@ $(document).ready(function() {
 
 		var wps = GDP.OGC.WPS(GDP.logger);
 		GDP.PROCESS_CLIENT.router = new GDP.PROCESS_CLIENT.controller.ProcessClientRouter(jobModel, wps);
-		Backbone.history.start({pushState : true, root: '/gdp_web/client/'});
+		var root  = (GDP.config.get('application').baseUrl).replace(location.origin, '')
+		Backbone.history.start({pushState : true, root: root + 'client/'});
 	});
 
 });
