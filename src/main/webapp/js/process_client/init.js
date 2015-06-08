@@ -15,12 +15,13 @@ $(document).ready(function() {
 		'spatial',
 		'datadetail',
 		'process',
-		'algorithm-config'
+		'algorithm-config',
+		'data_set_details'
 	];
 
 	var PARTIALS = [];
 
-	GDP.PROCESS_CLIENT.templates = GDP.util.templateLoader(GDP.BASE_URL + 'js/process_client/templates/');
+	GDP.PROCESS_CLIENT.templates = GDP.util.templateLoader(GDP.BASE_URL + 'templates/');
 
 	var loadConfigModel = $.when($.ajax(GDP.BASE_URL + 'config', {
 			success: function (data) {

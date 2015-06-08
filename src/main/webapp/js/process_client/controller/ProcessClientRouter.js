@@ -29,6 +29,7 @@ GDP.PROCESS_CLIENT.controller.ProcessClientRouter = Backbone.Router.extend({
 	hub : function(datasetid) {
 		this.showView(GDP.PROCESS_CLIENT.view.HubView, {
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('hub'),
+			metadataTemplate : GDP.PROCESS_CLIENT.templates.getTemplate('data_set_details'),
 			model: this.jobModel,
 			datasetId : datasetid,
 			wps : this.wps

@@ -51,7 +51,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		showDetails : function() {
 			this.detailView = new GDP.LANDING.views.DataSetDialogView({
 				model : this.model,
-				template : GDP.LANDING.templates.getTemplate('data_set_dialog'),
+				template : GDP.LANDING.templates.getTemplate('data_set_details'),
 				router : this.router,
 				el : this.$dialogEl
 			});

@@ -1,4 +1,4 @@
-/*jsline browser: true*/
+/*jslint browser: true*/
 /*global log4javascript*/
 /*global $*/
 /*global Backbone*/
@@ -13,10 +13,10 @@ $(document).ready(function() {
 	var TEMPLATES = [
 		'datasource_select',
 		'data_set_tile',
-		'data_set_dialog'
+		'data_set_details'
 	];
 
-	GDP.LANDING.templates = GDP.util.templateLoader('js/landing/templates/');
+	GDP.LANDING.templates = GDP.util.templateLoader('templates/');
 	var loadConfigModel = $.when($.ajax('config', {
 			success: function (data) {
 				GDP.config = new GDP.model.Config(data);
