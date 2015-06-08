@@ -42,16 +42,16 @@ var GDP = GDP || {};
 	'initialize': function(options) {
 		var dataSetModel = this.model.get('dataSetModel');
 	    this.wps = options.wps;
-		this.routePrefix = options.datasetId ? 'gdp/dataset/' + options.datasetId + '/' : '';
+		this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId + '/' : 'advanced/';
 	    this.wpsEndpoint = options.wpsEndpoint;
 
 		this.context = {
-			dataSources : dataSetModel.get('dataSources')
+			dataSources : dataSetModel.get('dataSources'),
+			dataSourceUrl : this.model.get('dataSourceUrl')
 		};
 	    //super
 		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
-		$(urlTextPicker.selector).val(this.model.get('dataSourceUrl'));
 		this.listenTo(this.model, 'change:dataSourceUrl', this.changeUrl);
 		this.listenTo(this.model.get('dataSourceVariables'), 'reset', this.changeAvailableVariables);
 		this.listenTo(this.model, 'change:invalidDataSourceUrl', this.changeInvalidUrl);

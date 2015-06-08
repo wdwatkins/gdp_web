@@ -234,7 +234,7 @@ describe('GDP.PROCESS_CLIENT.view.ProcessView', function() {
 		expect(algorithmRemoveSpy).not.toHaveBeenCalled();
 		testView.remove();
 		expect(algorithmRemoveSpy).toHaveBeenCalled();
-	})
+	});
 
 
 });

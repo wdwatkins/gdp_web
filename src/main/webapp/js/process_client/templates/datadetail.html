@@ -8,12 +8,12 @@
 			<select id="data-source-select" class="form-control" required>
 				<option></option>
 				{{#each dataSources}}
-				<option value="{{this.url}}">{{this.title}}</option>
+				<option value="{{this.url}}" {{defaultSelected this.url ../dataSourceUrl}}>{{this.title}}</option>
 				{{/each}}
 			</select>
 			{{else}}
 			<label for="data-source-url">Data Source URL</label>
-			<input id="data-source-url" class="form-control" type="url" required/>
+			<input id="data-source-url" class="form-control" type="url" required value="{{dataSourceUrl}}"/>
 			{{/if}}
 		</div>
 		<div class="form-group">

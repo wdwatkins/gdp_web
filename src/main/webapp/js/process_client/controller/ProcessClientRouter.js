@@ -15,15 +15,15 @@ GDP.PROCESS_CLIENT.controller.ProcessClientRouter = Backbone.Router.extend({
 	  this.wps = wps;
 	},
 	routes : {
-		'' : 'hub',
-		'/spatial' : 'spatial',
-		'/datadetail' : 'datadetail',
-		'/process' : 'process',
+		'advanced/' : 'hub',
+		'advanced/spatial' : 'spatial',
+		'advanced/datadetail' : 'datadetail',
+		'advanced/process' : 'process',
 
-		'gdp/dataset/:datasetid/' : 'hub',
-		'gdp/dataset/:datasetid/spatial' : 'spatial',
-		'gdp/dataset/:datasetid/datadetail' : 'datadetail',
-		'gdp/dataset/:datasetid/process' : 'process'
+		'catalog/gdp/dataset/:datasetid/' : 'hub',
+		'catalog/gdp/dataset/:datasetid/spatial' : 'spatial',
+		'catalog/gdp/dataset/:datasetid/datadetail' : 'datadetail',
+		'catalog/gdp/dataset/:datasetid/process' : 'process'
 	},
 
 	hub : function(datasetid) {

@@ -57,7 +57,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		initialize : function(options) {
 			var self = this;
 			this.wps = options.wps;
-			this.routePrefix = options.datasetId ? 'gdp/dataset/' + options.datasetId + '/' : '';
+			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId + '/' : 'advanced/';
 
 			var baseLayers = [GDP.util.mapUtils.createWorldStreetMapLayer()];
 			var controls = [

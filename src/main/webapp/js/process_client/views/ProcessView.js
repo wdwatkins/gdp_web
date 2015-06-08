@@ -24,7 +24,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 */
 		initialize : function(options) {
 			this.algorithmTemplate = options.algorithmTemplate;
-			this.routePrefix = options.datasetId ? 'gdp/dataset/' + options.datasetId + '/' : '';
+			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId + '/' : 'advanced/';
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
 			this.listenTo(this.model, 'change:algorithmId', this.displayAlgorithmDescription);
@@ -35,12 +35,18 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			// there isn't flashing when an algorithm has already been selected
 			this.$el.hide();
 			var context = this.model.clone().attributes;
-			var algorithms = this.model.get('dataSetModel').get('algorithms');
-			context.allowedAlgorithms = _.map(algorithms, function(alg) {
-				return _.find(context.processes.models, function(p) {
-					return p.attributes.id === alg;
+			var dataSetModel = this.model.get('dataSetModel');
+			if (dataSetModel.has('algorithms')) {
+				var algorithms = this.model.get('dataSetModel').get('algorithms');
+				context.allowedAlgorithms = _.map(algorithms, function(alg) {
+					return _.find(context.processes.models, function(p) {
+						return p.attributes.id === alg;
+					});
 				});
-			});
+			}
+			else {
+				context.allowedAlgorithms = context.processes.models;
+			}
 
 			this.$el.html(this.template(context));
 			this.displayAlgorithmDescription();
