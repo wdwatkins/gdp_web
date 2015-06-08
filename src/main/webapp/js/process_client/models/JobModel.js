@@ -64,6 +64,12 @@ var GDP = GDP || {};
 			filename : ''
 		},
 
+		/*
+		 *
+		 * @param {String} datasetId - Id of dataset to retrieve from sciencebase
+		 * @returns {jquery.Promise} - This promise is resolve if the data set model does not need to be updated or if it is
+		 * successfully updated. The promise is rejected if updating the datset failed. The dataSetModel property is also cleared.
+		 */
 		updateDataSetModel : function(datasetId) {
 			var dataSetModel = this.get('dataSetModel');
 			var deferred = $.Deferred();
