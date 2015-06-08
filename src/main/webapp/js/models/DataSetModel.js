@@ -21,10 +21,11 @@ GDP.models = GDP.models || {};
 		 * @param {Object} options
 		 */
 		parse : function(metadata, options) {
-			if (_.isEmpty(metadata)) {
-				return {};
-			}
 			var result = {};
+
+			if (_.isEmpty(metadata)) {
+				return result;
+			}
 
 			var datasetInfo = (metadata.identificationInfo.length  > 0) ? metadata.identificationInfo[0] : {};
 			result.identifier = this._getCharValue(metadata.fileIdentifier);

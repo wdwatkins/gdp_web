@@ -17,6 +17,7 @@
 <%
 Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));
 String baseUrl = props.getProperty("gdp.base.url");
+if (!baseUrl.endsWith("/")) { baseUrl += "/"; }
 String versionProject = props.get("version");
 String versionJquery = props.get("version.jquery");
 String versionBootstrap = props.get("version.bootstrap");

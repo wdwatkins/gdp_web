@@ -5,20 +5,6 @@
     <head>
 		<%@include file="/WEB-INF/jsp/head.jsp" %>
 		<link rel="stylesheet" type="text/css" href="css/gdp_custom.css">
-		
-		<jsp:include page="template/USGSHead.jsp">
-			<jsp:param name="relPath" value="" />
-			<jsp:param name="shortName" value="USGS Geo Data Portal" />
-			<jsp:param name="title" value="USGS Geo Data Portal" />
-			<jsp:param name="description" value="" />
-			<jsp:param name="author" value="Ivan Suftin, Mary Bucknell, Carl Schroedl" />
-			<jsp:param name="keywords" value="" />
-			<jsp:param name="publisher" value="" />
-			<jsp:param name="revisedDate" value="" />
-			<jsp:param name="nextReview" value="" />
-			<jsp:param name="expires" value="never" />
-			<jsp:param name="development" value="<%=development%>" />
-		</jsp:include>
 	</head>
     <body>
 		<div class="container-fluid">

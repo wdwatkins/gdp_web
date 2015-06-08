@@ -9,20 +9,6 @@
 		<link rel="stylesheet" type="text/css" href="<%= baseUrl %>css/process_client_custom.css">
 		<link type="text/css" rel="stylesheet" href="<%= baseUrl %>webjars/bootstrap-datepicker/<%= versionBsDatePicker%>/css/bootstrap-datepicker3<%= development ? "" : ".min"%>.css" />
 
-		<jsp:include page="template/USGSHead.jsp">
-			<jsp:param name="relPath" value="<%= baseUrl %>" />
-			<jsp:param name="shortName" value="USGS Geo Data Portal" />
-			<jsp:param name="title" value="USGS Geo Data Portal" />
-			<jsp:param name="description" value="" />
-			<jsp:param name="author" value="Ivan Suftin, Mary Bucknell, Carl Schroedl" />
-			<jsp:param name="keywords" value="" />
-			<jsp:param name="publisher" value="" />
-			<jsp:param name="revisedDate" value="" />
-			<jsp:param name="nextReview" value="" />
-			<jsp:param name="expires" value="never" />
-			<jsp:param name="development" value="<%=development%>" />
-		</jsp:include>
-		
 		<script type="text/javascript">
 			var GDP = GDP || {};
 			GDP.BASE_URL = "<%= baseUrl%>";
