@@ -23,11 +23,18 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 *    @prop {Backbone.model} model
 		 */
 		initialize : function(options) {
-			this.algorithmTemplate = options.algorithmTemplate;
-			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId + '/' : 'advanced/';
-			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+			var self = this;
+			var initArguments = arguments;
 
-			this.listenTo(this.model, 'change:algorithmId', this.displayAlgorithmDescription);
+			this.algorithmTemplate = options.algorithmTemplate;
+			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId  : 'advanced';
+
+			this.model.updateDataSetModel(options.datasetId).always(function() {
+				GDP.util.BaseView.prototype.initialize.apply(self, initArguments);
+				self.listenTo(self.model, 'change:algorithmId', self.displayAlgorithmDescription);
+			}).fail(function() {
+				window.alert('Unable to load requested dataset ' + options.datasetId);
+			})
 		},
 
 		render : function () {

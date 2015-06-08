@@ -39,7 +39,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		initialize : function(options) {
 			var self = this;
 			this.wps = options.wps;
-			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId + '/' : 'advanced/';
+			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId  : 'advanced';
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
@@ -70,17 +70,17 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 		goToSpatialPage : function(ev) {
 			ev.preventDefault();
-			this.router.navigate(this.routePrefix + 'spatial', {trigger : true});
+			this.router.navigate(this.routePrefix + '/spatial', {trigger : true});
 		},
 
 		goToDataDetailsPage : function(ev) {
 			ev.preventDefault();
-			this.router.navigate(this.routePrefix + 'datadetail', {trigger : true});
+			this.router.navigate(this.routePrefix + '/datadetail', {trigger : true});
 		},
 
 		goToProcessPage : function(ev) {
 			ev.preventDefault();
-			this.router.navigate(this.routePrefix + 'process', {trigger: true});
+			this.router.navigate(this.routePrefix + '/process', {trigger: true});
 		},
 
 		setEditable : function(editable) {

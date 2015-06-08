@@ -40,32 +40,38 @@ var GDP = GDP || {};
 	}()),
 	'wps' : null,
 	'initialize': function(options) {
-		var dataSetModel = this.model.get('dataSetModel');
+		var self = this;
+		var initArguments = arguments;
+
 	    this.wps = options.wps;
-		this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId + '/' : 'advanced/';
+		this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId : 'advanced';
 	    this.wpsEndpoint = options.wpsEndpoint;
 
-		this.context = {
-			dataSources : dataSetModel.get('dataSources'),
-			dataSourceUrl : this.model.get('dataSourceUrl')
-		};
-	    //super
-		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+		this.model.updateDataSetModel(options.datasetId).always(function() {
+			self.context = {
+				dataSources : self.model.get('dataSetModel').get('dataSources'),
+				dataSourceUrl : self.model.get('dataSourceUrl')
+			};
+			//super
+			GDP.util.BaseView.prototype.initialize.apply(self, initArguments);
+			
+			self.listenTo(self.model, 'change:dataSourceUrl', self.changeUrl);
+			self.listenTo(self.model.get('dataSourceVariables'), 'reset', self.changeAvailableVariables);
+			self.listenTo(self.model, 'change:invalidDataSourceUrl', self.changeInvalidUrl);
+			self.listenTo(self.model, 'change:minDate', self.changeMinDate);
+			self.listenTo(self.model, 'change:maxDate', self.changeMaxDate);
+			self.listenTo(self.model, 'change:startDate', self.changeStartDate);
+			self.listenTo(self.model, 'change:endDate', self.changeEndDate);
 
-		this.listenTo(this.model, 'change:dataSourceUrl', this.changeUrl);
-		this.listenTo(this.model.get('dataSourceVariables'), 'reset', this.changeAvailableVariables);
-		this.listenTo(this.model, 'change:invalidDataSourceUrl', this.changeInvalidUrl);
-		this.listenTo(this.model, 'change:minDate', this.changeMinDate);
-		this.listenTo(this.model, 'change:maxDate', this.changeMaxDate);
-		this.listenTo(this.model, 'change:startDate', this.changeStartDate);
-		this.listenTo(this.model, 'change:endDate', this.changeEndDate);
-
-		this.changeAvailableVariables();
-		this.changeInvalidUrl();
-		this.changeMinDate();
-		this.changeMaxDate();
-		this.changeStartDate();
-		this.changeEndDate();
+			self.changeAvailableVariables();
+			self.changeInvalidUrl();
+			self.changeMinDate();
+			self.changeMaxDate();
+			self.changeStartDate();
+			self.changeEndDate();
+		}).fail(function() {
+			window.alert('Unable to load requested dataset ' + options.datasetId);
+		});
 	},
 	'setEndDate' : function(ev){
 		this.model.set('endDate', ev.target.value);
