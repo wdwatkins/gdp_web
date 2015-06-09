@@ -29,23 +29,28 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 		GDP.config = {
 			get : function(prop) {
 				if (prop === 'process') {
-					return [
-						{
-							id : 'ALG1',
-							name : 'NAME1',
-							title : 'TITLE1'
-						},
-						{
-							id : 'ALG2',
-							name : 'NAME2',
-							title : 'TITLE2'
-						},
-						{
-							id : 'ALG3',
-							name : 'NAME3',
-							title : 'TITLE3'
-						}
-					]
+					return {
+						processes : [
+							{
+								id : 'ALG1',
+								name : 'NAME1',
+								title : 'TITLE1',
+								type : 'TYPE1'
+							},
+							{
+								id : 'ALG2',
+								name : 'NAME2',
+								title : 'TITLE2',
+								type : 'TYPE1'
+							},
+							{
+								id : 'ALG3',
+								name : 'NAME3',
+								title : 'TITLE3',
+								type : 'TYPE2'
+							}
+						]
+					};
 				}
 				else {
 					return null;
@@ -164,25 +169,25 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 		});
 
 		it('Expects a call to filterByAlgorithm to update the algorithms call and call isInFilter for each model in the collection', function() {
-			testView.filterByAlgorithm({target : {checked : true, value : 'ALG1'}});
+			testView.filterByAlgorithm({target : {checked : true, value : 'TYPE1'}});
 
 			expect(GDP.models.DataSetModel.prototype.isInFilter.calls.length).toBe(3);
-			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[0].args[0].algorithms).toEqual(['ALG1']);
-			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[1].args[0].algorithms).toEqual(['ALG1']);
-			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[2].args[0].algorithms).toEqual(['ALG1']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[0].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[1].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[2].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
 
-			testView.filterByAlgorithm({target : {checked : true, value : 'ALG2'}});
+			testView.filterByAlgorithm({target : {checked : true, value : 'TYPE2'}});
 
 			expect(GDP.models.DataSetModel.prototype.isInFilter.calls.length).toBe(6);
-			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[3].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
-			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[4].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
-			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[5].args[0].algorithms).toEqual(['ALG1', 'ALG2']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[3].args[0].algorithms).toEqual(['ALG1', 'ALG2', 'ALG3']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[4].args[0].algorithms).toEqual(['ALG1', 'ALG2', 'ALG3']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[5].args[0].algorithms).toEqual(['ALG1', 'ALG2', 'ALG3']);
 
-			testView.filterByAlgorithm({target : {checked : false, value : 'ALG1'}});
+			testView.filterByAlgorithm({target : {checked : false, value : 'TYPE1'}});
 			expect(GDP.models.DataSetModel.prototype.isInFilter.calls.length).toBe(9);
-			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[6].args[0].algorithms).toEqual(['ALG2']);
-			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[7].args[0].algorithms).toEqual(['ALG2']);
-			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[8].args[0].algorithms).toEqual(['ALG2']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[6].args[0].algorithms).toEqual(['ALG3']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[7].args[0].algorithms).toEqual(['ALG3']);
+			expect(GDP.models.DataSetModel.prototype.isInFilter.calls[8].args[0].algorithms).toEqual(['ALG3']);
 		});
 
 	});

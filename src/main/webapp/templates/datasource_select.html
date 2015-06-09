@@ -12,10 +12,10 @@
 				</div>
 				<div class="dataset-filter">
 					<div>Algorithms</div>
-					{{#each algorithms}}
+					{{#each algorithmFilters}}
 					<div class="algorithm-filter-container">
-						<input type="checkbox" id="algorithm{{@index}}" class="algorithm-type-filter" value="{{id}}" />
-						<label for="algorithm{{@index}}">{{title}}
+						<input type="checkbox" id="algorithm{{@index}}" class="algorithm-type-filter" value="{{this}}" />
+						<label for="algorithm{{@index}}">{{this}}
 					</div>
 					{{/each}}
 				</div>

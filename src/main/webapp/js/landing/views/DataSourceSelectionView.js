@@ -39,16 +39,18 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 				algorithms : []
 			};
 
-			this.context = {
-				algorithms : _.map(GDP.config.get('process').processes, function(process) {
+			this.algorithmFilters =  (_.chain(GDP.config.get('process').processes)
+				.map(function(process) {
 					return {
 						id : process.id,
-						name : process.name,
-						title : process.title
+						type : process.type
 					};
 				})
+				.groupBy('type')
+				.value());
+			this.context = {
+				algorithmFilters : _.keys(this.algorithmFilters)
 			};
-
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 
@@ -112,16 +114,13 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		 * @param {Jquery event} ev
 		 */
 		filterByAlgorithm : function(ev) {
-			var algorithm = ev.target.value;
+			var algorithmType = ev.target.value;
+			var algorithms = _.pluck(this.algorithmFilters[algorithmType], 'id');
 			if (ev.target.checked) {
-				if (!_.contains(this.filters.algorithms, algorithm)) {
-					this.filters.algorithms.push(algorithm);
-				}
+				this.filters.algorithms = _.union(this.filters.algorithms, algorithms);
 			}
 			else {
-				this.filters.algorithms = _.reject(this.filters.algorithms, function(filter) {
-					return filter === algorithm;
-				});
+				this.filters.algorithms = _.difference(this.filters.algorithms, algorithms);
 			}
 
 			this.updateFilteredViews();
