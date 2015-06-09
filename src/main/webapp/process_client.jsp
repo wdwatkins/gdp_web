@@ -8,11 +8,6 @@
 		<link rel="stylesheet" type="text/css" href="<%= baseUrl %>webjars/jquery-file-upload/<%= versionJqueryFileUpload%>/css/jquery.fileupload.css">
 		<link rel="stylesheet" type="text/css" href="<%= baseUrl %>css/process_client_custom.css">
 		<link type="text/css" rel="stylesheet" href="<%= baseUrl %>webjars/bootstrap-datepicker/<%= versionBsDatePicker%>/css/bootstrap-datepicker3<%= development ? "" : ".min"%>.css" />
-
-		<script type="text/javascript">
-			var GDP = GDP || {};
-			GDP.BASE_URL = "<%= baseUrl%>";
-		</script>
 	</head>
     <body>
 		<div class="container">

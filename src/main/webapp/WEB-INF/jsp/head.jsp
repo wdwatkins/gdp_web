@@ -15,9 +15,7 @@
 	}
 %>
 <%
-Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));
-String baseUrl = props.getProperty("gdp.base.url");
-if (!baseUrl.endsWith("/")) { baseUrl += "/"; }
+Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));	
 String versionProject = props.get("version");
 String versionJquery = props.get("version.jquery");
 String versionBootstrap = props.get("version.bootstrap");
@@ -30,6 +28,8 @@ String versionBsDatePicker= props.get("version.bsDatePicker");
 String versionJqueryFileUpload = props.get("version.jqueryFileUpload");
 String versionJqueryUI = props.get("version.jqueryUI");
 String resourceSuffix = development ? "" : "-" + versionProject + "-min";
+String baseUrl = props.getProperty("gdp.base.url");
+	if (!baseUrl.endsWith("/")) { baseUrl += "/"; }
 %>
 
 <jsp:include page="template/USGSHead.jsp">
@@ -47,3 +47,9 @@ String resourceSuffix = development ? "" : "-" + versionProject + "-min";
 </jsp:include>
 
 <link type="text/css" rel="stylesheet" href="<%= baseUrl %>webjars/font-awesome/<%= versionFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
+
+<script type="text/javascript">
+	var GDP = GDP || {};
+	GDP.BASE_URL = "<%= baseUrl%>";
+	GDP.DEVELOPMENT = "<%= development%>";
+</script>

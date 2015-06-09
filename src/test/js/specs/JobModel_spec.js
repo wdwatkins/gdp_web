@@ -434,7 +434,7 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 			expect(jobModel.get('dataSetModel').attributes.identifier).toBe('ID1');
 		});
 
-		it('Expect that if a new datasetId is specified, the record is retrieved and updated if the retrieval is successful', function() {
+		it('Expects that if a new datasetId is specified, the record is retrieved and updated if the retrieval is successful', function() {
 			var promise = jobModel.updateDataSetModel('ID2');
 			expect(GDP.cswClient.requestGetRecordById).toHaveBeenCalledWith({id : 'ID2'});
 			expect(promise.state()).toBe('pending');
