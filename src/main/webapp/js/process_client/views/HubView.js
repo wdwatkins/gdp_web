@@ -1,3 +1,6 @@
+/*jslint browser: true*/
+/*global Backbone*/
+
 var GDP = GDP || {};
 
 GDP.PROCESS_CLIENT = GDP.PROCESS_CLIENT || {};
@@ -23,6 +26,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			var process = this.model.getSelectedAlgorithmProcess();
 			var messages = this.model.jobErrorMessages();
 			var invalidJob = (messages.spatial.length !== 0) || (messages.dataDetails.length !== 0) || (messages.algorithm.length !== 0);
+
 			this.$el.html(this.template({
 				jobModel: this.model.attributes,
 				areAllAOIVariablesSelected : this.model.attributes.aoiAttributeValues === this.model.SELECT_ALL_AOI_ATTRIBUTE_VALUES,
@@ -31,21 +35,55 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				messages : messages,
 				invalidJob : invalidJob
 			}));
+
+
 		},
 
+		/*
+		 * @constructs
+		 * @param {Object} -
+		 *      @prop {Function} template - page template function
+		 *      @prop {Function} metadataTemplate - template to be used to render the metadat tile contents
+		 *      @prop {Function} wps - instance of the GDP.OGC.wps function
+		 *      @prop {Object} model - instance of GDP.PROCESS_CLIENT.model.JobModel
+		 *      @prop {String} datasetId - can be null .
+		 */
+
 		initialize : function(options) {
+			var self = this;
 			this.wps = options.wps;
+			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId  : 'advanced';
+
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
-			this.spatialMapView = new GDP.PROCESS_CLIENT.view.HubSpatialMapView({
-				model : this.model,
-				mapDiv : 'hub-spatial-inset-map'
-			});
+
 			this.alertView = new GDP.util.AlertView({
 				el : '#job-processing-messages-div'
 			});
 
 			// Used to store retrieval results id
 			this.resultsModel = new Backbone.Model();
+
+			this.model.updateDataSetModel(options.datasetId).fail(function(response) {
+				self.alertView.show('alert-danger', 'Unable to load information about the dataset, ' + options.datasetId);
+				GDP.logger.error('Could not GetRecordsById for ' + options.datasetId);
+			}).always(function() {
+				var datasetModel = self.model.get('dataSetModel');
+				var $metadataTile = self.$el.find('#dataset-metadata-wrapper');
+				
+				self.$el.find('.loading-indicator').hide();
+				self.$el.find('.hub-tile').show();
+				self.spatialMapView = new GDP.PROCESS_CLIENT.view.HubSpatialMapView({
+					model : self.model,
+					mapDiv : 'hub-spatial-inset-map'
+				});
+
+				if (datasetModel.has('identifier')) {
+					$metadataTile.find('.panel-body').html(options.metadataTemplate(datasetModel.attributes));
+				}
+				else {
+					$metadataTile.hide();
+				}
+			});
 		},
 
 		remove : function() {
@@ -53,16 +91,19 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			GDP.util.BaseView.prototype.remove.apply(this, arguments);
 		},
 
-		goToSpatialPage : function() {
-			this.router.navigate('/spatial', {trigger : true});
+		goToSpatialPage : function(ev) {
+			ev.preventDefault();
+			this.router.navigate(this.routePrefix + '/spatial', {trigger : true});
 		},
 
-		goToDataDetailsPage : function() {
-			this.router.navigate('/datadetail', {trigger : true});
+		goToDataDetailsPage : function(ev) {
+			ev.preventDefault();
+			this.router.navigate(this.routePrefix + '/datadetail', {trigger : true});
 		},
 
-		goToProcessPage : function() {
-			this.router.navigate('/process', {trigger: true});
+		goToProcessPage : function(ev) {
+			ev.preventDefault();
+			this.router.navigate(this.routePrefix + '/process', {trigger: true});
 		},
 
 		setEditable : function(editable) {
@@ -71,6 +112,12 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			$('#edit-process-btn').prop('disabled', !editable);
 		},
 
+		/*
+		 * Forms the web processing service call from the jobModel and submits it. Continues
+		 * to poll for status and results and updates the view as needed. This function returns as soon
+		 * as the set up for the initial Web processing service is made. Uses deferreds to handle the asynchronous
+		 * calls.
+		 */
 		submitProcessingRequest : function() {
 			var executePromise;
 			var mimeType = this.model.getMimeType();
@@ -88,6 +135,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			$('#submit-job-btn').prop('disabled', true);
 
 			$.when(getWPSStringInputs).done(function(wpsStringInputs) {
+				// We now have all the information we need to get started
 				self.alertView.show('alert-info', 'Process status: started');
 
 				executePromise = self.wps.sendWpsExecuteRequest(
@@ -105,13 +153,16 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				);
 
 				executePromise.done(function(xml) {
+					// Initial Web Processing service call made. Start polling for status and then resolve/reject the submitDone deferred
+					// when the process is done or has failed.
+					var intervalId;
 					var statusCallback = function(xmlText) {
 						// Workaround and extra logging for bug where empty xml is returned.
 						// Ignore it and keep rechecking.
 						var xml;
 
 						if (!xmlText || xmlText === '') {
-							logger.warn('GDP: RetrieveResultServlet returned empty response. Retrying.');
+							GDP.logger.warn('GDP: RetrieveResultServlet returned empty response. Retrying.');
 							return;
 						}
 						xml = $.parseXML(xmlText);
@@ -176,7 +227,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 						});
 					}
 
-					var intervalId = window.setInterval(function() {
+					intervalId = window.setInterval(function() {
 						$.ajax({
 							url: GDP.config.get('application').endpoints.processWps + '/RetrieveResultServlet',
 							data : {
@@ -197,6 +248,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				});
 			});
 
+			// Processing is done or has failed. Update the view.
 			submitDone.always(function() {
 				self.setEditable(true);
 			}).done(function() {
@@ -221,6 +273,5 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			var data = 'id=' + statusId + '&attachment=true';
 			$.download(url, data, 'get');
 		}
-
 	});
 }());

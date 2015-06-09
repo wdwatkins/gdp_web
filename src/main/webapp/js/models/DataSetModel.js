@@ -5,14 +5,12 @@
 
 var GDP = GDP || {};
 
-GDP.LANDING = GDP.LANDING || {};
-
-GDP.LANDING.models = GDP.LANDING.models || {};
+GDP.models = GDP.models || {};
 
 (function() {
 	"use strict";
 
-	GDP.LANDING.models.DataSetModel = Backbone.Model.extend({
+	GDP.models.DataSetModel = Backbone.Model.extend({
 		constructor : function(attributes) {
 			Backbone.Model.prototype.constructor.call(this, attributes, {parse : true});
 		},
@@ -24,6 +22,10 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 		 */
 		parse : function(metadata, options) {
 			var result = {};
+
+			if (_.isEmpty(metadata)) {
+				return result;
+			}
 
 			var datasetInfo = (metadata.identificationInfo.length  > 0) ? metadata.identificationInfo[0] : {};
 			result.identifier = this._getCharValue(metadata.fileIdentifier);
@@ -234,8 +236,8 @@ GDP.LANDING.models = GDP.LANDING.models || {};
 		}
 	});
 
-	GDP.LANDING.models.DataSetCollection = Backbone.Collection.extend({
-		model : GDP.LANDING.models.DataSetModel
+	GDP.models.DataSetCollection = Backbone.Collection.extend({
+		model : GDP.models.DataSetModel
 	});
 
 }());

@@ -337,7 +337,7 @@
 					</preloadSources>
 					<sourceIncludes>
 						<include>util/**.js</include>
-						<include>models/Config.js</include>
+						<include>models/*.js</include>
 						<include>ogc/**.js</include>
 						<include>process_client/models/Process.js</include>
 						<include>process_client/models/DataSourceModels.js</include>

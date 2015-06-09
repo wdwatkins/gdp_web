@@ -21,7 +21,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		/*
 		 * @constructs
 		 * @param {Object} options
-		 *	   @prop collection {GDP.LANDING.models.DataSetCollection}
+		 *	   @prop collection {GDP.models.DataSetCollection}
 		 *     @prop router {Backbone.Router instance} - defaults to null
 		 *	   @prop template {Handlerbars template function} - defaults to loading the template from NWC.templates - this is useful for testing
 		 *	   @prop context {Object} to be used when rendering templateName - defaults to {}

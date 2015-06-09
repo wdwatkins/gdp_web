@@ -23,18 +23,39 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 *    @prop {Backbone.model} model
 		 */
 		initialize : function(options) {
-			var process;
-			this.algorithmTemplate = options.algorithmTemplate;
-			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+			var self = this;
+			var initArguments = arguments;
 
-			this.listenTo(this.model, 'change:algorithmId', this.displayAlgorithmDescription);
+			this.algorithmTemplate = options.algorithmTemplate;
+			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId  : 'advanced';
+
+			this.model.updateDataSetModel(options.datasetId).always(function() {
+				GDP.util.BaseView.prototype.initialize.apply(self, initArguments);
+				self.listenTo(self.model, 'change:algorithmId', self.displayAlgorithmDescription);
+			}).fail(function() {
+				window.alert('Unable to load requested dataset ' + options.datasetId);
+			})
 		},
 
 		render : function () {
 			// Hiding the rendered template until the selected algorithm description is shown so that
 			// there isn't flashing when an algorithm has already been selected
 			this.$el.hide();
-			this.$el.html(this.template(this.model.attributes));
+			var context = this.model.clone().attributes;
+			var dataSetModel = this.model.get('dataSetModel');
+			if (dataSetModel.has('algorithms')) {
+				var algorithms = this.model.get('dataSetModel').get('algorithms');
+				context.allowedAlgorithms = _.map(algorithms, function(alg) {
+					return _.find(context.processes.models, function(p) {
+						return p.attributes.id === alg;
+					});
+				});
+			}
+			else {
+				context.allowedAlgorithms = context.processes.models;
+			}
+
+			this.$el.html(this.template(context));
 			this.displayAlgorithmDescription();
 			this.$el.show();
 
@@ -112,7 +133,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 */
 		goToHubPage : function(ev) {
 			ev.preventDefault();
-			this.router.navigate('', {trigger : true});
+			this.router.navigate(this.routePrefix, {trigger : true});
 		}
 	});
 }());

@@ -1,4 +1,4 @@
-describe('GDP.LANDING.models.DataSetModel', function() {
+describe('GDP.models.DataSetModel', function() {
 
 	describe('Tests for isInFilter function', function() {
 		var testModel;
@@ -7,7 +7,7 @@ describe('GDP.LANDING.models.DataSetModel', function() {
 			GDP.algorithms = {
 				get : jasmine.createSpy('algorithmsGetSpy').andReturn({'1234' : ['Alg1', 'Alg2']})
 			};
-			testModel = new GDP.LANDING.models.DataSetModel({
+			testModel = new GDP.models.DataSetModel({
 				identificationInfo : [],
 				fileIdentifier : {
 					CharacterString : {

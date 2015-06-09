@@ -57,6 +57,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		initialize : function(options) {
 			var self = this;
 			this.wps = options.wps;
+			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId  : 'advanced';
+
 			var baseLayers = [GDP.util.mapUtils.createWorldStreetMapLayer()];
 			var controls = [
 				new OpenLayers.Control.Navigation(),
@@ -312,7 +314,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 */
 		goToHubPage : function(ev) {
 			ev.preventDefault();
-			this.router.navigate('', {trigger : true});
+			this.router.navigate(this.routePrefix, {trigger : true});
 		},
 
 		/*

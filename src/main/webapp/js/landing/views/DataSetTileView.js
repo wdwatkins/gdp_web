@@ -21,7 +21,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		 * @param {Object} options
 		 *     @prop router {Backbone.Router instance} - defaults to null
 		 *	   @prop template {Handlerbars template function} - defaults to loading the template from NWC.templates - this is useful for testing
-		 *	   @prop model {GDP.LANDING.models.DataSetModel}
+		 *	   @prop model {GDP.models.DataSetModel}
 		 *	   @prop dialogEl {Jquery element} - The jquery element for the modal dialog
 		 *	   @prop el {Jquery element} - optional
 		 * @returns {GDP.LANDING.views.DataSetTileView}
@@ -51,7 +51,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		showDetails : function() {
 			this.detailView = new GDP.LANDING.views.DataSetDialogView({
 				model : this.model,
-				template : GDP.LANDING.templates.getTemplate('data_set_dialog'),
+				template : GDP.LANDING.templates.getTemplate('data_set_details'),
 				router : this.router,
 				el : this.$dialogEl
 			});

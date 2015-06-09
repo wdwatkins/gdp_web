@@ -31,6 +31,7 @@ var GDP = GDP || {};
     var Job = Backbone.Model.extend({
 		SELECT_ALL_AOI_ATTRIBUTE_VALUES : ['*'],
 		defaults: {
+			dataSetModel : new GDP.models.DataSetModel(),
 			//data details
 			dataSourceUrl : null,
 			invalidDataSourceUrl : true,
@@ -61,6 +62,47 @@ var GDP = GDP || {};
 
 			email : '',
 			filename : ''
+		},
+
+		/*
+		 *
+		 * @param {String} datasetId - Id of dataset to retrieve from sciencebase
+		 * @returns {jquery.Promise} - This promise is resolve if the data set model does not need to be updated or if it is
+		 * successfully updated. The promise is rejected if updating the datset failed. The dataSetModel property is also cleared.
+		 */
+		updateDataSetModel : function(datasetId) {
+			var dataSetModel = this.get('dataSetModel');
+			var deferred = $.Deferred();
+			if (datasetId) {
+				if (!dataSetModel.has('identifier') || (dataSetModel.get('identifier') !== datasetId)) {
+					// Need to retrieve it
+					GDP.cswClient.requestGetRecordById({
+						id : datasetId
+					}).done(function(response) {
+						if (response.records.length > 0){
+							dataSetModel.clear();
+							dataSetModel.set(dataSetModel.parse(response.records[0]));
+							deferred.resolve();
+						}
+						else {
+							dataSetModel.clear();
+							deferred.reject();
+						}
+					}).fail(function() {
+						GDP.logger.error('Could not GetRecordsById for ' + datasetId);
+						dataSetModel.clear();
+						deferred.reject();
+					});
+				}
+				else { // Already set
+					deferred.resolve();
+				}
+			}
+			else {
+				dataSetModel.clear();
+				deferred.resolve();
+			}
+			return deferred.promise();
 		},
 
 		/*

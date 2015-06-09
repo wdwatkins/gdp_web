@@ -7,6 +7,7 @@
 	<button id="retrieve-input-btn" class="btn btn-primary">Retrieve Process Input</button>
 </div>
 <div id="tiles-div" class="row">
+	<div class="loading-indicator"><i class="fa fa-5x fa-spinner fa-spin"></i></div>
 	<div class="hub-tile" id="spatial-wrapper">
 		 <div class="panel panel-default"  >
 			<div class="panel-heading">Spatial</div>
@@ -61,7 +62,7 @@
 					&nbsp;
 				</div>
 				<div class="hub-tile-button-div">
-					<button id="edit-detail-btn" class="btn btn-primary">Edit Data Detail</button>
+					<a href="datadetail" id="edit-detail-btn"  role="button" class="btn btn-primary">Edit Data Detail</a>
 				</div>
 			</div>
 		</div>
@@ -97,9 +98,15 @@
 					{{jobModel.filename}}&nbsp;
 				</div>
 				<div class="hub-tile-button-div">
-					<button id="edit-process-btn" class="btn btn-primary">Edit Process</button>
+					<a href="process" id="edit-process-btn" role="button" class="btn btn-primary">Edit Process</a>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div class="hub-tile" id="dataset-metadata-wrapper">
+		<div class="panel panel-default">
+			<div class="panel-heading">Dataset Metadata</div>
+			<div class="panel-body"></div>
 		</div>
 	</div>
 </div>

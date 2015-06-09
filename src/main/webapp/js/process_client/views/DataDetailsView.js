@@ -16,8 +16,12 @@ var GDP = GDP || {};
 			selector: '#end-date'
 		}
 	};
-	var urlPicker = {
+	var urlTextPicker = {
 		selector: '#data-source-url'
+	};
+
+	var dataSourcePicker = {
+		selector : '#data-source-select'
 	};
 
 	var VARIABLE_WPS_PROCESS_ID = 'gov.usgs.cida.gdp.wps.algorithm.discovery.ListOpendapGrids';
@@ -27,7 +31,8 @@ var GDP = GDP || {};
 	'events' : (function(){
 		var ret = {};
 		ret['change ' + variablePicker.selector] = 'setSelectedVariables';
-		ret['change ' + urlPicker.selector] = 'setUrl';
+		ret['change ' + urlTextPicker.selector] = 'setUrl';
+		ret['change ' + dataSourcePicker.selector] = 'setUrl';
 		ret['changeDate ' + datePickers.start.selector] = 'setStartDate';
 		ret['changeDate ' + datePickers.end.selector] = 'setEndDate';
 		ret['submit form'] = 'goToHubPage';
@@ -35,25 +40,38 @@ var GDP = GDP || {};
 	}()),
 	'wps' : null,
 	'initialize': function(options) {
-	    this.wps = options.wps;
-	    this.wpsEndpoint = options.wpsEndpoint;
-	    //super
-		GDP.util.BaseView.prototype.initialize.apply(this, arguments);
-		$(urlPicker.selector).val(this.model.get('dataSourceUrl'));
-		this.listenTo(this.model, 'change:dataSourceUrl', this.changeUrl);
-		this.listenTo(this.model.get('dataSourceVariables'), 'reset', this.changeAvailableVariables);
-		this.listenTo(this.model, 'change:invalidDataSourceUrl', this.changeInvalidUrl);
-		this.listenTo(this.model, 'change:minDate', this.changeMinDate);
-		this.listenTo(this.model, 'change:maxDate', this.changeMaxDate);
-		this.listenTo(this.model, 'change:startDate', this.changeStartDate);
-		this.listenTo(this.model, 'change:endDate', this.changeEndDate);
+		var self = this;
+		var initArguments = arguments;
 
-		this.changeAvailableVariables();
-		this.changeInvalidUrl();
-		this.changeMinDate();
-		this.changeMaxDate();
-		this.changeStartDate();
-		this.changeEndDate();
+		this.wps = options.wps;
+		this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId : 'advanced';
+		this.wpsEndpoint = options.wpsEndpoint;
+
+		this.model.updateDataSetModel(options.datasetId).always(function() {
+			self.context = {
+				dataSources : self.model.get('dataSetModel').get('dataSources'),
+				dataSourceUrl : self.model.get('dataSourceUrl')
+			};
+			//super
+			GDP.util.BaseView.prototype.initialize.apply(self, initArguments);
+
+			self.listenTo(self.model, 'change:dataSourceUrl', self.changeUrl);
+			self.listenTo(self.model.get('dataSourceVariables'), 'reset', self.changeAvailableVariables);
+			self.listenTo(self.model, 'change:invalidDataSourceUrl', self.changeInvalidUrl);
+			self.listenTo(self.model, 'change:minDate', self.changeMinDate);
+			self.listenTo(self.model, 'change:maxDate', self.changeMaxDate);
+			self.listenTo(self.model, 'change:startDate', self.changeStartDate);
+			self.listenTo(self.model, 'change:endDate', self.changeEndDate);
+
+			self.changeAvailableVariables();
+			self.changeInvalidUrl();
+			self.changeMinDate();
+			self.changeMaxDate();
+			self.changeStartDate();
+			self.changeEndDate();
+		}).fail(function() {
+			window.alert('Unable to load requested dataset ' + options.datasetId);
+		});
 	},
 	'setEndDate' : function(ev){
 		this.model.set('endDate', ev.target.value);
@@ -77,7 +95,7 @@ var GDP = GDP || {};
 	 */
 	goToHubPage : function(ev) {
 		ev.preventDefault();
-		this.router.navigate('', {trigger : true});
+		this.router.navigate(this.routePrefix, {trigger : true});
 	},
 
 	'changeMinDate' : function(){
@@ -109,8 +127,9 @@ var GDP = GDP || {};
 		}
 	},
 	'selectMenuView' : null,
+
 	'render' : function () {
-		this.$el.html(this.template());
+		this.$el.html(this.template(this.context));
 		this.selectMenuView = new GDP.util.SelectMenuView({
 				el : variablePicker.selector,
 				emptyPlaceholder : false,
@@ -120,6 +139,13 @@ var GDP = GDP || {};
 		$(datePickers.end.selector).datepicker();
 		return this;
 	},
+
+	remove : function() {
+		this.selectMenuView.remove();
+		GDP.util.BaseView.prototype.remove.apply(this, arguments);
+
+	},
+
 	'dateModelProperties' : ['minDate', 'startDate', 'maxDate', 'endDate'],
 	'resetDates': function(){
 		var self = this;

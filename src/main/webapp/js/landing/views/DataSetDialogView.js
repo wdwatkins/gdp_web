@@ -32,7 +32,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		/*
 		 * @param {Object} options
 		 *     @prop {Function} template - returns the rendered html.
-		 *     @prop {GDP.LANDING.models.DataSetModel} model
+		 *     @prop {GDP.models.DataSetModel} model
 		 *     @prop {Jquery element} el - This is expected to contain the framework for a bootstrap
 		 *         modal where el represents the div with the modal class and within that div is a modal-content
 		 *         class.
@@ -65,7 +65,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		 * Go to the process_client using the dataset identifier in the url.
 		 */
 		goToProcessClient : function() {
-			window.location.assign('process_client/' + this.model.get('csw').identifier);
+			window.location.assign('client/catalog/gdp/dataset/' + this.model.get('identifier'));
 			this.remove();
 		}
 

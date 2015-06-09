@@ -28,9 +28,14 @@
 	overflow:hidden;
 	text-align: left;
 }
+
 #tiles-div {
 	.make-row();
+	.loading-indicator  {
+		text-align : center;
+	}
 	.hub-tile {
+		display: none;
 		.make-md-column(6);
 	}
 	
@@ -54,6 +59,9 @@
 	#hub-spatial-inset-map {
 		height: 250px;
 		border : 1px solid black;
+	}
+	#dataset-metadata-wrapper {
+		display: none;
 	}
 }
 

@@ -189,10 +189,6 @@ describe('GDP.PROCESS_CLIENT.view.ProcessView', function() {
 		$('#container-process-description').remove();
 	});
 
-	it('Expects the template to be rendered using the model passed in at initialization', function() {
-		expect(templateSpy).toHaveBeenCalledWith(jobModel.attributes);
-	});
-
 	it('Expects the algorithmConfigView to be instantiated', function() {
 		expect(testView.algorithmConfigView).toBeDefined();
 		expect(GDP.PROCESS_CLIENT.view.AlgorithmConfigView).toHaveBeenCalled();
@@ -238,7 +234,7 @@ describe('GDP.PROCESS_CLIENT.view.ProcessView', function() {
 		expect(algorithmRemoveSpy).not.toHaveBeenCalled();
 		testView.remove();
 		expect(algorithmRemoveSpy).toHaveBeenCalled();
-	})
+	});
 
 
 });
