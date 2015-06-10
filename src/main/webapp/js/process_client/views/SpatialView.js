@@ -98,11 +98,16 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 			var getDeferreds = [];
 			getDeferreds.push(this.getAvailableFeatures());
-			getDeferreds.push(this._updateAttributes(name));
-			getDeferreds.push(this._updateValues(name, attribute));
+			if (needsAoiAttributeValues) {
+				getDeferreds.push(this._updateAttributes(name));
+				getDeferreds.push(this._updateValues(name, attribute));
+			}
+			getDeferreds.push(this.model.updateDataSetModel(options.datasetId));
 			$.when.apply(this, getDeferreds).done(function() {
 				self._updateAOILayer(name);
 				self._highlightFeatures(name, attribute, values);
+
+				self._addDatasetBoundingBoxLayer();
 
 				self.$el.find('#select-aoi').val(name);
 				self.$el.find('#select-attribute').val(attribute);
@@ -112,6 +117,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				self.listenTo(self.model, 'change:aoiAttribute', self.updateSelectedAoiAttribute);
 				self.listenTo(self.model, 'change:aoiAttributeValues', self.updateSelectedAoiAttributeValues);
 			});
+
 		},
 
 		/*
@@ -659,6 +665,26 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				}
 			);
 		    this.map.addControl(this.drawFeatureControl);
+		},
+
+		_addDatasetBoundingBoxLayer : function() {
+			var dataSetModel = this.model.get('dataSetModel');
+			var bounds;
+			var boundsFeature;
+
+			if (dataSetModel.has('bounds')) {
+				bounds = GDP.util.mapUtils.transformWGS84ToMercator(new OpenLayers.Bounds(dataSetModel.get('bounds').toArray()));
+				boundsFeature = new OpenLayers.Feature.Vector(bounds.toGeometry(), {}, {
+					strokeColor : '#440000',
+					strokeOpacity : 0.2,
+					strokeWidth : 1,
+					fillColor : '#440000',
+					fillOpacity : 0.2
+				});
+				this.boundsLayer = new OpenLayers.Layer.Vector('Dataset extent');
+				this.boundsLayer.addFeatures([boundsFeature]);
+				this.map.addLayer(this.boundsLayer);
+			}
 		},
 
 		/*

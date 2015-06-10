@@ -1,5 +1,6 @@
 /*jslint browser: true*/
 /*global Backbone*/
+/*global OpenLayers*/
 
 var GDP = GDP || {};
 
