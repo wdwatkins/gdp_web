@@ -101,6 +101,23 @@
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>CatalogWMSProxyServlet</servlet-name>
+		<servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+		<init-param>
+			<param-name>forward-url-param</param-name>
+			<param-value>gdp.endpoint.catalogwms</param-value>
+		</init-param>
+		<init-param>
+			<param-name>readTimeout</param-name>
+			<param-value>300000</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CatalogWMSProxyServlet</servlet-name>
+		<url-pattern>/catalogwms/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
         <servlet-name>shapefile-upload-servlet</servlet-name>
         <servlet-class>gov.usgs.cida.geoutils.geoserver.servlet.ShapefileUploadServlet</servlet-class>
         <!--

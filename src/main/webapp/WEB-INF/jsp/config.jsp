@@ -34,7 +34,8 @@
 			"geoserver" : "<%= baseUrl %>geoserver",
 			"utilityWps" : "<%= baseUrl %>utilityWps",
 			"processWps" : "<%= baseUrl %>processWps",
-			"csw" : "<%= baseUrl %>csw"
+			"csw" : "<%= baseUrl %>csw",
+			"catalogwms" : "<%= baseUrl %>catalogwms"
 		},
 		"serviceEndpoints" : {
 			"geoserver" : "<%= geoserverEndpoint %>"

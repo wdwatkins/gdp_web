@@ -668,22 +668,25 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		},
 
 		_addDatasetBoundingBoxLayer : function() {
+			var self = this;
 			var dataSetModel = this.model.get('dataSetModel');
+			var dataSourceUrl = this.model.get('dataSourceUrl');
 			var bounds;
-			var boundsFeature;
 
-			if (dataSetModel.has('bounds')) {
-				bounds = GDP.util.mapUtils.transformWGS84ToMercator(new OpenLayers.Bounds(dataSetModel.get('bounds').toArray()));
-				boundsFeature = new OpenLayers.Feature.Vector(bounds.toGeometry(), {}, {
-					strokeColor : '#440000',
-					strokeOpacity : 0.2,
-					strokeWidth : 1,
-					fillColor : '#440000',
-					fillOpacity : 0.2
-				});
-				this.boundsLayer = new OpenLayers.Layer.Vector('Dataset extent');
-				this.boundsLayer.addFeatures([boundsFeature]);
-				this.map.addLayer(this.boundsLayer);
+			if (dataSetModel.has('identifier') && dataSetModel.has('bounds')) {
+				bounds = dataSetModel.get('bounds');
+				if (dataSourceUrl) {
+					GDP.util.mapUtils.createDataSourceExtentLayer(bounds, dataSetModel.get('identifier'), dataSourceUrl).done(function(layer) {
+						self.boundsLayer = layer;
+						self.map.addLayer(self.boundsLayer);
+					});
+
+				}
+				else {
+					this.boundsLayer = GDP.util.mapUtils.createDataSetExtentLayer(bounds);
+					this.map.addLayer(this.boundsLayer);
+				}
+
 			}
 		},
 
