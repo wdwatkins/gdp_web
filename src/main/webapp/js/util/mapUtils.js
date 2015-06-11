@@ -141,6 +141,96 @@ GDP.util.mapUtils = (function() {
 		);
 	};
 
+	/*
+	 * Creates a new layer representing boundingBox which represents a dataset extent.
+	 * @param {OpenLayers.Bounds} boundingBox
+	 * @returns {OpenLayers.Layer.Vector}
+	 */
+	that.createDataSetExtentLayer = function(boundingBox) {
+		var bounds = that.transformWGS84ToMercator(new OpenLayers.Bounds(boundingBox.toArray()));
+		var boundsFeature = new OpenLayers.Feature.Vector(bounds.toGeometry(), {}, {
+			strokeColor : '#440000',
+			strokeOpacity : 0.2,
+			strokeWidth : 1,
+			fillColor : '#440000',
+			fillOpacity : 0.2
+		});
+		var boundsLayer = new OpenLayers.Layer.Vector('Dataset extent');
+		boundsLayer.addFeatures([boundsFeature]);
+		return boundsLayer;
+	};
+
+	/*
+	 * @param {OpenLayers.Bounds} boundingBox - Extent of the dataset.
+	 * @param {String} datasetId
+	 * @param {String} dataSourceUrl - should be in the dataset represented by datasetId
+	 * @return Jquery.Deferred.promise that when resolved returns the created layer.
+	 */
+	that.createDataSourceExtentLayer = function(boundingBox, datasetId, dataSourceUrl) {
+		// First get the WMS getCapabilities for the datasetId
+		var url = GDP.config.get('application').endpoints.catalogWms + '/' + datasetId;
+		var format = new OpenLayers.Format.WMSCapabilities.v1_3_0();
+		var layer;
+		var dataSourceName;
+		var dataSourceLayer;
+
+		var deferred = $.Deferred();
+
+		OpenLayers.Request.GET({
+			url : url,
+			params : {
+				request : 'GetCapabilities',
+				service : 'WMS',
+				version : '1.3.0'
+			},
+			success : function(response) {
+				var respObj = format.read(response.responseXML);
+				if (_.has(respObj, 'error')) {
+					GDP.debug('Unsuccessfully retrieved wms capabilities');
+					layer = that.createDataSetExtentLayer(boundingBox);
+				}
+				else {
+					if (dataSourceUrl.search('dodsC/') === -1) {
+						layer = that.createDataSetExtentLayer(boundingBox);
+					}
+					else {
+						dataSourceName = _.last(dataSourceUrl.split('dodsC/')).replace(/\//g, '_');
+						dataSourceLayer = _.find(respObj.capability.layers, function(layer) {
+							return _.last(layer.name.split(':')).indexOf(dataSourceName) !== -1;
+						});
+						if (dataSourceLayer) {
+							layer = new OpenLayers.Layer.WMS(
+								'Data source extent',
+								url,
+								{
+									transparent : true,
+									layers : dataSourceLayer.name
+								},
+								{
+									opacity : 0.2,
+									displayInLayerSwitcher : false,
+									visibility : true,
+									isBaseLayer : false,
+									singleTile : true
+								}
+							);
+						}
+						else {
+							layer = that.createDataSetExtentLayer(boundingBox);
+						}
+					}
+				}
+				deferred.resolve(layer);
+			},
+			failure : function(response) {
+				layer = that.createDataSetExtentLayer(boundingBox);
+				deferred.resolve(layer);
+			}
+		});
+
+		return deferred.promise();
+	};
+
 	return that;
 }());
 

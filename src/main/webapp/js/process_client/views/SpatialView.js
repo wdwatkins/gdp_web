@@ -98,11 +98,16 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 			var getDeferreds = [];
 			getDeferreds.push(this.getAvailableFeatures());
-			getDeferreds.push(this._updateAttributes(name));
-			getDeferreds.push(this._updateValues(name, attribute));
+			if (needsAoiAttributeValues) {
+				getDeferreds.push(this._updateAttributes(name));
+				getDeferreds.push(this._updateValues(name, attribute));
+			}
+			getDeferreds.push(this.model.updateDataSetModel(options.datasetId));
 			$.when.apply(this, getDeferreds).done(function() {
 				self._updateAOILayer(name);
 				self._highlightFeatures(name, attribute, values);
+
+				self._addDatasetBoundingBoxLayer();
 
 				self.$el.find('#select-aoi').val(name);
 				self.$el.find('#select-attribute').val(attribute);
@@ -112,6 +117,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				self.listenTo(self.model, 'change:aoiAttribute', self.updateSelectedAoiAttribute);
 				self.listenTo(self.model, 'change:aoiAttributeValues', self.updateSelectedAoiAttributeValues);
 			});
+
 		},
 
 		/*
@@ -659,6 +665,31 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				}
 			);
 		    this.map.addControl(this.drawFeatureControl);
+		},
+
+		_addDatasetBoundingBoxLayer : function() {
+			if (!(_.has(this.boundsLayer))) {
+				var self = this;
+				var dataSetModel = this.model.get('dataSetModel');
+				var dataSourceUrl = this.model.get('dataSourceUrl');
+				var bounds;
+
+				if (dataSetModel.has('identifier') && dataSetModel.has('bounds')) {
+					bounds = dataSetModel.get('bounds');
+					if (dataSourceUrl) {
+						GDP.util.mapUtils.createDataSourceExtentLayer(bounds, dataSetModel.get('identifier'), dataSourceUrl).done(function(layer) {
+							self.boundsLayer = layer;
+							self.map.addLayer(self.boundsLayer);
+						});
+
+					}
+					else {
+						this.boundsLayer = GDP.util.mapUtils.createDataSetExtentLayer(bounds);
+						this.map.addLayer(this.boundsLayer);
+					}
+
+				}
+			}
 		},
 
 		/*
