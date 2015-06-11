@@ -141,6 +141,11 @@ GDP.util.mapUtils = (function() {
 		);
 	};
 
+	/*
+	 * Creates a new layer representing boundingBox which represents a dataset extent.
+	 * @param {OpenLayers.Bounds} boundingBox
+	 * @returns {OpenLayers.Layer.Vector}
+	 */
 	that.createDataSetExtentLayer = function(boundingBox) {
 		var bounds = that.transformWGS84ToMercator(new OpenLayers.Bounds(boundingBox.toArray()));
 		var boundsFeature = new OpenLayers.Feature.Vector(bounds.toGeometry(), {}, {
@@ -156,6 +161,9 @@ GDP.util.mapUtils = (function() {
 	};
 
 	/*
+	 * @param {OpenLayers.Bounds} boundingBox - Extent of the dataset.
+	 * @param {String} datasetId
+	 * @param {String} dataSourceUrl - should be in the dataset represented by datasetId
 	 * @return Jquery.Deferred.promise that when resolved returns the created layer.
 	 */
 	that.createDataSourceExtentLayer = function(boundingBox, datasetId, dataSourceUrl) {
@@ -182,7 +190,7 @@ GDP.util.mapUtils = (function() {
 					layer = that.createDataSetExtentLayer(boundingBox);
 				}
 				else {
-					if (dataSourceUrl.search('dodsC/') == -1) {
+					if (dataSourceUrl.search('dodsC/') === -1) {
 						layer = that.createDataSetExtentLayer(boundingBox);
 					}
 					else {
@@ -196,7 +204,7 @@ GDP.util.mapUtils = (function() {
 								url,
 								{
 									transparent : true,
-									layers : dataSourceLayer.name,
+									layers : dataSourceLayer.name
 								},
 								{
 									opacity : 0.2,
