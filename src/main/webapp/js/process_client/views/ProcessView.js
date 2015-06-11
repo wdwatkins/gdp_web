@@ -34,7 +34,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				self.listenTo(self.model, 'change:algorithmId', self.displayAlgorithmDescription);
 			}).fail(function() {
 				window.alert('Unable to load requested dataset ' + options.datasetId);
-			})
+			});
 		},
 
 		render : function () {
@@ -43,17 +43,24 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			this.$el.hide();
 			var context = this.model.clone().attributes;
 			var dataSetModel = this.model.get('dataSetModel');
+			var allowedAlgorithms;
 			if (dataSetModel.has('algorithms')) {
 				var algorithms = this.model.get('dataSetModel').get('algorithms');
-				context.allowedAlgorithms = _.map(algorithms, function(alg) {
+				allowedAlgorithms = _.map(algorithms, function(alg) {
 					return _.find(context.processes.models, function(p) {
 						return p.attributes.id === alg;
-					});
+					}).attributes;
 				});
 			}
 			else {
-				context.allowedAlgorithms = context.processes.models;
+				allowedAlgorithms = _.map(context.processes.models, function(process) {
+					return process.attributes;
+				});
 			}
+			context.allowedAlgorithms = _.chain(allowedAlgorithms)
+				.sortBy('type')
+				.groupBy('type')
+				.value();
 
 			this.$el.html(this.template(context));
 			this.displayAlgorithmDescription();
