@@ -668,25 +668,27 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		},
 
 		_addDatasetBoundingBoxLayer : function() {
-			var self = this;
-			var dataSetModel = this.model.get('dataSetModel');
-			var dataSourceUrl = this.model.get('dataSourceUrl');
-			var bounds;
+			if (!(_.has(this.boundsLayer))) {
+				var self = this;
+				var dataSetModel = this.model.get('dataSetModel');
+				var dataSourceUrl = this.model.get('dataSourceUrl');
+				var bounds;
 
-			if (dataSetModel.has('identifier') && dataSetModel.has('bounds')) {
-				bounds = dataSetModel.get('bounds');
-				if (dataSourceUrl) {
-					GDP.util.mapUtils.createDataSourceExtentLayer(bounds, dataSetModel.get('identifier'), dataSourceUrl).done(function(layer) {
-						self.boundsLayer = layer;
-						self.map.addLayer(self.boundsLayer);
-					});
+				if (dataSetModel.has('identifier') && dataSetModel.has('bounds')) {
+					bounds = dataSetModel.get('bounds');
+					if (dataSourceUrl) {
+						GDP.util.mapUtils.createDataSourceExtentLayer(bounds, dataSetModel.get('identifier'), dataSourceUrl).done(function(layer) {
+							self.boundsLayer = layer;
+							self.map.addLayer(self.boundsLayer);
+						});
+
+					}
+					else {
+						this.boundsLayer = GDP.util.mapUtils.createDataSetExtentLayer(bounds);
+						this.map.addLayer(this.boundsLayer);
+					}
 
 				}
-				else {
-					this.boundsLayer = GDP.util.mapUtils.createDataSetExtentLayer(bounds);
-					this.map.addLayer(this.boundsLayer);
-				}
-
 			}
 		},
 

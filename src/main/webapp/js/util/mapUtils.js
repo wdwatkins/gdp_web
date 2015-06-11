@@ -168,7 +168,7 @@ GDP.util.mapUtils = (function() {
 	 */
 	that.createDataSourceExtentLayer = function(boundingBox, datasetId, dataSourceUrl) {
 		// First get the WMS getCapabilities for the datasetId
-		var url = GDP.config.get('application').endpoints.catalogwms + '/' + datasetId;
+		var url = GDP.config.get('application').endpoints.catalogWms + '/' + datasetId;
 		var format = new OpenLayers.Format.WMSCapabilities.v1_3_0();
 		var layer;
 		var dataSourceName;
