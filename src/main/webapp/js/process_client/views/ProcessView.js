@@ -43,27 +43,24 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			this.$el.hide();
 			var context = this.model.clone().attributes;
 			var dataSetModel = this.model.get('dataSetModel');
+			var allowedAlgorithms;
 			if (dataSetModel.has('algorithms')) {
 				var algorithms = this.model.get('dataSetModel').get('algorithms');
-				context.allowedAlgorithms = _.chain(algorithms)
-					.map(function(alg) {
-						return _.find(context.processes.models, function(p) {
-							return p.attributes.id === alg;
-						}).attributes;
-					})
-					.sortBy('type')
-					.groupBy('type')
-					.value();
+				allowedAlgorithms = _.map(algorithms, function(alg) {
+					return _.find(context.processes.models, function(p) {
+						return p.attributes.id === alg;
+					}).attributes;
+				});
 			}
 			else {
-				context.allowedAlgorithms = _.chain(context.processes.models)
-					.map(function(process) {
-						return process.attributes;
-					})
-					.sortBy('type')
-					.groupBy('type')
-					.value();
+				allowedAlgorithms = _.map(context.processes.models, function(process) {
+					return process.attributes;
+				});
 			}
+			context.allowedAlgorithms = _.chain(allowedAlgorithms)
+				.sortBy('type')
+				.groupBy('type')
+				.value();
 
 			this.$el.html(this.template(context));
 			this.displayAlgorithmDescription();
