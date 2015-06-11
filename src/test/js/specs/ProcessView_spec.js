@@ -8,6 +8,7 @@ describe('GDP.PROCESS_CLIENT.view.ProcessView', function() {
 			"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageIntersectionAlgorithm",
 			"name" : "FeatureCoverageIntersectionAlgorithm",
 			"title" : "WCS Subset",
+			"type" : "Data Subsets",
 			"abstract" : "This service returns the subset of data that intersects a set of vector polygon features and a Web Coverage Service (WCS) data source. A GeoTIFF file will be returned.",
 			"inputs" : [
 				{
@@ -67,6 +68,7 @@ describe('GDP.PROCESS_CLIENT.view.ProcessView', function() {
 			"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm",
 			"name" : "FeatureWeightedGridStatisticsAlgorithm",
 			"title" : "Area Grid Statistics (weighted)",
+			"type" : "Areal Statistics",
 			"abstract" : "This algorithm generates area weighted statistics of a gridded dataset for a set of vector polygon features. Using the bounding-box that encloses the feature data and the time range, if provided, a subset of the gridded dataset is requested from the remote gridded data server. Polygon representations are generated for cells in the retrieved grid. The polygon grid-cell representations are then projected to the feature data coordinate reference system. The grid-cells are used to calculate per grid-cell feature coverage fractions. Area-weighted statistics are then calculated for each feature using the grid values and fractions as weights. If the gridded dataset has a time range the last step is repeated for each time step within the time range or all time steps if a time range was not supplied.",
 			"inputs" : [
 				{
@@ -188,7 +190,7 @@ describe('GDP.PROCESS_CLIENT.view.ProcessView', function() {
 	afterEach(function() {
 		$('#container-process-description').remove();
 	});
-
+	
 	it('Expects the algorithmConfigView to be instantiated', function() {
 		expect(testView.algorithmConfigView).toBeDefined();
 		expect(GDP.PROCESS_CLIENT.view.AlgorithmConfigView).toHaveBeenCalled();
