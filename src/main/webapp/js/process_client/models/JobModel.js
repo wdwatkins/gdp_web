@@ -31,7 +31,7 @@ var GDP = GDP || {};
     var Job = Backbone.Model.extend({
 		SELECT_ALL_AOI_ATTRIBUTE_VALUES : ['*'],
 		defaults: {
-			dataSetModel : new GDP.models.DataSetModel(),
+			dataSetModel : null,
 			//data details
 			dataSourceUrl : null,
 			invalidDataSourceUrl : true,

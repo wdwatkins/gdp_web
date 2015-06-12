@@ -59,6 +59,7 @@ $(document).ready(function() {
 
 		var jobModel = new GDP.PROCESS_CLIENT.model.Job();
 		jobModel.get('processes').reset(GDP.config.get('process').processes);
+		jobModel.set({'dataSetModel' : new GDP.models.DataSetModel()});
 
 		var wps = GDP.OGC.WPS(GDP.logger);
 		GDP.PROCESS_CLIENT.router = new GDP.PROCESS_CLIENT.controller.ProcessClientRouter(jobModel, wps);
