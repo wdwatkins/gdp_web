@@ -16,7 +16,10 @@ describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 			algorithm : []
 		});
 		datasetDeferred = $.Deferred();
-		spyOn(model, 'updateDataSetModel').andReturn(datasetDeferred.promise());
+		spyOn(model, 'updateDataSetModel').andCallFake(function() {
+			model.set({'dataSetModel' : new GDP.models.DataSetModel()});
+			return datasetDeferred.promise();
+		});
 		datasetDeferred.resolve();
 		templateSpy = jasmine.createSpy('templateSpy');
 

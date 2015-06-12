@@ -34,6 +34,38 @@ describe('GDP.PROCESS_CLIENT.view.DataDetailsView', function() {
 
 	beforeEach(function() {
 		server = sinon.fakeServer.create();
+
+		GDP.config = {
+			get : function(prop) {
+				if (prop === 'process') {
+					return {
+						processes : [
+							{
+								id : 'ALG1',
+								name : 'NAME1',
+								title : 'TITLE1',
+								type : 'TYPE1'
+							},
+							{
+								id : 'ALG2',
+								name : 'NAME2',
+								title : 'TITLE2',
+								type : 'TYPE1'
+							},
+							{
+								id : 'ALG3',
+								name : 'NAME3',
+								title : 'TITLE3',
+								type : 'TYPE2'
+							}
+						]
+					};
+				}
+				else {
+					return null;
+				}
+			}
+		};
 		model = new GDP.PROCESS_CLIENT.model.Job();
 
 		wpsDeferred = $.Deferred();

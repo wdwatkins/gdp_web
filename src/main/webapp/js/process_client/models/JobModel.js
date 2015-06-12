@@ -72,6 +72,10 @@ var GDP = GDP || {};
 		 */
 		updateDataSetModel : function(datasetId) {
 			var dataSetModel = this.get('dataSetModel');
+			if (!dataSetModel) {
+				dataSetModel = new GDP.models.DataSetModel();
+				this.set({'dataSetModel' : dataSetModel});
+			}
 			var deferred = $.Deferred();
 			if (datasetId) {
 				if (!dataSetModel.has('identifier') || (dataSetModel.get('identifier') !== datasetId)) {

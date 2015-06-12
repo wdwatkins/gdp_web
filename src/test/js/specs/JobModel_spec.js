@@ -416,6 +416,7 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 				error : jasmine.createSpy('logErrorSpy')
 			};
 
+			jobModel.set({'dataSetModel' : new GDP.models.DataSetModel()});
 			jobModel.get('dataSetModel').set({identifier : 'ID1'});
 		});
 
