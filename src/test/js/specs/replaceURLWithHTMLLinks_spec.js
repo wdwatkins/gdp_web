@@ -31,4 +31,11 @@ describe('GDP.util.replaceURLWIth HTMLLinks', function() {
 		expect(result).toContain('This test contains <a href="ftp://server.com/1/example_page"');
 		expect(result).toContain('>ftp://server.com/1/example_page</a>');
 	});
+
+	it('Expects that if the textLimit parameter is specified that the visible link name will be truncated', function() {
+		var test = 'This test contains http://server.com/1/example_page as a link';
+		var result = GDP.util.replaceURLWithHTMLLinks(test, 15);
+		expect(result).toContain('This test contains <a href="http://server.com/1/example_page"');
+		expect(result).toContain('>http://server.c...</a>');
+	});
 });
