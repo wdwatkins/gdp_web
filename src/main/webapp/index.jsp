@@ -34,7 +34,8 @@
 		<%@include file="/WEB-INF/jsp/scripts.jsp" %>
 		
 		<script type="text/javascript" src="webjars/openlayers/<%= versionOpenLayers%>/OpenLayers<%= development ? ".debug" :"" %>.js"></script>
-		<script type="text/javascript" src="openlayers/extensions/format/csw/v2_0_2.js"></script>		
+		<script type="text/javascript" src="openlayers/extensions/format/csw/v2_0_2.js"></script>	
+		<script type="text/javascript" src="js/util/replaceURLWithHTMLLinks<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/templateLoader<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/BaseView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/mapUtils<%= resourceSuffix %>.js"></script>

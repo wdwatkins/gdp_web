@@ -17,6 +17,28 @@ describe('GDP.PROCESS_CLIENT.VIEW.SpatialView', function() {
 					geoserver : 'http://fakegeoserver.com'
 				}
 			},
+			process : {
+				processes : [
+						{
+						id : 'ALG1',
+						name : 'NAME1',
+						title : 'TITLE1',
+						type : 'TYPE1'
+					},
+					{
+						id : 'ALG2',
+						name : 'NAME2',
+						title : 'TITLE2',
+						type : 'TYPE1'
+					},
+					{
+						id : 'ALG3',
+						name : 'NAME3',
+						title : 'TITLE3',
+						type : 'TYPE2'
+					}
+				]
+			},
 			map : {
 				extent : {
 					conus : {

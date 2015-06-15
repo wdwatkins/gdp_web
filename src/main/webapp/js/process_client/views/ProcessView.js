@@ -43,21 +43,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			this.$el.hide();
 			var context = this.model.clone().attributes;
 			var dataSetModel = this.model.get('dataSetModel');
-			var allowedAlgorithms;
-			if (dataSetModel.has('algorithms')) {
-				var algorithms = this.model.get('dataSetModel').get('algorithms');
-				allowedAlgorithms = _.map(algorithms, function(alg) {
-					return _.find(context.processes.models, function(p) {
-						return p.attributes.id === alg;
-					}).attributes;
-				});
-			}
-			else {
-				allowedAlgorithms = _.map(context.processes.models, function(process) {
-					return process.attributes;
-				});
-			}
-			context.allowedAlgorithms = _.chain(allowedAlgorithms)
+			context.allowedAlgorithms = _.chain(dataSetModel.get('algorithms'))
 				.sortBy('type')
 				.groupBy('type')
 				.value();

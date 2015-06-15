@@ -1,3 +1,9 @@
+/*global GDP*/
+/*global expect*/
+/*global jasmine*/
+/*global spyOn*/
+/*global OpenLayers*/
+
 describe('GDP.LANDING.views.DataSetTileView', function() {
 	var templateSpy;
 	var testModel;
@@ -13,6 +19,36 @@ describe('GDP.LANDING.views.DataSetTileView', function() {
 		GDP.algorithms = {
 			get : jasmine.createSpy('algorithmsGetSpy').andReturn({'ID1' : ['Alg1', 'Alg2']})
 		};
+		GDP.config = new GDP.model.Config({
+			process : {
+				processes : [
+						{
+						id : 'Alg1',
+						name : 'NAME1',
+						title : 'TITLE1',
+						type : 'TYPE1'
+					},
+					{
+						id : 'Alg2',
+						name : 'NAME2',
+						title : 'TITLE2',
+						type : 'TYPE1'
+					},
+					{
+						id : 'Alg3',
+						name : 'NAME3',
+						title : 'TITLE3',
+						type : 'TYPE2'
+					},
+					{
+						id : 'Alg4',
+						name : 'NAME4',
+						title : 'TITLE4',
+						type : 'TYPE2'
+					}
+				]
+			}
+		});
 		GDP.LANDING.templates = {
 			getTemplate : jasmine.createSpy('getTemplateSpy').andReturn(templateSpy)
 		};

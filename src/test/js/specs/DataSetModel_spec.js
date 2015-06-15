@@ -1,3 +1,7 @@
+/*global GDP*/
+/*global expect*/
+/*global jasmine*/
+
 describe('GDP.models.DataSetModel', function() {
 
 	describe('Tests for isInFilter function', function() {
@@ -7,6 +11,38 @@ describe('GDP.models.DataSetModel', function() {
 			GDP.algorithms = {
 				get : jasmine.createSpy('algorithmsGetSpy').andReturn({'1234' : ['Alg1', 'Alg2']})
 			};
+
+			GDP.config = new GDP.model.Config({
+				process : {
+					processes : [
+							{
+							id : 'Alg1',
+							name : 'NAME1',
+							title : 'TITLE1',
+							type : 'TYPE1'
+						},
+						{
+							id : 'Alg2',
+							name : 'NAME2',
+							title : 'TITLE2',
+							type : 'TYPE1'
+						},
+						{
+							id : 'Alg3',
+							name : 'NAME3',
+							title : 'TITLE3',
+							type : 'TYPE2'
+						},
+						{
+							id : 'Alg4',
+							name : 'NAME4',
+							title : 'TITLE4',
+							type : 'TYPE2'
+						}
+					]
+				}
+			});
+
 			testModel = new GDP.models.DataSetModel({
 				identificationInfo : [],
 				fileIdentifier : {
@@ -72,6 +108,6 @@ describe('GDP.models.DataSetModel', function() {
 				text : 'Title',
 				algorithms : ['Alg3', 'Alg4']
 			})).toBe(false);
-		})
+		});
 	});
 });

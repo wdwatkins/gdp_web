@@ -1,3 +1,8 @@
+/*global GDP*/
+/*global expect*/
+/*global sinon*/
+/*global jasmine*/
+
 describe('GDP.PROCESS_CLIENT.model.Job', function() {
 	var PROCESSES = [{
 			"id" : "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageIntersectionAlgorithm",
@@ -161,6 +166,13 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 			]
 		}
 	];
+
+	GDP.config = new GDP.model.Config({
+			process : {
+				processes : PROCESSES
+			}
+		});
+
 
 	var jobModel;
 	var server;
@@ -389,7 +401,7 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 		it('Expects that if all values are selected, then the empty array is returned', function() {
 			jobModel.set('aoiAttributeValues', ['v1', 'v2', 'v3', 'v4']);
 			expect(jobModel.getSelectedFeatureIds()).toEqual([]);
-		})
+		});
 
 		it('Expects that if the first element of aoiAttributeValues is "*", then an empty array is returned', function() {
 			jobModel.set('aoiAttributeValues', ['*']);
@@ -416,6 +428,7 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 				error : jasmine.createSpy('logErrorSpy')
 			};
 
+			jobModel.set({'dataSetModel' : new GDP.models.DataSetModel()});
 			jobModel.get('dataSetModel').set({identifier : 'ID1'});
 		});
 

@@ -56,7 +56,7 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 					return null;
 				}
 			}
-		}
+		};
 
 		testView = new GDP.LANDING.views.DataSourceSelectionView({
 			template : templateSpy,
@@ -103,6 +103,7 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 			abstrct : 'Abstract1',
 			bounds : '',
 			identifier : 'ID1',
+			algorithms : [],
 			title : 'Title1',
 			dataSources : [],
 			contactInfo : [],

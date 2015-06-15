@@ -31,7 +31,7 @@ var GDP = GDP || {};
     var Job = Backbone.Model.extend({
 		SELECT_ALL_AOI_ATTRIBUTE_VALUES : ['*'],
 		defaults: {
-			dataSetModel : new GDP.models.DataSetModel(),
+			dataSetModel : null,
 			//data details
 			dataSourceUrl : null,
 			invalidDataSourceUrl : true,
@@ -72,6 +72,10 @@ var GDP = GDP || {};
 		 */
 		updateDataSetModel : function(datasetId) {
 			var dataSetModel = this.get('dataSetModel');
+			if (!dataSetModel) {
+				dataSetModel = new GDP.models.DataSetModel();
+				this.set({'dataSetModel' : dataSetModel});
+			}
 			var deferred = $.Deferred();
 			if (datasetId) {
 				if (!dataSetModel.has('identifier') || (dataSetModel.get('identifier') !== datasetId)) {

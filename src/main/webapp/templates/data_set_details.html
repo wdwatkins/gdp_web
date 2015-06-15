@@ -5,7 +5,7 @@
 </dl>
 <dl>
 	<dt>Abstract</dt>
-	<dd>{{abstrct}}</dd>
+	<dd>{{{abstrct}}}</dd>
 </dl>
 <dl>
 	<dt>Point of Contacts</dt>
@@ -16,7 +16,7 @@
 			{{#if @last}}{{this}}{{else}}{{this}},&nbsp;{{/if}}
 		{{/each}}
 	</dd>
-	<dd>{{this.orgName}}</dd>
+	<dd>{{{this.orgName}}}</dd>
 	{{#if @last}}{{else}}<br/>{{/if}}
 	{{/each}}
 </dl>
@@ -32,7 +32,7 @@
 	<dt>Distribution Info</dt>
 	<dd>
 	{{#if distributionInfo}}
-	{{distributionInfo.name}} - <a href="{{distributionInfo.url}}">{{distributionInfo.url}}</a>
+	{{distributionInfo.name}} - <a target="_blank" href="{{distributionInfo.url}}">{{distributionInfo.url}}</a>
 	{{else}}Not Available
 	{{/if}}
 	</dd>
@@ -49,7 +49,7 @@
 	<strong>Available algorithms for data sources</strong>
 	<ul>
 		{{#each algorithms}}
-		<li>{{this}}</li>
+		<li>{{title}}</li>
 		{{/each}}
 	</ul>
 </div>

@@ -19,6 +19,38 @@ describe('GDP.LANDING.views.DataSetDialogView', function() {
 		$('body').append('<div class="modal"><div class="modal-dialog"><div class="modal-content"></div></div></div>');
 
 		templateSpy = jasmine.createSpy('templateSpy');
+		GDP.config = {
+			get : function(prop) {
+				if (prop === 'process') {
+					return {
+						processes : [
+							{
+								id : 'Alg1',
+								name : 'NAME1',
+								title : 'TITLE1',
+								type : 'TYPE1'
+							},
+							{
+								id : 'Alg2',
+								name : 'NAME2',
+								title : 'TITLE2',
+								type : 'TYPE1'
+							},
+							{
+								id : 'Alg3',
+								name : 'NAME3',
+								title : 'TITLE3',
+								type : 'TYPE2'
+							}
+						]
+					};
+				}
+				else {
+					return null;
+				}
+			}
+		};
+
 		GDP.algorithms = {
 			get : jasmine.createSpy('algorithmsGetSpy').andReturn({'ID1' : ['Alg1', 'Alg2']})
 		};
@@ -59,7 +91,18 @@ describe('GDP.LANDING.views.DataSetDialogView', function() {
 		expect(testView.render).toHaveBeenCalled();
 		expect(context.abstrct).toEqual(TEST_DATA.abstrct);
 		expect(context.dataSources).toEqual(TEST_DATA.dataSources);
-		expect(context.algorithms).toEqual(['Alg1', 'Alg2']);
+		expect(context.algorithms).toEqual([{
+			id : 'Alg1',
+			name : 'NAME1',
+			title : 'TITLE1',
+			type : 'TYPE1'
+		},
+		{
+			id : 'Alg2',
+			name : 'NAME2',
+			title : 'TITLE2',
+			type : 'TYPE1'
+		}]);
 	});
 
 	it('Expects removeDialog to hide the dialog and remove the view', function() {

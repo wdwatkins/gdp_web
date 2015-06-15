@@ -42,6 +42,7 @@
 		<script type="text/javascript" src="<%= baseUrl %>js/vendor/jQuery.download<%= resourceSuffix %>.js"></script>
 		
 		<script type="text/javascript" src="<%= baseUrl %>js/util/jqueryUtils<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="<%= baseUrl %>js/util/replaceURLWithHTMLLinks<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/util/templateLoader<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/util/BaseView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/util/SelectMenuView<%= resourceSuffix %>.js"></script>

@@ -22,16 +22,22 @@ GDP.models = GDP.models || {};
 		 */
 		parse : function(metadata, options) {
 			var result = {};
+			var allProcesses = GDP.config.get('process').processes;
 
 			if (_.isEmpty(metadata)) {
+				result.algorithms = allProcesses;
 				return result;
 			}
 
 			var datasetInfo = (metadata.identificationInfo.length  > 0) ? metadata.identificationInfo[0] : {};
 			result.identifier = this._getCharValue(metadata.fileIdentifier);
-			result.algorithms = GDP.algorithms.get('gdpAlgorithms')[result.identifier];
+			result.algorithms = _.map(GDP.algorithms.get('gdpAlgorithms')[result.identifier], function(alg) {
+				return _.find(allProcesses, function(process) {
+					return process.id === alg;
+				});
+			});
 			if (datasetInfo) {
-				result.abstrct = _.has(datasetInfo, 'abstract') ? this._getCharValue(datasetInfo['abstract']) : '';
+				result.abstrct = _.has(datasetInfo, 'abstract') ? GDP.util.replaceURLWithHTMLLinks(this._getCharValue(datasetInfo['abstract']), 40) : '';
 				result.title = (_.has(datasetInfo, 'citation') && _.has(datasetInfo.citation, 'title')) ? this._getCharValue(datasetInfo.citation.title) : '';
 				if (_.has(datasetInfo, 'extent') &&
 					(datasetInfo.extent.length > 0) &&
@@ -71,7 +77,7 @@ GDP.models = GDP.models || {};
 			if (_.has(datasetFilter, 'algorithms') &&
 				(datasetFilter.algorithms.length > 0) &&
 				(this.get('algorithms'))) {
-				if (_.intersection(datasetFilter.algorithms, this.get('algorithms')).length === 0) {
+				if (_.intersection(datasetFilter.algorithms, _.pluck(this.get('algorithms'), 'id')).length === 0) {
 					return false;
 				}
 			}
@@ -155,7 +161,7 @@ GDP.models = GDP.models || {};
 						name = getCharValue(c.individualName);
 					}
 					if (_.has(c, 'organisationName')) {
-						orgName = getCharValue(c.organisationName);
+						orgName = GDP.util.replaceURLWithHTMLLinks(getCharValue(c.organisationName));
 					}
 					if (_.has(c, 'role')) {
 						role = c.role;
