@@ -1,3 +1,10 @@
+/*global GDP*/
+/*global expect*/
+/*global sinon*/
+/*global spyOn*/
+/*global Backbone*/
+/*global jasmine*/
+
 describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 	var model;
 	var templateSpy, spatialViewRemoveSpy;
@@ -7,6 +14,37 @@ describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 
 	beforeEach(function() {
 		server = sinon.fakeServer.create();
+
+		GDP.config = new GDP.model.Config({
+			process : {
+				processes : [
+						{
+						id : 'Alg1',
+						name : 'NAME1',
+						title : 'TITLE1',
+						type : 'TYPE1'
+					},
+					{
+						id : 'Alg2',
+						name : 'NAME2',
+						title : 'TITLE2',
+						type : 'TYPE1'
+					},
+					{
+						id : 'Alg3',
+						name : 'NAME3',
+						title : 'TITLE3',
+						type : 'TYPE2'
+					},
+					{
+						id : 'Alg4',
+						name : 'NAME4',
+						title : 'TITLE4',
+						type : 'TYPE2'
+					}
+				]
+			}
+		});
 
 		model = new GDP.PROCESS_CLIENT.model.Job();
 		spyOn(model, "getSelectedAlgorithmProcess").andReturn(new Backbone.Model({'var1' : 'value1', 'var2' : 'value2'}));
