@@ -43,7 +43,7 @@
             "gov.usgs.cida.gdp.wps.algorithm.FeatureCategoricalGridCoverageAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
         ], 
-        "54dd5e6ae4b08de9379b390e": [
+        "555c7e54e4b0a92fa7eaddfc": [
             "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm"
         ], 
         "54dd5e31e4b08de9379b38f3": [
