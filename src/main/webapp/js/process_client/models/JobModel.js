@@ -104,6 +104,7 @@ var GDP = GDP || {};
 			}
 			else {
 				dataSetModel.clear();
+				dataSetModel.set(dataSetModel.parse({}));
 				deferred.resolve();
 			}
 			return deferred.promise();

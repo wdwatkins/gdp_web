@@ -192,7 +192,7 @@ var GDP = GDP || {};
 	 * Reacts to a change in url
 	 *
 	 * @returns {jQuery.Deferred.promise} The promise is resolved with no args
-	 * if user cleared the url or if user submitted a url and all subesequent
+	 * if user cleared the url or if user submitted a url and all subsequent
 	 * web service calls succeded. The promise is rejected with an error message
 	 * if any web service calls fail, or if the web service responses cannot be
 	 * parsed.
@@ -248,9 +248,9 @@ var GDP = GDP || {};
 				deferred = $.Deferred(),
 				wpsInputs = {
 					"catalog-url": [dataSourceUrl],
-					"allow-cached-response": ["true"]
+					"allow-cached-response": [$('#use-cached-checkbox').is(':checked')]
 				},
-		wpsOutput = ["result_as_json"];
+				wpsOutput = ["result_as_json"];
 
 		this.wps.sendWpsExecuteRequest(
 				this.wpsEndpoint + '/WebProcessingService',
@@ -350,7 +350,7 @@ var GDP = GDP || {};
 			deferred = $.Deferred(),
 			wpsInputs = {
 				"catalog-url": [dataSourceUrl],
-				"allow-cached-response": ["true"],
+				"allow-cached-response": [$('#use-cached-checkbox').is(':checked')],
 				"grid": [variableName]
 			},
 			wpsOutput = ["result_as_json"];

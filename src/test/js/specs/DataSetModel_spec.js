@@ -4,45 +4,77 @@
 
 describe('GDP.models.DataSetModel', function() {
 
+	var testModel;
+
+	beforeEach(function() {
+		GDP.algorithms = {
+			get : jasmine.createSpy('algorithmsGetSpy').andReturn({'1234' : ['Alg1', 'Alg2']})
+		};
+
+		GDP.config = new GDP.model.Config({
+			process : {
+				processes : [
+						{
+						id : 'Alg1',
+						name : 'NAME1',
+						title : 'TITLE1',
+						type : 'TYPE1'
+					},
+					{
+						id : 'Alg2',
+						name : 'NAME2',
+						title : 'TITLE2',
+						type : 'TYPE1'
+					},
+					{
+						id : 'Alg3',
+						name : 'NAME3',
+						title : 'TITLE3',
+						type : 'TYPE2'
+					},
+					{
+						id : 'Alg4',
+						name : 'NAME4',
+						title : 'TITLE4',
+						type : 'TYPE2'
+					}
+				]
+			}
+		});
+	});
+
+	it('If the dataset model is created with no metadata that all algorithms in the config\'s processes property are assigned to the algorithms property', function() {
+		testModel = new GDP.models.DataSetModel();
+		expect(testModel.get('algorithms')).toEqual([
+				{
+				id : 'Alg1',
+				name : 'NAME1',
+				title : 'TITLE1',
+				type : 'TYPE1'
+			},
+			{
+				id : 'Alg2',
+				name : 'NAME2',
+				title : 'TITLE2',
+				type : 'TYPE1'
+			},
+			{
+				id : 'Alg3',
+				name : 'NAME3',
+				title : 'TITLE3',
+				type : 'TYPE2'
+			},
+			{
+				id : 'Alg4',
+				name : 'NAME4',
+				title : 'TITLE4',
+				type : 'TYPE2'
+			}
+		]);
+	});
+
 	describe('Tests for isInFilter function', function() {
-		var testModel;
-
-		beforeEach(function (){
-			GDP.algorithms = {
-				get : jasmine.createSpy('algorithmsGetSpy').andReturn({'1234' : ['Alg1', 'Alg2']})
-			};
-
-			GDP.config = new GDP.model.Config({
-				process : {
-					processes : [
-							{
-							id : 'Alg1',
-							name : 'NAME1',
-							title : 'TITLE1',
-							type : 'TYPE1'
-						},
-						{
-							id : 'Alg2',
-							name : 'NAME2',
-							title : 'TITLE2',
-							type : 'TYPE1'
-						},
-						{
-							id : 'Alg3',
-							name : 'NAME3',
-							title : 'TITLE3',
-							type : 'TYPE2'
-						},
-						{
-							id : 'Alg4',
-							name : 'NAME4',
-							title : 'TITLE4',
-							type : 'TYPE2'
-						}
-					]
-				}
-			});
-
+		beforeEach(function(){
 			testModel = new GDP.models.DataSetModel({
 				identificationInfo : [],
 				fileIdentifier : {

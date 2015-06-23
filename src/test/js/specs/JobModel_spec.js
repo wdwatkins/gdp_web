@@ -2,6 +2,7 @@
 /*global expect*/
 /*global sinon*/
 /*global jasmine*/
+/*global _*/
 
 describe('GDP.PROCESS_CLIENT.model.Job', function() {
 	var PROCESSES = [{
@@ -432,12 +433,12 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 			jobModel.get('dataSetModel').set({identifier : 'ID1'});
 		});
 
-		it('Expects that if the datasetId id is null the dataSetModel is cleared', function() {
+		it('Expects that if the datasetId id is null except for algorithms', function() {
 			var promise = jobModel.updateDataSetModel();
 
 			expect(GDP.cswClient.requestGetRecordById).not.toHaveBeenCalled();
 			expect(promise.state()).toBe("resolved");
-			expect(jobModel.get('dataSetModel').attributes).toEqual({});
+			expect(_.keys(jobModel.get('dataSetModel').attributes)).toEqual(['algorithms']);
 		});
 
 		it('Expects that if the datasetId is the same as the current dataSetModel that the model is not updated', function() {
