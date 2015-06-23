@@ -10,11 +10,11 @@ mvn clean package
 ```
 
 This will produce a .war file in the `target` directory. You can deploy this war file to tomcat like any other war.
-Instructions:
-https://tomcat.apache.org/tomcat-7.0-doc/html-manager-howto.html#Deploy
-https://tomcat.apache.org/tomcat-7.0-doc/deployer-howto.html
 
-#
+For help with tomcat:
+* https://tomcat.apache.org/tomcat-7.0-doc/html-manager-howto.html#Deploy
+* https://tomcat.apache.org/tomcat-7.0-doc/deployer-howto.html
+
 The project requires the following JNDI variables in the context.xml. Example values are given.
 ```
 <Environment name="gdp.endpoint.utilityWps" type="java.lang.String" value="http://cida.usgs.gov/gdp/utility/" />
