@@ -1,3 +1,7 @@
+/*global GDP*/
+/*global jasmine*/
+/*global expect*/
+
 describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 	var getDeferred;
 	var templateSpy;
@@ -58,73 +62,128 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 			}
 		};
 
-		testView = new GDP.LANDING.views.DataSourceSelectionView({
-			template : templateSpy,
-			collection : collection
-		});
+
 	});
 
 	afterEach(function() {
 		$('.dataset-tile-container').remove();
 	});
 
-	it('Expects that a getRecords request is made', function() {
-		expect(GDP.cswClient.requestGetRecords).toHaveBeenCalled();
-	});
-
-	it('Expects a successful GetRecords request to create DataSetModels and dataSetViews for each record', function() {
-		var response = {
-			records : [
-				{
-					identificationInfo : [
-						{ abstract : {CharacterString : {value : 'Abstract1'}},
-						citation : {title : {CharacterString : {value : 'Title1'}}}}
-					],
-					fileIdentifier : {CharacterString : {value :'ID1'}}
-
-				}, {
-					identificationInfo : [
-						{ abstract : {CharacterString : {value : 'Abstract2'}},
-						citation : {title : {CharacterString : {value : 'Title2'}}}}
-					],
-					fileIdentifier : {CharacterString : {value :'ID2'}}
-				}, {
-					identificationInfo : [
-						{ abstract : {CharacterString : {value : 'Abstract3'}},
-						citation : {title : {CharacterString : {value : 'Title3'}}}}
-					],
-					fileIdentifier : {CharacterString : {value :'ID3'}}
-				}
-			]
-		};
-		getDeferred.resolve(response);
-		expect(testView.collection.size()).toBe(3);
-		expect(testView.collection.first().attributes).toEqual({
-			abstrct : 'Abstract1',
-			bounds : '',
-			identifier : 'ID1',
-			algorithms : [],
-			title : 'Title1',
-			dataSources : [],
-			contactInfo : [],
-			datasetTimeRange : null,
-			distributionInfo : null
+	it('Expects the template to be called with an empty aoiMessageContext property if no incomingParams defined', function() {
+		GDP.incomingParams = {};
+		testView = new GDP.LANDING.views.DataSourceSelectionView({
+			template : templateSpy,
+			collection : collection
 		});
-		expect(GDP.LANDING.views.DataSetTileView.prototype.initialize.calls.length).toBe(3);
-		expect(GDP.LANDING.views.DataSetTileView.prototype.initialize.calls[0].args[0].model).toEqual(testView.collection.first())
-		expect(testView.dataSetViews.length).toBe(3);
+
+		expect(templateSpy.calls[0].args[0].aoiMessageContext).toEqual({});
 	});
 
-	it('Expects a failed getRecords call to create no models or views', function() {
-		getDeferred.reject('Unavailable');
-		expect(testView.collection.size()).toBe(0);
-		expect(GDP.LANDING.views.DataSetTileView.prototype.initialize).not.toHaveBeenCalled();
-		expect(testView.dataSetViews.length).toBe(0);
+	it('Expects the template to be called with aoiMessageContext property set to an object with a sciencebase property when caller param is sciencebase', function() {
+		GDP.incomingParams = {
+			caller : 'sciencebase',
+			item_id : '1234',
+			redirect_url : 'http://www.sciencebase.gov/catalog/gdp/1234'
+		};
+		testView = new GDP.LANDING.views.DataSourceSelectionView({
+			template : templateSpy,
+			collection : collection
+		});
+		expect(templateSpy.calls[0].args[0].aoiMessageContext).toEqual({
+			sciencebase : {
+				url : 'http://www.sciencebase.gov/catalog/item/1234'
+			}
+		});
+	});
+
+	it('Expects the template to be called with aoimessageContext property set with a default property when called param is not sciencebase', function() {
+		GDP.incomingParams = {
+			caller : 'otherservice',
+			item_id : '1234'
+		};
+		testView = new GDP.LANDING.views.DataSourceSelectionView({
+			template : templateSpy,
+			collection : collection
+		});
+		expect(templateSpy.calls[0].args[0].aoiMessageContext).toEqual({
+			default : {
+				itemId : '1234',
+				caller : 'otherservice'
+			}
+		});
+	});
+
+	describe('Tests for getRecords request processing', function() {
+		beforeEach(function() {
+			testView = new GDP.LANDING.views.DataSourceSelectionView({
+				template : templateSpy,
+				collection : collection
+			});
+		});
+
+		it('Expects that a getRecords request is made', function() {
+			expect(GDP.cswClient.requestGetRecords).toHaveBeenCalled();
+		});
+
+		it('Expects a successful GetRecords request to create DataSetModels and dataSetViews for each record', function() {
+			var response = {
+				records : [
+					{
+						identificationInfo : [
+							{ abstract : {CharacterString : {value : 'Abstract1'}},
+							citation : {title : {CharacterString : {value : 'Title1'}}}}
+						],
+						fileIdentifier : {CharacterString : {value :'ID1'}}
+
+					}, {
+						identificationInfo : [
+							{ abstract : {CharacterString : {value : 'Abstract2'}},
+							citation : {title : {CharacterString : {value : 'Title2'}}}}
+						],
+						fileIdentifier : {CharacterString : {value :'ID2'}}
+					}, {
+						identificationInfo : [
+							{ abstract : {CharacterString : {value : 'Abstract3'}},
+							citation : {title : {CharacterString : {value : 'Title3'}}}}
+						],
+						fileIdentifier : {CharacterString : {value :'ID3'}}
+					}
+				]
+			};
+			getDeferred.resolve(response);
+			expect(testView.collection.size()).toBe(3);
+			expect(testView.collection.first().attributes).toEqual({
+				abstrct : 'Abstract1',
+				bounds : '',
+				identifier : 'ID1',
+				algorithms : [],
+				title : 'Title1',
+				dataSources : [],
+				contactInfo : [],
+				datasetTimeRange : null,
+				distributionInfo : null
+			});
+			expect(GDP.LANDING.views.DataSetTileView.prototype.initialize.calls.length).toBe(3);
+			expect(GDP.LANDING.views.DataSetTileView.prototype.initialize.calls[0].args[0].model).toEqual(testView.collection.first());
+			expect(testView.dataSetViews.length).toBe(3);
+		});
+
+		it('Expects a failed getRecords call to create no models or views', function() {
+			getDeferred.reject('Unavailable');
+			expect(testView.collection.size()).toBe(0);
+			expect(GDP.LANDING.views.DataSetTileView.prototype.initialize).not.toHaveBeenCalled();
+			expect(testView.dataSetViews.length).toBe(0);
+		});
 	});
 
 	describe('Tests for filterBy* methods', function() {
 
 		beforeEach(function() {
+			testView = new GDP.LANDING.views.DataSourceSelectionView({
+				template : templateSpy,
+				collection : collection
+			});
+
 			spyOn(GDP.models.DataSetModel.prototype, 'isInFilter');
 
 			var response = {
