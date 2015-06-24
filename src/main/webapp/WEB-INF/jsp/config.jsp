@@ -31,14 +31,15 @@
 		"development" : "<%= development %>",
 		"maxPolygonsToShowAttributeValues" : <%= maxPolygonsToShowAttributeValues%>,
 		"endpoints" : {
-			"geoserver" : "<%= baseUrl %>geoserver",
+			"wms" : "<%= baseUrl %>geoserver/wms",
+			"wfs" : "<%= baseUrl %>geoserver/wfs",
 			"utilityWps" : "<%= baseUrl %>utilityWps",
 			"processWps" : "<%= baseUrl %>processWps",
 			"csw" : "<%= baseUrl %>csw",
 			"catalogWms" : "<%= baseUrl %>catalogwms"
 		},
 		"serviceEndpoints" : {
-			"geoserver" : "<%= geoserverEndpoint %>"
+			"wfs" : "<%= geoserverEndpoint %>/wfs"
 		}
 	},
 	"process" : {

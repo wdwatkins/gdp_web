@@ -424,7 +424,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				getFeatureDeferred = GDP.OGC.WFS.callWFS(
 					{
 						request : 'GetFeature',
-						typename : name,
+						typename : name.replace(ns_attribute + ':', ''),
 						propertyname : attribute,
 						maxFeatures : 5001 // Limits number of features shown in selection menu
 					}
@@ -621,7 +621,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 					'</wfs:Transaction>';
 
 				$.ajax({
-					url: GDP.config.get('application').endpoints.geoserver + '/wfs',
+					url: GDP.config.get('application').endpoints.wfs,
 					type: 'POST',
 					contentType: 'application/xml',
 					data: updateTransaction,
@@ -649,7 +649,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				protocol: new OpenLayers.Protocol.WFS({
 					version: '1.1.0',
 					srsName: 'EPSG:4326',
-					url: GDP.config.get('application').endpoints.geoserver + '/wfs',
+					url: GDP.config.get('application').wfs,
 					featureNS :  'gov.usgs.cida.gdp.' + this._DRAW_FEATURE_NS,
 					featureType : "dummy-" + new Date().getTime() + '', // this gets changed before submitting geometry
 					geometryName: 'the_geom'

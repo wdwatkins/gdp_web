@@ -50,7 +50,9 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 				.value());
 			this.context = {
 				algorithmFilters : _.keys(this.algorithmFilters),
-				aoiMessageContext : this._getAreasOfInterestMessageContext()
+				aoiMessageContext : this._getAreasOfInterestMessageContext(),
+				incomingMethod : GDP.incomingMethod,
+				incomingParams : GDP.incomingParams
 			};
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);

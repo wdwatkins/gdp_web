@@ -29,7 +29,7 @@ GDP.OGC.WFS = (function () {
 		$.extend(wfsData, defaultData, data);
 		GDP.logger.debug('GDP: Calling WFS Service with a ' + wfsData.request + ' request.');
 		$.ajax({
-			url: GDP.config.get('application').endpoints.geoserver + '/wfs',
+			url: GDP.config.get('application').endpoints.wfs,
 			method : (method) ? method : 'GET',
 			data: wfsData,
 			cache: false,

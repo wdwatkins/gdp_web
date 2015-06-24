@@ -55,8 +55,13 @@
 				<div class="dataset-dialog-contents"></div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default cancel-btn">Cancel</button>
-				<button type="button" class="btn btn-primary process-btn">Process Data Source</button>
+				<form class="process-form" method="POST">
+					<button type="button" class="btn btn-default cancel-btn">Cancel</button>
+					{{#each incomingParams}}
+						<input type="hidden" name="{{@key}}" value="{{this}}" />
+					{{/each}}
+					<button type="submit" class="btn btn-primary process-btn">Process Data Source</button>
+				</form>
 			</div>
 		</div>
 	</div>

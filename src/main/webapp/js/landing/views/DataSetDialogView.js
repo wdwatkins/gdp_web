@@ -1,5 +1,6 @@
 /*jslint browser: true*/
 /*global Backbone*/
+/*global _*/
 
 var GDP = GDP || {};
 
@@ -14,7 +15,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 		events : {
 			'click .cancel-btn' : 'removeDialog',
-			'click .process-btn' : 'goToProcessClient'
+			'submit .process-form' : 'goToProcessClient'
 		},
 
 		/*
@@ -25,7 +26,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			var context = this.model.attributes;
 			var html = this.template(context);
 			this.$el.find('.dataset-dialog-contents').html(html);
-
+			this.$el.find('.process-form').attr('action', 'client/catalog/gdp/dataset/' + this.model.get('identifier'));
 			return this;
 		},
 
@@ -64,9 +65,9 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		/*
 		 * Go to the process_client using the dataset identifier in the url.
 		 */
-		goToProcessClient : function() {
-			window.location.assign('client/catalog/gdp/dataset/' + this.model.get('identifier'));
+		goToProcessClient : function(ev) {
 			this.remove();
+			ev.currentTarget.submit();
 		}
 
 	});

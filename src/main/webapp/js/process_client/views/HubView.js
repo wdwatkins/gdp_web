@@ -69,7 +69,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			}).always(function() {
 				var datasetModel = self.model.get('dataSetModel');
 				var $metadataTile = self.$el.find('#dataset-metadata-wrapper');
-				
+
 				self.$el.find('.loading-indicator').hide();
 				self.$el.find('.hub-tile').show();
 				self.spatialMapView = new GDP.PROCESS_CLIENT.view.HubSpatialMapView({
@@ -145,7 +145,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 					['OUTPUT'],
 					true,
 					{
-						'FEATURE_COLLECTION' : [self.wps.createWfsWpsReference(GDP.config.get('application').serviceEndpoints.geoserver + '/wfs', xmlInputs)]
+						'FEATURE_COLLECTION' : [self.wps.createWfsWpsReference(GDP.config.get('application').serviceEndpoints.wfs, xmlInputs)]
 					},
 					false,
 					'xml',

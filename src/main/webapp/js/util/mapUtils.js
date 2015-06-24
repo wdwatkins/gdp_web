@@ -77,7 +77,7 @@ GDP.util.mapUtils = (function() {
 
 		return new OpenLayers.Layer.WMS(
 			'Area of Interest',
-			GDP.config.get('application').endpoints.geoserver + '/wms?',
+			GDP.config.get('application').endpoints.wms + '?',
 			layerParams,
 			layerOptions
 		);
@@ -135,7 +135,7 @@ GDP.util.mapUtils = (function() {
 
 		return new OpenLayers.Layer.WMS(
 			'Selected AOI',
-			GDP.config.get('application').endpoints.geoserver + '/wms?',
+			GDP.config.get('application').endpoints.wms + '?',
 			layerParams,
 			layerOptions
 		);
