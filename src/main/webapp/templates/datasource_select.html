@@ -1,3 +1,20 @@
+<div class="jumbotron">
+	<h1>Welcome to GDP</h1>
+	<p>Here's where to put the latest and greatest information about GDP.</p>
+{{#if aoiMessageContext.sciencebase}}
+	<div>
+		<a href="{{aoiMessageContext.sciencebase.url}}" target="_blank">Areas of interest from ScienceBase already selected.</a>
+	</div>
+{{/if}}
+
+{{#if aoiMessageContext.default}}
+	<div>
+		Areas of interest {{aoiMessageContext.default.itemId}} from {{aoiMessageContext.default.caller}} already selected.
+	</div>
+{{/if}}
+</div>
+
+
 <div class="dataset-select-container">
 	
 	<div class="dataset-tile-panel-div panel panel-default">

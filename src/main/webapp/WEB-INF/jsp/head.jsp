@@ -73,6 +73,6 @@ String baseUrl = props.getProperty("gdp.base.url");
 					}
 				}
 			}
-		 %>
+		%>
 	};
 </script>

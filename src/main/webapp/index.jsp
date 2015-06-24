@@ -16,10 +16,6 @@
 				</jsp:include>
 			</header>
 
-			<div class="jumbotron">
-				<h1>Welcome to GDP</h1>
-				<div>Here's where to put the latest and greatest information about GDP</div>
-			</div>
 			<div id="home-page-content"></div>
 			
 			<footer class="row">
