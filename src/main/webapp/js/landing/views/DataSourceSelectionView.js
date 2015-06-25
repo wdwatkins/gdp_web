@@ -51,7 +51,6 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			this.context = {
 				algorithmFilters : _.keys(this.algorithmFilters),
 				aoiMessageContext : this._getAreasOfInterestMessageContext(),
-				incomingMethod : GDP.incomingMethod,
 				incomingParams : GDP.incomingParams
 			};
 
