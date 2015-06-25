@@ -96,7 +96,7 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 		});
 	});
 
-	it('Expects the template to be called with aoimessageContext property set with a default property when called param is not sciencebase', function() {
+	it('Expects the template to be called with aoimessageContext property set with a defaultCaller property when called param is not sciencebase', function() {
 		GDP.incomingParams = {
 			caller : 'otherservice',
 			item_id : '1234'
@@ -106,7 +106,7 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 			collection : collection
 		});
 		expect(templateSpy.calls[0].args[0].aoiMessageContext).toEqual({
-			default : {
+			defaultCaller : {
 				itemId : '1234',
 				caller : 'otherservice'
 			}

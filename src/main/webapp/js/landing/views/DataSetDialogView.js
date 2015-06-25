@@ -66,7 +66,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		 * Go to the process_client using the dataset identifier in the url.
 		 */
 		goToProcessClient : function(ev) {
-			this.remove();
+			this.removeDialog();
 			ev.currentTarget.submit();
 		}
 

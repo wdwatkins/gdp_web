@@ -1,3 +1,9 @@
+/*global GDP*/
+/*global jasmine*/
+/*global expect*/
+/*global OpenLayers*/
+/*global spyOn*/
+
 describe('GDP.LANDING.views.DataSetDialogView', function() {
 	var getDeferred;
 	var templateSpy;

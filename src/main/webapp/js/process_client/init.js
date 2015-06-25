@@ -34,6 +34,7 @@ $(document).ready(function() {
 			var applicationConfig = GDP.config.get('application');
 
 			var application = GDP.config.get('application');
+			// Need to override the endpoints for services if they are in the incoming POST parameters
 			if (_.has(GDP.incomingParams, 'feature_wms')) {
 				application.endpoints.wms = GDP.incomingParams.feature_wms;
 			}

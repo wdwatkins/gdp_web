@@ -161,7 +161,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 					};
 				}
 				else {
-					context.default = {
+					context.defaultCaller = {
 						itemId : GDP.incomingParams.item_id,
 						caller : GDP.incomingParams.caller
 					};
