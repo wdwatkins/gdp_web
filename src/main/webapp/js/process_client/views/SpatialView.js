@@ -541,7 +541,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			};
 
 			$fileUploaderInput.fileupload({
-				url : 'uploadhandler?' +  $.param(params),
+				url : GDP.BASE_URL + 'uploadhandler?' +  $.param(params),
 				type: 'POST',
 				dataType: 'xml',
 				send : function(e, data) {
@@ -649,7 +649,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				protocol: new OpenLayers.Protocol.WFS({
 					version: '1.1.0',
 					srsName: 'EPSG:4326',
-					url: GDP.config.get('application').wfs,
+					url: GDP.config.get('application').endpoints.wfs,
 					featureNS :  'gov.usgs.cida.gdp.' + this._DRAW_FEATURE_NS,
 					featureType : "dummy-" + new Date().getTime() + '', // this gets changed before submitting geometry
 					geometryName: 'the_geom'

@@ -53,7 +53,7 @@ String baseUrl = props.getProperty("gdp.base.url");
 	var GDP = GDP || {};
 	GDP.BASE_URL = "<%= baseUrl%>";
 	GDP.DEVELOPMENT = "<%= development%>";
-	GDP.incomingMethod = '<%= request.getMethod() %>';
+	GDP.incomingMethod = "<%= request.getMethod() %>";
 	GDP.incomingParams = {
 		<% 
 			Enumeration<String> paramNames = request.getParameterNames();

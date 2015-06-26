@@ -4,7 +4,7 @@
 
     <head>
 		<%@include file="/WEB-INF/jsp/head.jsp" %>
-    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<link rel="stylesheet" type="text/css" href="<%= baseUrl %>webjars/openlayers/<%= versionOpenLayers%>/theme/default/style.css" />
 		<link rel="stylesheet" type="text/css" href="<%= baseUrl %>webjars/jquery-file-upload/<%= versionJqueryFileUpload%>/css/jquery.fileupload.css">
 		<link rel="stylesheet" type="text/css" href="<%= baseUrl %>css/process_client_custom.css">
