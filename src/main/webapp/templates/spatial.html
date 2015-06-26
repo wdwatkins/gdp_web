@@ -4,28 +4,30 @@
 	</div>
 </div>
 <div id="spatial-area-selection-div">
-	<div id="upload-draw-container-div" class="row">
-		<div class="form-group" id="upload-container-div">
-			<span class="btn btn-primary fileinput-button">
-				<i class="fa fa-plus"></i>
-				<span>Select shapefile to upload...</span>
-				<!-- The file input field used as target for the file upload widget -->
-				<input id="upload-shapefile-input" type="file" name="qqfile">
-			</span>
-			<i id="upload-indicator" class="fa fa-2x fa-spinner fa-spin"></i>
-		</div>
-		<div id="spatial-selection-text-div" >Or</div>
-		<div id="draw-container-div">
-			<button id="draw-polygon-btn" class="btn btn-primary">Draw Polygon(s)</button>
-			<div id="draw-polygon-div">
-				<label for="polygon-name-input">Feature Name:</label>
-				<input type="text" id="polygon-name-input" name="polygon-name-input">
-				<button id="draw-submit-btn" class="btn btn-info">Submit</button>
-				<button id="draw-clear-btn" class="btn btn-info">Clear Polygon(s)</button>
+	{{#if enable_upload_and_drawing}}
+		<div id="upload-draw-container-div" class="row">
+			<div class="form-group" id="upload-container-div">
+				<span class="btn btn-primary fileinput-button">
+					<i class="fa fa-plus"></i>
+					<span>Select shapefile to upload...</span>
+					<!-- The file input field used as target for the file upload widget -->
+					<input id="upload-shapefile-input" type="file" name="qqfile">
+				</span>
+				<i id="upload-indicator" class="fa fa-2x fa-spinner fa-spin"></i>
 			</div>
+			<div id="spatial-selection-text-div" >Or</div>
+			<div id="draw-container-div">
+				<button id="draw-polygon-btn" class="btn btn-primary">Draw Polygon(s)</button>
+				<div id="draw-polygon-div">
+					<label for="polygon-name-input">Feature Name:</label>
+					<input type="text" id="polygon-name-input" name="polygon-name-input">
+					<button id="draw-submit-btn" class="btn btn-info">Submit</button>
+					<button id="draw-clear-btn" class="btn btn-info">Clear Polygon(s)</button>
+				</div>
+			</div>
+			<div class="col-sm-12" id="messages-div"></div>
 		</div>
-		<div class="col-sm-12" id="messages-div"></div>
-	</div>
+	{{/if}}
 	
 	<form id="feature-selection-div">
 		<div id="aoi-selection-div" class="form-group">

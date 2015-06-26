@@ -56,6 +56,9 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 		initialize : function(options) {
 			var self = this;
+			this.context = {
+				enable_upload_and_drawing : (!_.has(GDP.incomingParams, 'feature_wms') || !_.has(GDP.incomingParams, 'feature_wfs'))
+			};
 			this.wps = options.wps;
 			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId  : 'advanced';
 
