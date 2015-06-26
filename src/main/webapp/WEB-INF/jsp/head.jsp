@@ -1,7 +1,8 @@
 <%@page import="java.io.File"%>
 <%@page import="java.net.URL"%>
 <%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
-
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="java.util.Enumeration"%>
 <%!
 	protected DynamicReadOnlyProperties props = null;
 	{
@@ -52,4 +53,26 @@ String baseUrl = props.getProperty("gdp.base.url");
 	var GDP = GDP || {};
 	GDP.BASE_URL = "<%= baseUrl%>";
 	GDP.DEVELOPMENT = "<%= development%>";
+	GDP.incomingMethod = "<%= request.getMethod() %>";
+	GDP.incomingParams = {
+		<% 
+			Enumeration<String> paramNames = request.getParameterNames();
+			while (paramNames.hasMoreElements()) {
+				String key = paramNames.nextElement();
+				String value = request.getParameter(key);
+				if (StringUtils.isNotBlank(key)) {
+					if (paramNames.hasMoreElements()){
+		%>
+						"<%=key%>" : "<%=value%>",
+		<%
+					}
+					else {
+		%>
+						"<%=key%>" : "<%=value%>"
+		<%						
+					}
+				}
+			}
+		%>
+	};
 </script>

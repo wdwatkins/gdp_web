@@ -33,6 +33,17 @@ $(document).ready(function() {
 			GDP.config = new GDP.model.Config(data);
 			var applicationConfig = GDP.config.get('application');
 
+			var application = GDP.config.get('application');
+			// Need to override the endpoints for services if they are in the incoming POST parameters
+			if (_.has(GDP.incomingParams, 'feature_wms')) {
+				application.endpoints.wms = GDP.incomingParams.feature_wms;
+			}
+			if (_.has(GDP.incomingParams, 'feature_wfs')) {
+				application.endpoints.wfs = GDP.incomingParams.feature_wfs;
+				application.serviceEndpoints.wfs = GDP.incomingParams.feature_wfs;
+			}
+			GDP.config.set({'application' : application});
+
 			GDP.cswClient = new GDP.OGC.CSW({
 				url : applicationConfig.endpoints.csw
 			});

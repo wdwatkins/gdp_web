@@ -1,3 +1,10 @@
+/*global GDP*/
+/*global expect*/
+/*global jasmine*/
+/*global sinon*/
+/*global spyOn*/
+/*global OpenLayers*/
+
 describe('GDP.PROCESS_CLIENT.VIEW.SpatialView', function() {
 	var model;
 	var templateSpy;
@@ -14,7 +21,8 @@ describe('GDP.PROCESS_CLIENT.VIEW.SpatialView', function() {
 		GDP.config = new GDP.model.Config({
 			application : {
 				endpoints : {
-					geoserver : 'http://fakegeoserver.com'
+					wms : 'http://fakegeoserver.com/wms',
+					wfs : 'http://fakegeoserver.com/wfs'
 				}
 			},
 			process : {
@@ -68,7 +76,7 @@ describe('GDP.PROCESS_CLIENT.VIEW.SpatialView', function() {
 
 		spyOn($.fn, 'fileupload');
 
-		$('body').append('<div id="test-div"><div id="spatial-map"></div><input id="upload-shapefile-input" type="file" name="qqfile"></div>')
+		$('body').append('<div id="test-div"><div id="spatial-map"></div><input id="upload-shapefile-input" type="file" name="qqfile"></div>');
 
 
 		testView = new GDP.PROCESS_CLIENT.view.SpatialView({
@@ -147,11 +155,11 @@ describe('GDP.PROCESS_CLIENT.VIEW.SpatialView', function() {
 
 	it('Expects a change to aoiName to callWFS to make a DescribeFeatureType request', function() {
 		wfsDeferred.resolve();
-		testView.model.set('aoiName', 'featureName');
+		testView.model.set('aoiName', 'tst:featureName');
 		expect(callWFSSpy.calls.length).toBe(2);
 		var callWfsArgs = callWFSSpy.mostRecentCall.args;
 		expect(callWfsArgs[0].request).toEqual('DescribeFeatureType');
-		expect(callWfsArgs[0].typename).toEqual('featureName');
+		expect(callWfsArgs[0].typename).toEqual('tst:featureName');
 	});
 
 	it('Expects a change to aoiName which is using the draw namepsace to set the aoiAttribute', function() {
@@ -164,7 +172,7 @@ describe('GDP.PROCESS_CLIENT.VIEW.SpatialView', function() {
 
 	it('Expects a change to aoiAttribute to callWFS to make GetFeature request', function() {
 		wfsDeferred.resolve();
-		testView.model.set('aoiName', 'featureName');
+		testView.model.set('aoiName', 'tst:featureName');
 		testView.model.set('aoiAttribute', 'attr1');
 
 		expect(callWFSSpy.calls.length).toBe(3);
@@ -178,8 +186,8 @@ describe('GDP.PROCESS_CLIENT.VIEW.SpatialView', function() {
 	//TODO: Add tests to build DOM correctly from GetFeature response when aoiAttribute is changed
 
 	it('Expects changeName to change the model\'s aoiName property', function() {
-		testView.changeName({ target : { value : 'thisFeature' } });
-		expect(testView.model.get('aoiName')).toEqual('thisFeature');
+		testView.changeName({ target : { value : 'tst:thisFeature' } });
+		expect(testView.model.get('aoiName')).toEqual('tst:thisFeature');
 	});
 
 	it('Expects changeAttribute to change the model\'s aoiAttribute property', function() {

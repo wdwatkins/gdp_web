@@ -4,6 +4,7 @@
 
     <head>
 		<%@include file="/WEB-INF/jsp/head.jsp" %>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<link rel="stylesheet" type="text/css" href="css/gdp_custom.css">
 	</head>
     <body>
@@ -16,10 +17,6 @@
 				</jsp:include>
 			</header>
 
-			<div class="jumbotron">
-				<h1>Welcome to GDP</h1>
-				<div>Here's where to put the latest and greatest information about GDP</div>
-			</div>
 			<div id="home-page-content"></div>
 			
 			<footer class="row">
