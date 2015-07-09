@@ -146,6 +146,11 @@
             "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ],
+        "54dd5e18e4b08de9379b38ea": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
         ]
     }
 }
