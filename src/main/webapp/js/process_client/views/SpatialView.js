@@ -233,7 +233,6 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 */
 		changeValues : function(ev) {
 			var aoiAttributeValues = $(ev.target).val();
-			var aoiAttributeValues ;
 			this.model.set('aoiAttributeValues', aoiAttributeValues);
 		},
 
