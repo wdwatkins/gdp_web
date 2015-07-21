@@ -78,7 +78,6 @@ describe('GDP.PROCESS_CLIENT.VIEW.SpatialView', function() {
 
 		$('body').append('<div id="test-div"><div id="spatial-map"></div><input id="upload-shapefile-input" type="file" name="qqfile"></div>');
 
-
 		testView = new GDP.PROCESS_CLIENT.view.SpatialView({
 			model : model,
 			template : templateSpy
@@ -184,19 +183,4 @@ describe('GDP.PROCESS_CLIENT.VIEW.SpatialView', function() {
 	});
 
 	//TODO: Add tests to build DOM correctly from GetFeature response when aoiAttribute is changed
-
-	it('Expects changeName to change the model\'s aoiName property', function() {
-		testView.changeName({ target : { value : 'tst:thisFeature' } });
-		expect(testView.model.get('aoiName')).toEqual('tst:thisFeature');
-	});
-
-	it('Expects changeAttribute to change the model\'s aoiAttribute property', function() {
-		testView.changeAttribute({ target : { value : 'thisAttribute' } });
-		expect(testView.model.get('aoiAttribute')).toEqual('thisAttribute');
-	});
-
-	it('Expects changeValues to change the model\'s aoiValues property', function() {
-		testView.changeValues({ target : { selectedOptions : [ { text : '1' }, { text : '2' }, { text : '3' } ] } });
-		expect(testView.model.get('aoiAttributeValues')).toEqual(['1', '2', '3']);
-	});
 });
