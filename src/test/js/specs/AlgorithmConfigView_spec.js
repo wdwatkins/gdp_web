@@ -347,31 +347,6 @@ describe('GDP.PROCESS_CLIENT.view.AlgorithmConfigView', function() {
 			expect(processVariables.get('DATASET_ID')).toEqual('false');
 		});
 
-		it('Expects calling changeSelectProcessVariable to check to see if multiple is set and use selectOptions to set the variable', function() {
-			var ev = {
-				target : {
-					id : 'input-DATASET_ID',
-					multiple : true,
-					selectedOptions : [
-						{value : 'junk'},
-						{value : 'stuff'}
-					],
-					value : 'junk'
-				}
-			};
-			testView.changeSelectProcessVariable(ev);
-			expect(processVariables.get('DATASET_ID')).toEqual(['junk','stuff']);
-
-			ev = {
-				target : {
-					id : 'input-DATASET_ID',
-					value : 'junk'
-				}
-			};
-			testView.changeSelectProcessVariable(ev);
-			expect(processVariables.get('DATASET_ID')).toEqual('junk');
-		});
-
 		it('Expects calling changeTextProcessVariable to use the value property to set the process variable', function() {
 			var ev = {
 				target : {
