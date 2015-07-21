@@ -102,14 +102,8 @@ GDP.PROCESS_CLIENT.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 		var processVariables = this.model.get('processVariables');
 		var newVal = {};
 
-		if (ev.target.multiple) {
-			newVal[key] = _.map(ev.target.selectedOptions, function(v) {
-				return v.value;
-			});
-		}
-		else {
-			newVal[key] = ev.target.value;
-		}
+		newVal[key] = $(ev.target).val();
+
 		processVariables.set(newVal, key);
 	},
 
