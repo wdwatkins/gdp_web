@@ -214,7 +214,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 */
 		changeName : function(ev) {
 			this.model.set('aoiExtent', GDP.util.mapUtils.transformWGS84ToMercator(GDP.OGC.WFS.getBoundsFromCache(ev.target.value)));
-			this.model.set('aoiName', ev.target.value);
+			this.model.set('aoiName', $(ev.target).val());
 		},
 
 		/*
@@ -223,7 +223,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 * @returns {undefined}
 		 */
 		changeAttribute : function(ev) {
-			this.model.set('aoiAttribute', ev.target.value);
+			this.model.set('aoiAttribute', $(ev.target).val());
 		},
 
 		/*
@@ -232,7 +232,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 * @returns {undefined}
 		 */
 		changeValues : function(ev) {
-			var aoiAttributeValues = _.pluck(ev.target.selectedOptions, 'text');
+			var aoiAttributeValues = $(ev.target).val();
+			var aoiAttributeValues ;
 			this.model.set('aoiAttributeValues', aoiAttributeValues);
 		},
 
