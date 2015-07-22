@@ -184,7 +184,7 @@ GDP.util.mapUtils = (function() {
 				version : '1.3.0'
 			},
 			success : function(response) {
-				var respObj = format.read(response.responseXML);
+				var respObj = format.read(response.responseXML || response.responseText);
 				if (_.has(respObj, 'error')) {
 					GDP.debug('Unsuccessfully retrieved wms capabilities');
 					layer = that.createDataSetExtentLayer(boundingBox);
