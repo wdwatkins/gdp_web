@@ -98,7 +98,7 @@ GDP.OGC.CSW = function (args) {
 				outputSchema : outputSchema
 			},
 			success : function(response) {
-				var respObj = cswGetRecFormat.read(response.responseXML);
+				var respObj = cswGetRecFormat.read(response.responseXML || response.responseText);
 				deferred.resolve(respObj);
 			},
 			failure : function(response) {
@@ -107,5 +107,5 @@ GDP.OGC.CSW = function (args) {
 		});
 
 		return deferred.promise();
-	}
+	};
 };
