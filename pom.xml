@@ -127,7 +127,7 @@
 	<scm>
 		<url>https://github.com/USGS-CIDA/gdp_web</url>
 		<connection>scm:git:git@github.com:USGS-CIDA/gdp_web.git</connection>
-		<developerConnection>scm:git@github.com:USGS-CIDA/gdp_web.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:USGS-CIDA/gdp_web.git</developerConnection>
 	</scm>
 	
 	<dependencies>
