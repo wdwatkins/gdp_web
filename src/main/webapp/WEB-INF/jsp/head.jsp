@@ -31,7 +31,7 @@ String versionJqueryUI = props.get("version.jqueryUI");
 String resourceSuffix = development ? "" : "-" + versionProject + "-min";
 String baseUrl = props.getProperty("gdp.base.url");
 	if (!baseUrl.endsWith("/")) { baseUrl += "/"; }
-String gaCode = development ? "" : "UA-34377683-1";
+String gaCode = development ? "" : "UA-34380265-1";
 %>
 
 <jsp:include page="template/USGSHead.jsp">
