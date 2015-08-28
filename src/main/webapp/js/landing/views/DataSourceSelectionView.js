@@ -83,7 +83,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 				self.collection.set(dataSetModels);
 			}).fail(function(error) {
 				self.$dataSetTileContainer.html('<h3>Sorry, the catalog contents are not available right now, please check back later.</h3>');
-                                GDP.logger.debug('Got CSW GetRequest error');
+				GDP.logger.debug('Got CSW GetRequest error');
 			}).always(function() {
 				self.$el.find('.tile-loading-indicator').hide();
 			});
