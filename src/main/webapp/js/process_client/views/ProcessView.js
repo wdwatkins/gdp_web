@@ -28,12 +28,15 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 			this.algorithmTemplate = options.algorithmTemplate;
 			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId  : 'advanced';
-
+			
 			this.model.updateDataSetModel(options.datasetId).always(function() {
 				GDP.util.BaseView.prototype.initialize.apply(self, initArguments);
 				self.listenTo(self.model, 'change:algorithmId', self.displayAlgorithmDescription);
 			}).fail(function() {
-			    window.alert('Unable to load requested dataset ' + options.datasetId);
+				self.alertView = new GDP.util.AlertView({
+					el : '#messages-div'
+				});
+				self.alertView.show('alert-danger', 'Unable to load information about the dataset, ' + options.datasetId);
 			});
 		},
 
