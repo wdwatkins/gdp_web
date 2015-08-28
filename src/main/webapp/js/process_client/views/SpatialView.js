@@ -119,6 +119,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				self.listenTo(self.model, 'change:aoiName', self.updateSelectedAoiName);
 				self.listenTo(self.model, 'change:aoiAttribute', self.updateSelectedAoiAttribute);
 				self.listenTo(self.model, 'change:aoiAttributeValues', self.updateSelectedAoiAttributeValues);
+			}).fail(function() {
+				self.alertView.show('alert-danger', 'Unable to load information about the dataset, ' + options.datasetId);
 			});
 
 		},
