@@ -33,7 +33,10 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				GDP.util.BaseView.prototype.initialize.apply(self, initArguments);
 				self.listenTo(self.model, 'change:algorithmId', self.displayAlgorithmDescription);
 			}).fail(function() {
-				window.alert('Unable to load requested dataset ' + options.datasetId);
+				self.alertView = new GDP.util.AlertView({
+					el : '#messages-div'
+				});
+				self.alertView.show('alert-danger', 'Unable to load information about the dataset, ' + options.datasetId);
 			});
 		},
 
