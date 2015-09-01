@@ -60,7 +60,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				enable_upload_and_drawing : (!_.has(GDP.incomingParams, 'feature_wms') || !_.has(GDP.incomingParams, 'feature_wfs'))
 			};
 			this.wps = options.wps;
-			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId  : 'advanced';
+			this.routePrefix = options.datasetId ? '#!catalog/gdp/dataset/' + options.datasetId  : 'advanced';
 
 			var baseLayers = [GDP.util.mapUtils.createWorldStreetMapLayer()];
 			var controls = [

@@ -27,7 +27,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			var initArguments = arguments;
 
 			this.algorithmTemplate = options.algorithmTemplate;
-			this.routePrefix = options.datasetId ? 'catalog/gdp/dataset/' + options.datasetId  : 'advanced';
+			this.routePrefix = options.datasetId ? '#!catalog/gdp/dataset/' + options.datasetId  : 'advanced';
 
 			this.model.updateDataSetModel(options.datasetId).always(function() {
 				GDP.util.BaseView.prototype.initialize.apply(self, initArguments);

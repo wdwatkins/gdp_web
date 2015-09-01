@@ -76,7 +76,7 @@ $(document).ready(function() {
 
 		var origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
 		var root  = GDP.BASE_URL.replace(origin, '');
-		Backbone.history.start({pushState : true, root: root + 'client/'});
+		Backbone.history.start({root: root + 'client/'});
 	});
 
 });
