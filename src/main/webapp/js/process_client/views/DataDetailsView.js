@@ -44,7 +44,7 @@ var GDP = GDP || {};
 		var initArguments = arguments;
 
 		this.wps = options.wps;
-		this.routePrefix = options.datasetId ? '#!catalog/gdp/dataset/' + options.datasetId : 'advanced';
+		this.routePrefix = options.datasetId ? '#!catalog/gdp/dataset/' + options.datasetId : '#!advanced';
 		this.wpsEndpoint = options.wpsEndpoint;
 
 		this.model.updateDataSetModel(options.datasetId).always(function() {
