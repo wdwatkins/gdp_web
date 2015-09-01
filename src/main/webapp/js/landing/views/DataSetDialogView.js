@@ -26,7 +26,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			var context = this.model.attributes;
 			var html = this.template(context);
 			this.$el.find('.dataset-dialog-contents').html(html);
-			this.$el.find('.process-form').attr('action', 'client/catalog/gdp/dataset/' + this.model.get('identifier'));
+			this.$el.find('.process-form').attr('action', 'client/#!catalog/gdp/dataset/' + this.model.get('identifier'));
 			return this;
 		},
 
