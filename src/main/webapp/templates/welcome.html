@@ -1,5 +1,5 @@
 <div class="welcome-view-div">
-	<div class="jumbotron welcome-jumbotron">
+	<div class="jumbotron welcome-jumbotron"  {{#if hide }}style="display:none;"{{/if}}>
 		<h1>Welcome to the USGS Geo Data Portal</h1>
 		<div class="welcome-content">
 			<div>This page is a catalog of the datasets that have been tested to 
@@ -44,6 +44,6 @@
 		</div>
 	</div>
 	<div class="toggle-welcome-container">
-		<button class="toggle-welcome" type="button" title="Hide welcome"><i class="fa fa-angle-double-down"></i></button>
+		<button class="toggle-welcome" type="button" title="{{button.buttonTitle}}"><i class="fa {{button.buttonIcon}}"></i></button>
 	</div>
 </div>

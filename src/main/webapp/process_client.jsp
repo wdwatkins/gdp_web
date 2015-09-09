@@ -48,6 +48,7 @@
 		<script type="text/javascript" src="<%= baseUrl %>js/util/BaseView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/util/SelectMenuView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/util/AlertView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="<%= baseUrl %>js/util/WelcomeView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/util/parseUri<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/util/mapUtils<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/ogc/wfs<%= resourceSuffix %>.js"></script>
