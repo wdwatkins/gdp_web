@@ -10,6 +10,7 @@ describe('GDP.PROCESS_CLIENT.view.DataDetailsView', function() {
 	callWpsSpy,
 	wpsDeferred,
 	wps,
+	updateDataSetModelDeferred,
 	url = 'http://cida.usgs.gov';
 
 	//no-op alert
@@ -34,6 +35,8 @@ describe('GDP.PROCESS_CLIENT.view.DataDetailsView', function() {
 
 	beforeEach(function() {
 		server = sinon.fakeServer.create();
+
+		updateDataSetModelDeferred = $.Deferred();
 
 		GDP.config = {
 			get : function(prop) {
@@ -67,6 +70,7 @@ describe('GDP.PROCESS_CLIENT.view.DataDetailsView', function() {
 			}
 		};
 		model = new GDP.PROCESS_CLIENT.model.Job();
+		spyOn(model, 'updateDataSetModel').andReturn(updateDataSetModelDeferred);
 
 		wpsDeferred = $.Deferred();
 
