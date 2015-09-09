@@ -256,9 +256,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 							success : function (data, textStatus, XMLHttpRequest) {
 								statusCallback(XMLHttpRequest.responseText);
 							},
-							error : function() {
-								self.childViews.alertView.show('alert-warning', 'Status request error. Submission failed');
-								window.clearInterval(intervalId);
+							error : function(jqXHr, textStatus) {
+								self.childViews.alertView.show('alert-warning', 'Status request error with ' + textStatus + '. Retrying, Last checked: ' + (new Date()).toTimeString());
 							}
 						});
 					}, 5000);
