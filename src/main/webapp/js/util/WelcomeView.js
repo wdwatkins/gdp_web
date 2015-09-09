@@ -15,11 +15,11 @@ GDP.util = GDP.util || {};
 
 		SHOW_WELCOME : {
 			buttonTitle : 'Hide welcome',
-			buttonIcon : 'fa-angle-double-down'
+			buttonIcon : 'fa-angle-double-up'
 		},
 		HIDE_WELCOME : {
 			buttonTitle : 'Show welcome',
-			buttonIcon : 'fa-angle-double-up'
+			buttonIcon : 'fa-angle-double-down'
 		},
 
 		/*

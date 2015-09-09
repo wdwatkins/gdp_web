@@ -13,7 +13,7 @@ describe('WelcomeView', function() {
 		$testDiv = $('#test-div');
 
 		$testDiv.html('<div class="welcome-jumbotron"></div>' +
-			'<button class="toggle-welcome" title="Hide welcome"><i class="fa fa-angle-double-down"></i>'
+			'<button class="toggle-welcome" title="Hide welcome"><i class="fa fa-angle-double-up"></i>'
 		);
 
 		templateSpy = jasmine.createSpy('templateSpy');
