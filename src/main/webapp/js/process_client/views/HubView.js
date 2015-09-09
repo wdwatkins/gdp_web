@@ -75,6 +75,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				GDP.logger.error('Could not GetRecordsById for ' + options.datasetId);
 			}).always(function() {
 				var datasetModel = self.model.get('dataSetModel');
+				var dataSources = datasetModel.get('dataSources');
 				var $metadataTile = self.$el.find('#dataset-metadata-wrapper');
 
 				self.$el.find('.loading-indicator').hide();
@@ -84,6 +85,13 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 					model : self.model,
 					mapDiv : 'hub-spatial-inset-map'
 				});
+
+				if (dataSources.length === 1 && (!self.model.get('dataSourceUrl'))) {
+					// Set the dataSourceUrl in the job model.
+					self.model.set('dataSourceUrl', dataSources[0].url);
+					self.model.set('invalidDataSourceUrl', false);
+					self.$('.data-source-url-selection').html(dataSources[0].url);
+				}
 
 				if (datasetModel.has('identifier')) {
 					$metadataTile.find('.panel-body').html(options.metadataTemplate(datasetModel.attributes));

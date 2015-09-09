@@ -33,6 +33,7 @@ GDP.util.templateLoader = function(templateDir) {
 				error : function() {
 					templates[this] = Handlebars.compile('Unable to load template');
 				},
+				cache : false,
 				context : names[i]
 			}));
 		}
