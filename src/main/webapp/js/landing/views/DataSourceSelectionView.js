@@ -56,6 +56,10 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			};
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+			this.welcomeView = new GDP.util.WelcomeView({
+				template : GDP.LANDING.templates.getTemplate('welcome'),
+				el : '.welcome-view-container'
+			});
 
 			this.$dataSetTileContainer = $('.dataset-tile-container');
 
@@ -168,6 +172,12 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 				}
 			}
 			return context;
+		},
+
+		remove : function() {
+			this.welcomeView.remove();
+			GDP.util.BaseView.prototype.remove.apply(this, arguments);
+			return this;
 		}
 
 

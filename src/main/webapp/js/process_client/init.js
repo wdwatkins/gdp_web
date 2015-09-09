@@ -16,7 +16,8 @@ $(document).ready(function() {
 		'datadetail',
 		'process',
 		'algorithm-config',
-		'data_set_details'
+		'data_set_details',
+		'welcome'
 	];
 
 	var PARTIALS = [];

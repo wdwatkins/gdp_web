@@ -7,7 +7,7 @@
 
 describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 	var model;
-	var templateSpy, spatialViewRemoveSpy;
+	var templateSpy, spatialViewRemoveSpy, welcomeViewRemoveSpy, hideWelcomeSpy;
 	var server;
 	var testView;
 	var datasetDeferred;
@@ -68,6 +68,16 @@ describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 			remove : spatialViewRemoveSpy
 		});
 
+		hideWelcomeSpy = jasmine.createSpy('hubWelcomeSpy');
+		welcomeViewRemoveSpy = jasmine.createSpy('welcomeViewRemoveSpy');
+		spyOn(GDP.util, 'WelcomeView').andReturn({
+			hideWelcome : hideWelcomeSpy,
+			remove :welcomeViewRemoveSpy
+		});
+		GDP.PROCESS_CLIENT.templates = {
+			getTemplate : jasmine.createSpy('getTemplateSpy')
+		};
+
 		spyOn($, 'download');
 
 		testView = new GDP.PROCESS_CLIENT.view.HubView({
@@ -81,8 +91,9 @@ describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 	});
 
 	it('Expects the view to create a spatial map view, an alert view, and a results model at initialization', function() {
-		expect(testView.spatialMapView).toBeDefined();
-		expect(testView.alertView).toBeDefined();
+		expect(testView.childViews.spatialMapView).toBeDefined();
+		expect(testView.childViews.alertView).toBeDefined();
+		expect(testView.childViews.welcomeView).toBeDefined();
 		expect(testView.resultsModel).toBeDefined();
 	});
 
@@ -92,8 +103,11 @@ describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 	});
 
 	it('Expects the spatialMapView to be removed when remove is called', function() {
+		spyOn(testView.childViews.alertView, 'remove');
 		testView.remove();
 		expect(spatialViewRemoveSpy).toHaveBeenCalled();
+		expect(welcomeViewRemoveSpy).toHaveBeenCalled();
+		expect(testView.childViews.alertView.remove).toHaveBeenCalled();
 	});
 
 	it('Expects downloadResults to use filename in the data when defined in the model', function() {

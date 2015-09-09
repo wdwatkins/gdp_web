@@ -1,5 +1,6 @@
 /*jslint browser: true*/
 /*global Backbone*/
+/*global _*/
 
 var GDP = GDP || {};
 
@@ -55,8 +56,14 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			this.routePrefix = options.datasetId ? '#!catalog/gdp/dataset/' + options.datasetId  : '#!advanced';
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+			this.childViews = {};
+			this.childViews.welcomeView = new GDP.util.WelcomeView({
+				template : GDP.PROCESS_CLIENT.templates.getTemplate('welcome'),
+				el : '.welcome-view-container',
+				hide : this.model.get('dataSetModel') !== null
+			});
 
-			this.alertView = new GDP.util.AlertView({
+			this.childViews.alertView = new GDP.util.AlertView({
 				el : '#job-processing-messages-div'
 			});
 
@@ -64,15 +71,16 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			this.resultsModel = new Backbone.Model();
 
 			this.model.updateDataSetModel(options.datasetId).fail(function(response) {
-				self.alertView.show('alert-danger', 'Unable to load information about the dataset, ' + options.datasetId);
+				self.childViews.alertView.show('alert-danger', 'Unable to load information about the dataset, ' + options.datasetId);
 				GDP.logger.error('Could not GetRecordsById for ' + options.datasetId);
 			}).always(function() {
 				var datasetModel = self.model.get('dataSetModel');
 				var $metadataTile = self.$el.find('#dataset-metadata-wrapper');
 
 				self.$el.find('.loading-indicator').hide();
+				self.childViews.welcomeView.hideWelcome();
 				self.$el.find('.hub-tile').show();
-				self.spatialMapView = new GDP.PROCESS_CLIENT.view.HubSpatialMapView({
+				self.childViews.spatialMapView = new GDP.PROCESS_CLIENT.view.HubSpatialMapView({
 					model : self.model,
 					mapDiv : 'hub-spatial-inset-map'
 				});
@@ -87,8 +95,12 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		},
 
 		remove : function() {
-			this.spatialMapView.remove();
+			_.each(this.childViews, function(view) {
+				view.remove();
+			});
+
 			GDP.util.BaseView.prototype.remove.apply(this, arguments);
+			return this;
 		},
 
 		goToSpatialPage : function(ev) {
@@ -136,7 +148,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 			$.when(getWPSStringInputs).done(function(wpsStringInputs) {
 				// We now have all the information we need to get started
-				self.alertView.show('alert-info', 'Process status: started');
+				self.childViews.alertView.show('alert-info', 'Process status: started');
 
 				executePromise = self.wps.sendWpsExecuteRequest(
 					GDP.config.get('application').endpoints.processWps + '/WebProcessingService',
@@ -169,15 +181,15 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 
 						if ($(xml).find('wps\\:ProcessStarted, ProcessStarted').length > 0) {
 							GDP.logger.debug('GDP Status: Process started');
-							self.alertView.show('alert-info', 'Process status: in progess. Last checked: ' + (new Date()).toTimeString());
+							self.childViews.alertView.show('alert-info', 'Process status: in progess. Last checked: ' + (new Date()).toTimeString());
 						}
                                                 else if ($(xml).find('wps\\:ProcessAccepted, ProcessAccepted').length > 0) {
                                                         GDP.logger.debug('GDP Status: Process accepted');
-							self.alertView.show('alert-info', 'Process status: in queue. Last checked: ' + (new Date()).toTimeString());
+							self.childViews.alertView.show('alert-info', 'Process status: in queue. Last checked: ' + (new Date()).toTimeString());
 						}
 						else if ($(xml).find('wps\\:ProcessSucceeded, ProcessSucceeded').length > 0) {
 							window.clearInterval(intervalId);
-							self.alertView.show('alert-success', 'Process status: complete');
+							self.childViews.alertView.show('alert-success', 'Process status: complete');
 							var outputURL = $(xml).find('wps\\:Output, Output').find('wps\\:Reference, Reference').attr('href');
 							var outputURLAndData = outputURL.split('?');
 							self.resultsModel.set({
@@ -189,13 +201,13 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 						else if ($(xml).find('wps\\:ProcessFailed, ProcessFailed').length > 0) {
 							window.clearInterval(intervalId);
 							var message = 'GDP: STATUS: Process Failed: ' + $(xml).find('wps\\:ProcessFailed, ProcessFailed').find('ows\\:ExceptionText, ExceptionText').text();
-							self.alertView.show('alert-danger', 'Process failed: ' + message);
+							self.childViews.alertView.show('alert-danger', 'Process failed: ' + message);
 							GDP.logger.warn('GDP: STATUS: Process failed: ' + message);
 							submitDone.reject();
 						}
 						else {
 							GDP.logger.warn('GDP: Status: Bad response received');
-							self.alertView.show('alert-info', 'Process status: Unknown response received. Retrying, Last checked: ' + (new Date()).toTimeString());
+							self.childViews.alertView.show('alert-info', 'Process status: Unknown response received. Retrying, Last checked: ' + (new Date()).toTimeString());
 						}
 					};
 					var statusLocation = $(xml).find('wps\\:ExecuteResponse, ExecuteResponse').attr('statusLocation');
@@ -223,7 +235,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 							['result'],
 							false
 						).fail(function(xhr, textStatus, errorMessages) {
-							self.alertView('alert-warning', 'Request for email notification failed : ' + textStatus);
+							self.childViews.alertView.show('alert-warning', 'Request for email notification failed : ' + textStatus);
 						});
 					}
 
@@ -237,13 +249,13 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 								statusCallback(XMLHttpRequest.responseText);
 							},
 							error : function() {
-								self.alertView.show('alert-warning', 'Status request error. Submission failed');
+								self.childViews.alertView.show('alert-warning', 'Status request error. Submission failed');
 								window.clearInterval(intervalId);
 							}
 						});
 					}, 5000);
 				}).fail(function(jqXhr, errorThrown, errorMessage) {
-					self.alertView.show('alert-danger', 'Process status: Failed with ' + errorMessage);
+					self.childViews.alertView.show('alert-danger', 'Process status: Failed with ' + errorMessage);
 					submitDone.reject();
 				});
 			});

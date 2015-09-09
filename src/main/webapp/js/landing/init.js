@@ -13,7 +13,8 @@ $(document).ready(function() {
 	var TEMPLATES = [
 		'datasource_select',
 		'data_set_tile',
-		'data_set_details'
+		'data_set_details',
+		'welcome'
 	];
 
 	initializeLogging({

@@ -36,6 +36,7 @@
 		<script type="text/javascript" src="js/util/templateLoader<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/BaseView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/util/mapUtils<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="js/util/WelcomeView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/ogc/csw<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/models/Config<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/models/DataSetModel<%= resourceSuffix %>.js"></script>	
