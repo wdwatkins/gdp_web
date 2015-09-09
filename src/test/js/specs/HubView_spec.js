@@ -56,6 +56,7 @@ describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 		datasetDeferred = $.Deferred();
 		spyOn(model, 'updateDataSetModel').andCallFake(function() {
 			model.set({'dataSetModel' : new GDP.models.DataSetModel()});
+			model.get('dataSetModel').set('dataSources', []);
 			return datasetDeferred.promise();
 		});
 		datasetDeferred.resolve();

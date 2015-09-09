@@ -39,6 +39,16 @@ var GDP = GDP || {};
 		return ret;
 	}()),
 	'wps' : null,
+
+	/*
+	 *
+	 * @param {Object} options
+	 *     @prop {Function} template - returns a function which will render the template for this view
+	 *     @prop {GDP.PROCESS_CLIENT.JobModel} model
+	 *     @prop {String} datasetid,
+	 *     @prop {GDP.OGC.WPS instance} wps
+	 *     @prop {String} wpsEndPoint
+	 */
 	'initialize': function(options) {
 		var self = this;
 		var initArguments = arguments;
@@ -48,8 +58,13 @@ var GDP = GDP || {};
 		this.wpsEndpoint = options.wpsEndpoint;
 
 		this.model.updateDataSetModel(options.datasetId).always(function() {
+			var dataSources = self.model.get('dataSetModel').get('dataSources');
+			if (dataSources.length === 1) {
+				self.model.set('dataSourceUrl', dataSources[0].url);
+				self.model.set('invalidDataSourceUrl', false);
+			}
 			self.context = {
-				dataSources : self.model.get('dataSetModel').get('dataSources'),
+				dataSources : dataSources,
 				dataSourceUrl : self.model.get('dataSourceUrl')
 			};
 			//super
@@ -63,6 +78,11 @@ var GDP = GDP || {};
 			self.listenTo(self.model, 'change:startDate', self.changeStartDate);
 			self.listenTo(self.model, 'change:endDate', self.changeEndDate);
 
+			if ((dataSources.length === 1) && (self.model.get('dataSourceVariables').length === 0)) {
+				// Need to retrieve the variables
+				self.changeUrl();
+			}
+
 			self.changeAvailableVariables();
 			self.changeInvalidUrl();
 			self.changeMinDate();
@@ -72,7 +92,7 @@ var GDP = GDP || {};
 		}).fail(function() {
 			self.alertView = new GDP.util.AlertView({
 				el : '#messages-div'
-			});			
+			});
 			self.alertView.show('alert-danger', 'Unable to load information about the dataset, ' + options.datasetId);
 		});
 	},
