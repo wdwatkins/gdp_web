@@ -86,7 +86,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 					mapDiv : 'hub-spatial-inset-map'
 				});
 
-				if (dataSources.length === 1 && (!self.model.get('dataSourceUrl'))) {
+				if ((_.has(dataSources, 'length')) && (dataSources.length === 1) && (!self.model.get('dataSourceUrl'))) {
 					// Set the dataSourceUrl in the job model.
 					self.model.set('dataSourceUrl', dataSources[0].url);
 					self.model.set('invalidDataSourceUrl', false);

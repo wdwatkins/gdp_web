@@ -59,7 +59,7 @@ var GDP = GDP || {};
 
 		this.model.updateDataSetModel(options.datasetId).always(function() {
 			var dataSources = self.model.get('dataSetModel').get('dataSources');
-			if (dataSources.length === 1) {
+			if ((_.has(dataSources, 'length')) && (dataSources.length === 1)) {
 				self.model.set('dataSourceUrl', dataSources[0].url);
 				self.model.set('invalidDataSourceUrl', false);
 			}
@@ -78,7 +78,7 @@ var GDP = GDP || {};
 			self.listenTo(self.model, 'change:startDate', self.changeStartDate);
 			self.listenTo(self.model, 'change:endDate', self.changeEndDate);
 
-			if ((dataSources.length === 1) && (self.model.get('dataSourceVariables').length === 0)) {
+			if (((_.has(dataSources, 'length')) && dataSources.length === 1) && (self.model.get('dataSourceVariables').length === 0)) {
 				// Need to retrieve the variables
 				self.changeUrl();
 			}
