@@ -10,9 +10,8 @@ GDP.PROCESS_CLIENT.controller.ProcessClientRouter = Backbone.Router.extend({
 
 	applicationContextDiv : '#advanced-page-content',
 	jobModel: null,
-	initialize: function(jobModel, wps){
+	initialize: function(jobModel){
 	  this.jobModel = jobModel;
-	  this.wps = wps;
 	},
 	routes : {
 		'!advanced' : 'hub',
@@ -49,9 +48,7 @@ GDP.PROCESS_CLIENT.controller.ProcessClientRouter = Backbone.Router.extend({
 		this.showView(GDP.PROCESS_CLIENT.view.DataDetailsView, {
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('datadetail'),
 			model: this.jobModel,
-			datasetId : datasetid,
-			wps: this.wps,
-			wpsEndpoint: GDP.config.get('application').endpoints.utilityWps
+			datasetId : datasetid
 		});
 	},
 

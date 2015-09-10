@@ -72,8 +72,8 @@ $(document).ready(function() {
 		var jobModel = new GDP.PROCESS_CLIENT.model.Job();
 		jobModel.get('processes').reset(GDP.config.get('process').processes);
 
-		var wps = GDP.OGC.WPS(GDP.logger);
-		GDP.PROCESS_CLIENT.router = new GDP.PROCESS_CLIENT.controller.ProcessClientRouter(jobModel, wps);
+		GDP.wpsClient = GDP.OGC.WPS(GDP.logger);
+		GDP.PROCESS_CLIENT.router = new GDP.PROCESS_CLIENT.controller.ProcessClientRouter(jobModel);
 
 		var origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
 		var root  = GDP.BASE_URL.replace(origin, '');
