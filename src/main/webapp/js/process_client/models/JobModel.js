@@ -86,7 +86,7 @@ var GDP = GDP || {};
 							dataSetModel.clear();
 							deferred.reject('No dataset record returned for ' + datasetId);
 						}
-					}).fail(function() {
+					}).fail(function(msg) {
 						GDP.logger.error('Could not GetRecordsById for ' + datasetId);
 						dataSetModel.clear();
 						deferred.reject(msg);
@@ -203,9 +203,7 @@ var GDP = GDP || {};
 
 			/* The following property always need to be specified */
 			var result = {
-				DATASET_ID : _.map(this.get('dataVariables'), function(model) {
-					return model.get('value');
-				})
+				DATASET_ID : this.get('dataVariables')
 			};
 
 			/* The rest of the properties should only be specified if in validInputs */

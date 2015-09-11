@@ -22,12 +22,18 @@ var GDP = GDP || {};
     var DataSourceVariables = Backbone.Collection.extend({
 		model: DataSourceVariable,
 
+		/*
+		 * @param {Object} options
+		 *     @prop {String} dataSourceUrl - The catalog url to be used to retrieve the data variables
+		 *     @prop {Boolean} allowCached
+		 *  @returns a promise that is resolved when the variables are succussfully retrieve, otherwise rejected
+		 */
 		fetch : function(options) {
 			var self = this;
 			var deferred = $.Deferred();
 			var wpsInputs = {
 				"catalog-url": [options.dataSourceUrl],
-				"allow-cached-response": [options.allow_cached]
+				"allow-cached-response": [options.allowCached ? 'true' : 'false']
 			};
 			var wpsOutput = ["result_as_json"];
 
@@ -76,18 +82,24 @@ var GDP = GDP || {};
 			url : '',
 			variables : new DataSourceVariables(),
 			dateRange : {
-				minDate : '',
-				maxDate : ''
+				start : '',
+				end : ''
 			}
 		},
 
+		/*
+		 * This will use the url and variables in the model so these should already be defined
+		 * @param {Object} options
+		 *     @prop {Boolean} allowCached
+		 * @returns {Jquery.promise} - resolved if the dateRange is successfully retrieve, otherwise rejected
+		 */
 		getDateRange : function(options) {
 			// date range is the same for all variables, so just use the first one in the collection
 			var self = this;
 			var deferred = $.Deferred();
 			var wpsInputs = {
 				"catalog-url": [this.get('url')],
-				"allow-cached-response": [options.allowCached],
+				"allow-cached-response": [options.allowCached ? 'true' : 'false'],
 				"grid": [this.get('variables').at(0).get('name')]
 			};
 			var wpsOutput = ["result_as_json"];
