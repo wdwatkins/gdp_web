@@ -75,8 +75,10 @@ var GDP = GDP || {};
 		defaults : {
 			url : '',
 			variables : new DataSourceVariables(),
-			minDate : '',
-			maxDate : ''
+			dateRange : {
+				minDate : '',
+				maxDate : ''
+			}
 		},
 
 		getDateRange : function(options) {
@@ -132,8 +134,10 @@ var GDP = GDP || {};
 					starttime = response.availabletimes.starttime;
 					endtime = response.availabletimes.endtime;
 
-					self.set('minDate', starttime.month + '/'  + starttime.day + '/' + starttime.year);
-					self.set('maxDate', endtime.month + '/'  + endtime.day + '/' + endtime.year);
+					self.set('dateRange', {
+						start : starttime.month + '/'  + starttime.day + '/' + starttime.year,
+						end : endtime.month + '/'  + endtime.day + '/' + endtime.year
+					});
 
 					deferred.resolve();
 				}

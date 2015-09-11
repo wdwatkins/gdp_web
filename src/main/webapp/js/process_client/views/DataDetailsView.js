@@ -30,8 +30,8 @@ var GDP = GDP || {};
 		ret['change ' + variablePicker.selector] = 'setSelectedVariables';
 		ret['change ' + urlTextPicker.selector] = 'setUrl';
 		ret['change ' + dataSourcePicker.selector] = 'setUrl';
-		ret['change ' + datePickers.start.selector] = 'setStartDate';
-		ret['change ' + datePickers.end.selector] = 'setEndDate';
+		ret['changeDate ' + datePickers.start.selector] = 'setStartDate';
+		ret['changeDate ' + datePickers.end.selector] = 'setEndDate';
 		ret['submit form'] = 'goToHubPage';
 		return ret;
 	}()),
@@ -104,28 +104,31 @@ var GDP = GDP || {};
 
 		getDataSetModelPromise.done(function() {
 			var dataSourceModel = self.model.get('dataSourceModel');
-			self.dataSourceSelectMenuView.updateMenuOptions(self.getDataSourceOptions());
-
-			self.updateVariables();
-			self.changeVariables();
-			self.changeMinDate();
-			self.changeMaxDate();
-			self.changeStartDate();
-			self.changeEndDate();
 
 			self.listenTo(self.model, 'change:dataSourceUrl', self.changeUrl);
 			self.listenTo(dataSourceModel, 'change:variables', self.updateVariables);
-			self.listenTo(dataSourceModel, 'change:minDate', self.changeMinDate);
-			self.listenTo(dataSourceModel, 'change:maxDate', self.changeMaxDate);
+			self.listenTo(dataSourceModel, 'change:dateRange', self.changeDateRange);
 			self.listenTo(self.model, 'change:dataVariables', self.changeVariables);
 			self.listenTo(self.model, 'change:startDate', self.changeStartDate);
 			self.listenTo(self.model, 'change:endDate', self.changeEndDate);
+
+			self.dataSourceSelectMenuView.updateMenuOptions(self.getDataSourceOptions());
+			self.updateVariables();
+			self.changeVariables();
+
+			self.changeStartDate();
+			self.changeEndDate();
+
+			// Set datePickers start and end dates
+			self.updateStartEndDates(dataSourceModel.get('dateRange'));
 		});
 	},
 	'setEndDate' : function(ev){
+		ev.preventDefault();
 		this.model.set('endDate', ev.target.value);
 	},
 	'setStartDate' : function(ev){
+		ev.preventDefault();
 		this.model.set('startDate', ev.target.value);
 	},
 	'setUrl' : function(ev){
@@ -141,25 +144,43 @@ var GDP = GDP || {};
 		this.router.navigate(this.routePrefix, {trigger : true});
 	},
 
+	setInputsDisabled : function(disabled) {
+		this.$(urlTextPicker.selector).prop('disabled', disabled);
+		this.$(dataSourcePicker.selector).prop('disabled', disabled);
+		this.$(variablePicker.selector).prop('disabled', disabled);
+		this.$(datePickers.start.selector).prop('disabled', disabled);
+		this.$(datePickers.end.selector).prop('disabled', disabled);
+	},
+
 	changeUrl : function() {
+		var self = this;
 		var dataSourceUrl = this.model.get('dataSourceUrl');
 		var dataSourceModel = this.model.get('dataSourceModel');
 
 		this.$(dataSourcePicker.selector).val(dataSourceUrl);
 		this.$(urlTextPicker.selector).val(dataSourceUrl);
 
-		this.model.set('dataVariable', []);
-		this.model.set('startDate', '');
-		this.model.set('endDate', '');
 		if (dataSourceUrl) {
+			this.setInputsDisabled(true);
+
 			dataSourceModel.fetch({
 				dataSourceUrl : dataSourceUrl,
 				allowCache : this.$('#use-cached-checkbox').is(':checked')
 			}).fail(function(msg) {
+				self.model.set('dataVariable', []);
+				self.model.set('startDate', '');
+				self.model.set('endDate', '');
 				//TODO: better error handling
 				GDP.logger.debug(msg);
 				window.alert(msg);
+			}).always(function() {
+				self.setInputsDisabled(false);
 			});
+		}
+		else {
+			this.model.set('dataVariable', []);
+			this.model.set('startDate', '');
+			this.model.set('endDate', '');
 		}
 	},
 
@@ -171,23 +192,33 @@ var GDP = GDP || {};
 		$variablePicker.prop('disabled', !variables.length);
 	},
 
-	changeMinDate : function() {
-		var dataSourceModel = this.model.get('dataSourceModel');
-		var minDate = dataSourceModel.get('minDate');
+	updateStartEndDates : function(dateRange) {
 		var $startDate = this.$(datePickers.start.selector);
-		$startDate.prop('disabled', !minDate);
-		$startDate.datepicker('setStartDate', minDate);
-		$startDate.datepicker('update', minDate);
+		var $endDate = this.$(datePickers.end.selector);
+
+		if (dateRange.start) {
+			$startDate.datepicker('setStartDate', dateRange.start);
+			$startDate.datepicker('setEndDate', dateRange.end);
+		}
+
+		if (dateRange.end) {
+			$endDate.datepicker('setStartDate', dateRange.start);
+			$endDate.datepicker('setEndDate', dateRange.end);
+		}
 	},
 
-	changeMaxDate : function() {
-		var dataSourceModel = this.model.get('dataSourceModel');
-		var maxDate = dataSourceModel.get('maxDate');
+	changeDateRange : function() {
+		var dateRange = this.model.get('dataSourceModel').get('dateRange');
+		var $startDate = this.$(datePickers.start.selector);
 		var $endDate = this.$(datePickers.end.selector);
-		$endDate.prop('disabled', !maxDate);
-		$endDate.datepicker('setEndDate', maxDate);
-		$endDate.datepicker('update', maxDate);
 
+		$startDate.prop('disabled', !dateRange.start);
+		$endDate.prop('disabled', !dateRange.end);
+
+		this.updateStartEndDates(dateRange);
+
+		this.model.set('startDate', dateRange.start);
+		this.model.set('endDate', dateRange.end);
 	},
 
 	changeVariables : function() {
@@ -198,24 +229,24 @@ var GDP = GDP || {};
 		var startDate = this.model.get('startDate');
 		var $startDate = this.$(datePickers.start.selector);
 
-		if (null === startDate){
+		if ('' === startDate){
 			$startDate.datepicker('clearDates');
 		}
 		else{
-			$startDate.datepicker('update', startDate);
 			this.$(datePickers.end.selector).datepicker('setStartDate', startDate);
+			$startDate.datepicker('setDate', startDate);
 		}
 	},
 	'changeEndDate' : function(){
 		var endDate = this.model.get('endDate');
 		var $endDate = this.$(datePickers.end.selector);
 
-		if(null === endDate){
+		if('' === endDate){
 			$endDate.datepicker('clearDates');
 		}
 		else{
-			$endDate.datepicker('update', endDate);
 			this.$(datePickers.start.selector).datepicker('setEndDate', endDate);
+			$endDate.datepicker('setDate', endDate);
 		}
 	},
 
@@ -226,8 +257,12 @@ var GDP = GDP || {};
 				emptyPlaceholder : false,
 				sortOptions: false
 		});
-		this.$(datePickers.start.selector).datepicker();
-		this.$(datePickers.end.selector).datepicker();
+		this.$(datePickers.start.selector).datepicker({
+			format : 'm/d/yyyy'
+		});
+		this.$(datePickers.end.selector).datepicker({
+			format : 'm/d/yyyy'
+		});
 		return this;
 	},
 
@@ -239,7 +274,7 @@ var GDP = GDP || {};
 	},
 
 	'setSelectedVariables' : function (ev) {
-		this.model.set('dataSourceVariables', this.$(variablePicker.selector).val());
+		this.model.set('dataVariables', this.$(variablePicker.selector).val());
 	}
 });
 
