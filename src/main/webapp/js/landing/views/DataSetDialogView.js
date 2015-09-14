@@ -39,7 +39,6 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 		 *         class.
 		 */
 		initialize : function(options) {
-			var self = this;
 			this.$el.find('.dataset-dialog-loading-indicator').hide();
 			this.$el.modal({});
 			options = options || {};

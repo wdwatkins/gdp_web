@@ -15,7 +15,9 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 		events : {
 			'change .dataset-search-input' : 'filterByText',
-			'change .algorithm-type-filter' : 'filterByAlgorithm'
+			'change .algorithm-type-filter' : 'filterByAlgorithm',
+			'submit .process-form' : 'goToProcessClient'
+
 		},
 
 		/*
@@ -50,13 +52,12 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 				.value());
 			this.context = {
 				algorithmFilters : _.keys(this.algorithmFilters),
-				aoiMessageContext : this._getAreasOfInterestMessageContext(),
-				incomingParams : GDP.incomingParams,
-				baseUrl : GDP.BASE_URL
+				incomingParams : GDP.incomingParams
 			};
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 			this.welcomeView = new GDP.util.WelcomeView({
+				isLandingPage : true,
 				template : GDP.LANDING.templates.getTemplate('welcome'),
 				el : '.welcome-view-container'
 			});
@@ -131,47 +132,6 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 			}
 
 			this.updateFilteredViews();
-		},
-
-		_getAreasOfInterestMessageContext : function() {
-			var context = {};
-			var parser;
-			var host;
-			var protocol;
-			if (GDP.incomingParams.caller && GDP.incomingParams.item_id) {
-				if (GDP.incomingParams.caller.toLowerCase() === 'sciencebase') {
-					/* We need to build the sciencebase url since its not included in the
-					 * request params.  Params passed in via ScienceBase look like:
-					 * 				caller: "sciencebase"
-					 *		 		development: "false"
-					 *		 		feature_wfs: "https://www.sciencebase.gov/catalogMaps/mapping/ows/54296bf0e4b0ad29004c2fbb"
-					 *		 		feature_wms: "https://www.sciencebase.gov/catalogMaps/mapping/ows/54296bf0e4b0ad29004c2fbb"
-					 *		 		item_id: "54296bf0e4b0ad29004c2fbb"
-					 *		 		ows: "https://www.sciencebase.gov/catalogMaps/mapping/ows/54296bf0e4b0ad29004c2fbb"
-					 *		 		redirect_url: "https://www.sciencebase.gov/catalog/gdp/landing/54296bf0e4b0ad29004c2fbb"
-					 *
-					 *		URL to sciencebase looks like:
-					 *				https://www.sciencebase.gov/catalog/item/54296bf0e4b0ad29004c2fbb
-					 *
-					 * So first thing is to get the request host
-					 */
-					parser = document.createElement('a');
-					parser.href = GDP.incomingParams.redirect_url;
-
-					host = parser.hostname;
-					protocol = parser.protocol;
-					context.sciencebase = {
-						url : protocol + "//" + host + "/catalog/item/" + GDP.incomingParams.item_id
-					};
-				}
-				else {
-					context.defaultCaller = {
-						itemId : GDP.incomingParams.item_id,
-						caller : GDP.incomingParams.caller
-					};
-				}
-			}
-			return context;
 		},
 
 		remove : function() {
