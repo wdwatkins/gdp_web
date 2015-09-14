@@ -201,11 +201,6 @@ var GDP = GDP || {};
 
 		changeDateRange : function() {
 			var dateRange = this.model.get('dataSourceModel').get('dateRange');
-			var $startDate = this.$(datePickers.start.selector);
-			var $endDate = this.$(datePickers.end.selector);
-
-			$startDate.prop('disabled', !dateRange.start);
-			$endDate.prop('disabled', !dateRange.end);
 
 			this.updateStartEndDates(dateRange);
 
@@ -223,11 +218,14 @@ var GDP = GDP || {};
 
 			if ('' === startDate){
 				$startDate.datepicker('clearDates');
+
 			}
 			else{
 				this.$(datePickers.end.selector).datepicker('setStartDate', startDate);
 				$startDate.datepicker('setDate', startDate);
 			}
+			$startDate.prop('disabled', !startDate);
+
 		},
 		'changeEndDate' : function(){
 			var endDate = this.model.get('endDate');
@@ -240,6 +238,9 @@ var GDP = GDP || {};
 				this.$(datePickers.start.selector).datepicker('setEndDate', endDate);
 				$endDate.datepicker('setDate', endDate);
 			}
+
+			$endDate.prop('disabled', !endDate);
+
 		},
 
 		'render' : function () {
