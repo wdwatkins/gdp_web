@@ -1,5 +1,10 @@
 {
     "gdpAlgorithms": {
+	"54dd5e64e4b08de9379b390b": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm",
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm",
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+	],
         "54dd5dffe4b08de9379b38de": [
             "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
