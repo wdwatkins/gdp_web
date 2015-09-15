@@ -26,7 +26,7 @@ var GDP = GDP || {};
 		 * @param {Object} options
 		 *     @prop {String} dataSourceUrl - The catalog url to be used to retrieve the data variables
 		 *     @prop {Boolean} allowCached
-		 *  @returns a promise that is resolved when the variables are succussfully retrieve, otherwise rejected
+		 *  @returns a promise that is resolved when the variables are succussfully retrieve, otherwise rejected with a String error message.
 		 */
 		fetch : function(options) {
 			var self = this;
@@ -58,11 +58,7 @@ var GDP = GDP || {};
 					}
 					// Need to retrieve dates now. The dates are the same for all variables so use the first in the list
 					self.add(_.map(dataCollection, function(c) {
-						return {
-							name : c.name,
-							description : c.description,
-							unitsstring : c.unitsstring
-						};
+						return _.pick(c, 'name', 'description', 'unitsstring');
 					}));
 					deferred.resolve();
 				}
@@ -91,7 +87,7 @@ var GDP = GDP || {};
 		 * This will use the url and variables in the model so these should already be defined
 		 * @param {Object} options
 		 *     @prop {Boolean} allowCached
-		 * @returns {Jquery.promise} - resolved if the dateRange is successfully retrieve, otherwise rejected
+		 * @returns {Jquery.promise} - resolved if the dateRange is successfully retrieve, otherwise rejected with a String error message.
 		 */
 		getDateRange : function(options) {
 			// date range is the same for all variables, so just use the first one in the collection
@@ -163,6 +159,11 @@ var GDP = GDP || {};
 			return deferred.promise();
 		},
 
+		/*
+		 * @param {Object} options
+		 *     @prop {String} dataSourceUrl - The url for a data source.
+		 *     @prop {Boolean} allowCached - Set to true if cached response is acceptable
+		 */
 		fetch : function(options) {
 			var self = this;
 			var deferred = $.Deferred();
@@ -172,7 +173,7 @@ var GDP = GDP || {};
 			variables.fetch(options).done(function() {
 				self.set('variables', variables);
 				self.getDateRange({
-					allowCache : options.allowCache
+					allowCached : options.allowCached
 				}).done(function() {
 					deferred.resolve();
 				}).fail(function(msg) {
@@ -185,7 +186,7 @@ var GDP = GDP || {};
 		}
 	});
 
-    GDP.PROCESS_CLIENT.model.DataSourceVariable = DataSourceVariable;
-    GDP.PROCESS_CLIENT.model.DataSourceVariables = DataSourceVariables;
+	GDP.PROCESS_CLIENT.model.DataSourceVariable = DataSourceVariable;
+	GDP.PROCESS_CLIENT.model.DataSourceVariables = DataSourceVariables;
 	GDP.PROCESS_CLIENT.model.DataSourceModel = DataSourceModel;
 }());
