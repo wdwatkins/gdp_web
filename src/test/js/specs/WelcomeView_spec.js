@@ -9,6 +9,7 @@ describe('WelcomeView', function() {
 	var view, templateSpy;
 
 	beforeEach(function() {
+		GDP.incomingParams = {};
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
 
@@ -29,11 +30,15 @@ describe('WelcomeView', function() {
 	it('Expects that at initialization the template is called with the correct context if hide is not specified', function() {
 		view = new GDP.util.WelcomeView({
 			template : templateSpy,
-			el : '#test-div'
+			el : '#test-div',
+			isLandingPage : true
 		});
 		expect(templateSpy).toHaveBeenCalledWith({
 			button : view.SHOW_WELCOME,
-			hide : false
+			hide : false,
+			incomingParams : {},
+			aoiMessageContext : {},
+			isLandingPage : true
 		});
 	});
 
@@ -41,11 +46,15 @@ describe('WelcomeView', function() {
 		view = new GDP.util.WelcomeView({
 			template : templateSpy,
 			el : '#test-div',
-			hide : true
+			hide : true,
+			isLandingPage : false
 		});
 		expect(templateSpy).toHaveBeenCalledWith({
 			button : view.HIDE_WELCOME,
-			hide : true
+			hide : true,
+			incomingParams : {},
+			aoiMessageContext : {},
+			isLandingPage : false
 		});
 	});
 

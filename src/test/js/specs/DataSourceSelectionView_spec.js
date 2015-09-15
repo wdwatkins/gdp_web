@@ -69,52 +69,9 @@ describe('GDP.LANDING.views.DataSourceSelectionView', function() {
 		$('.dataset-tile-container').remove();
 	});
 
-	it('Expects the template to be called with an empty aoiMessageContext property if no incomingParams defined', function() {
-		GDP.incomingParams = {};
-		testView = new GDP.LANDING.views.DataSourceSelectionView({
-			template : templateSpy,
-			collection : collection
-		});
-
-		expect(templateSpy.calls[0].args[0].aoiMessageContext).toEqual({});
-	});
-
-	it('Expects the template to be called with aoiMessageContext property set to an object with a sciencebase property when caller param is sciencebase', function() {
-		GDP.incomingParams = {
-			caller : 'sciencebase',
-			item_id : '1234',
-			redirect_url : 'http://www.sciencebase.gov/catalog/gdp/1234'
-		};
-		testView = new GDP.LANDING.views.DataSourceSelectionView({
-			template : templateSpy,
-			collection : collection
-		});
-		expect(templateSpy.calls[0].args[0].aoiMessageContext).toEqual({
-			sciencebase : {
-				url : 'http://www.sciencebase.gov/catalog/item/1234'
-			}
-		});
-	});
-
-	it('Expects the template to be called with aoimessageContext property set with a defaultCaller property when called param is not sciencebase', function() {
-		GDP.incomingParams = {
-			caller : 'otherservice',
-			item_id : '1234'
-		};
-		testView = new GDP.LANDING.views.DataSourceSelectionView({
-			template : templateSpy,
-			collection : collection
-		});
-		expect(templateSpy.calls[0].args[0].aoiMessageContext).toEqual({
-			defaultCaller : {
-				itemId : '1234',
-				caller : 'otherservice'
-			}
-		});
-	});
-
 	describe('Tests for getRecords request processing', function() {
 		beforeEach(function() {
+			GDP.incomingParams = {};
 			testView = new GDP.LANDING.views.DataSourceSelectionView({
 				template : templateSpy,
 				collection : collection

@@ -27,9 +27,14 @@ GDP.util = GDP.util || {};
 		 *      @prop {Function} template - returns a function which will render a template
 		 *      @prop {String} el - Jquery selector where this content should be rendered
 		 *      @prop {Boolean} hide - optional. Set to true if content should initially be hidden.
+		 *      @prop {Boolean} isLandingPage. Set to true if you want the full welcome.
 		 */
 		initialize : function(options) {
-			this.context = {};
+			this.context = {
+				aoiMessageContext : this._getAreasOfInterestMessageContext(),
+				incomingParams : GDP.incomingParams,
+				isLandingPage : options.isLandingPage
+			};
 			if (!_.has(options, 'hide')) {
 				options.hide = false;
 			}
@@ -41,6 +46,47 @@ GDP.util = GDP.util || {};
 			}
 			this.context.hide = options.hide;
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
+		},
+
+		_getAreasOfInterestMessageContext : function() {
+			var context = {};
+			var parser;
+			var host;
+			var protocol;
+			if (GDP.incomingParams.caller && GDP.incomingParams.item_id) {
+				if (GDP.incomingParams.caller.toLowerCase() === 'sciencebase') {
+					/* We need to build the sciencebase url since its not included in the
+					 * request params.  Params passed in via ScienceBase look like:
+					 * 				caller: "sciencebase"
+					 *		 		development: "false"
+					 *		 		feature_wfs: "https://www.sciencebase.gov/catalogMaps/mapping/ows/54296bf0e4b0ad29004c2fbb"
+					 *		 		feature_wms: "https://www.sciencebase.gov/catalogMaps/mapping/ows/54296bf0e4b0ad29004c2fbb"
+					 *		 		item_id: "54296bf0e4b0ad29004c2fbb"
+					 *		 		ows: "https://www.sciencebase.gov/catalogMaps/mapping/ows/54296bf0e4b0ad29004c2fbb"
+					 *		 		redirect_url: "https://www.sciencebase.gov/catalog/gdp/landing/54296bf0e4b0ad29004c2fbb"
+					 *
+					 *		URL to sciencebase looks like:
+					 *				https://www.sciencebase.gov/catalog/item/54296bf0e4b0ad29004c2fbb
+					 *
+					 * So first thing is to get the request host
+					 */
+					parser = document.createElement('a');
+					parser.href = GDP.incomingParams.redirect_url;
+
+					host = parser.hostname;
+					protocol = parser.protocol;
+					context.sciencebase = {
+						url : protocol + "//" + host + "/catalog/item/" + GDP.incomingParams.item_id
+					};
+				}
+				else {
+					context.defaultCaller = {
+						itemId : GDP.incomingParams.item_id,
+						caller : GDP.incomingParams.caller
+					};
+				}
+			}
+			return context;
 		},
 
 		hideWelcome : function() {

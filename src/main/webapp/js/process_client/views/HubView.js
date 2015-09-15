@@ -58,7 +58,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			this.childViews.welcomeView = new GDP.util.WelcomeView({
 				template : GDP.PROCESS_CLIENT.templates.getTemplate('welcome'),
 				el : '.welcome-view-container',
-				hide : this.model.get('dataSetModel') !== null
+				hide : this.model.get('dataSetModel') !== null,
+				isLandingPage : false
 			});
 
 			this.childViews.alertView = new GDP.util.AlertView({
@@ -77,7 +78,6 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				var $metadataTile = self.$el.find('#dataset-metadata-wrapper');
 
 				self.$el.find('.loading-indicator').hide();
-				self.childViews.welcomeView.hideWelcome();
 				self.$el.find('.hub-tile').show();
 				self.childViews.spatialMapView = new GDP.PROCESS_CLIENT.view.HubSpatialMapView({
 					model : self.model,
