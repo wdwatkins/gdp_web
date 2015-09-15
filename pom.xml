@@ -331,10 +331,10 @@
 						<source>webjars/backbone.js</source>
 						<source>webjars/handlebars.js</source>
 						<source>webjars/OpenLayers.js</source>
-						<source>webjars/bootstrap-datepicker.js</source>
 						<source>webjars/jquery-ui.js</source>
 						<source>webjars/jquery.fileupload.js</source>
 						<source>vendor/jQuery.download.js</source>
+						<source>webjars/bootstrap-datepicker.js</source>
 					</preloadSources>
 					<sourceIncludes>
 						<include>util/**.js</include>

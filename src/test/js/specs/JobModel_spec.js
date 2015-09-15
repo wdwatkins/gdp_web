@@ -201,18 +201,6 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 		expect(jobModel.getProcessInputs()).toBe(null);
 	});
 
-	it('Expects getSelectedDataSourceVariables to return an array of DataSourceVariables for those in jobModel whose selected attribute is true', function() {
-			var var1 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text1', value : 'value1', selected : true});
-			var var2 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text2', value : 'value2', selected : true});
-			var var3 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text3', value : 'value3', selected : false});
-
-			jobModel.get('dataSourceVariables').reset([var1, var2, var3]);
-			var result = jobModel.getSelectedDataSourceVariables();
-			expect(result.length).toBe(2);
-			expect(result).toContain(var1);
-			expect(result).toContain(var2);
-	});
-
 	it('Expects getProcessInputs to return the inputs minus excluded inputs', function() {
 		jobModel.set('algorithmId', 'gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm');
 		var inputs = jobModel.getProcessInputs();
@@ -330,11 +318,7 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 		});
 
 		it('Expects DATASET_ID to be assigned to the values in the selected DataSourceVariables', function() {
-			var var1 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text1', value : 'value1', selected : true});
-			var var2 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text2', value : 'value2', selected : true});
-			var var3 = new GDP.PROCESS_CLIENT.model.DataSourceVariable({text : 'Text3', value : 'value3', selected : false});
-
-			jobModel.get('dataSourceVariables').reset([var1, var2, var3]);
+			jobModel.set('dataVariables',['value1', 'value2']);
 			var result = getWPSStringInputsResult();
 			expect(result.DATASET_ID.length).toBe(2);
 			expect(result.DATASET_ID).toContain('value1');

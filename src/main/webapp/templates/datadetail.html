@@ -3,13 +3,10 @@
 	<div class="col-sm-12" id="messages-div"></div>	
 	<form class="panel-body">
 		<div class="form-group">
-			{{#if dataSources}}
+			{{#if hasDataSources}}
 			<label for="data-source-select">Data Source</label>
 			<select id="data-source-select" class="form-control" required>
 				<option></option>
-				{{#each dataSources}}
-				<option value="{{this.url}}" {{defaultSelected this.url ../dataSourceUrl}}>{{this.title}}</option>
-				{{/each}}
 			</select>
 			{{else}}
 			<label for="data-source-url">Data Source URL</label>
@@ -29,9 +26,9 @@
 		<div class="form-horizontal">
 			<div class="form-group input-daterange">
 				<label for="start-date">Date Range</label>
-				<input id="start-date" class="form-control" type="text" required disabled/>
+				<input id="start-date" class="form-control" type="text" required {{#if startDate}}{{else}}disabled{{/if}} value="{{startDate}}"/>
 				<label for="end-date">to</label>
-				<input id="end-date" class="form-control" type="text" required disabled/>
+				<input id="end-date" class="form-control" type="text" required {{#if endDate}}{{else}}disabled{{/if}} value="{{endDate}}"/>
 			</div>
 		</div>
 		<div class="row center-block">

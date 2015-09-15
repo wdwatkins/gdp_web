@@ -45,14 +45,12 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		 * @param {Object} -
 		 *      @prop {Function} template - page template function
 		 *      @prop {Function} metadataTemplate - template to be used to render the metadat tile contents
-		 *      @prop {Function} wps - instance of the GDP.OGC.wps function
 		 *      @prop {Object} model - instance of GDP.PROCESS_CLIENT.model.JobModel
 		 *      @prop {String} datasetId - can be null .
 		 */
 
 		initialize : function(options) {
 			var self = this;
-			this.wps = options.wps;
 			this.routePrefix = options.datasetId ? '#!catalog/gdp/dataset/' + options.datasetId  : '#!advanced';
 
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
@@ -158,14 +156,14 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				// We now have all the information we need to get started
 				self.childViews.alertView.show('alert-info', 'Process status: started');
 
-				executePromise = self.wps.sendWpsExecuteRequest(
+				executePromise = GDP.wpsClient.sendWpsExecuteRequest(
 					GDP.config.get('application').endpoints.processWps + '/WebProcessingService',
 					self.model.get('algorithmId'),
 					wpsStringInputs,
 					['OUTPUT'],
 					true,
 					{
-						'FEATURE_COLLECTION' : [self.wps.createWfsWpsReference(GDP.config.get('application').serviceEndpoints.wfs, xmlInputs)]
+						'FEATURE_COLLECTION' : [GDP.wpsClient.createWfsWpsReference(GDP.config.get('application').serviceEndpoints.wfs, xmlInputs)]
 					},
 					false,
 					'xml',
@@ -236,7 +234,9 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 							emailWPSInputs.filename = [filename];
 						}
 
-						self.wps.sendWpsExecuteRequest(
+						if (self.model.get)
+
+						GDP.wpsClient.sendWpsExecuteRequest(
 							GDP.config.get('application').endpoints.utilityWps + '/WebProcessingService',
 							self.EMAIL_WHEN_FINISHED_ALGORITHM,
 							emailWPSInputs,

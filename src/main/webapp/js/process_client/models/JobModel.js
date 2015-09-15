@@ -34,18 +34,13 @@ var GDP = GDP || {};
 			dataSetModel : null,
 			//data details
 			dataSourceUrl : null,
-			invalidDataSourceUrl : true,
-			dataSourceVariables : new GDP.PROCESS_CLIENT.model.DataSourceVariables(),
+			//details about the selected dataSourceUrl
+			dataSourceModel : new GDP.PROCESS_CLIENT.model.DataSourceModel(),
 
-			//the earliest date the user can select
-			minDate: null,
-
-			//the latest date the user can select
-			maxDate: null,
-
+			dataVariables : [],
 			//the dates the user actually selected
-			startDate: null,
-			endDate: null,
+			startDate: '',
+			endDate: '',
 
 			//spatial details:
 			aoiName : '',
@@ -67,7 +62,8 @@ var GDP = GDP || {};
 		/*
 		 * @param {String} datasetId - Id of dataset to retrieve from sciencebase
 		 * @returns {jquery.Promise} - This promise is resolve if the data set model does not need to be updated or if it is
-		 * successfully updated. The promise is rejected if updating the datset failed. The dataSetModel property is also cleared.
+		 * successfully updated. The promise is rejected if updating the dataset failed and an error message is returned.
+		 * The dataSetModel property is also cleared.
 		 */
 		updateDataSetModel : function(datasetId) {
 			var dataSetModel = this.get('dataSetModel');
@@ -89,12 +85,12 @@ var GDP = GDP || {};
 						}
 						else {
 							dataSetModel.clear();
-							deferred.reject();
+							deferred.reject('No dataset record returned for ' + datasetId);
 						}
-					}).fail(function() {
+					}).fail(function(msg) {
 						GDP.logger.error('Could not GetRecordsById for ' + datasetId);
 						dataSetModel.clear();
-						deferred.reject();
+						deferred.reject(msg);
 					});
 				}
 				else { // Already set
@@ -171,14 +167,6 @@ var GDP = GDP || {};
 		},
 
 		/*
-		 * Return the data source variables whose selected attribute is true.
-		 * @returns {Array of GDP.PROCESS_CLIENT.model.DataSourceVariables}
-		 */
-		getSelectedDataSourceVariables : function() {
-			return this.get('dataSourceVariables').where({'selected' : true});
-		},
-
-		/*
 		 * Returns the inputs that are comprise the inputs to be used as processVariables.
 		 * @returns {Object} or null if no algorithm has been selected
 		 */
@@ -214,11 +202,9 @@ var GDP = GDP || {};
 
 			var getDataSourceUrl = this.getWCSDataSourceUrl();
 
-			/* The following property always need to be specified */
+			/* The following property always need to be specified. It should contain the array of selected variables*/
 			var result = {
-				DATASET_ID : _.map(this.getSelectedDataSourceVariables(), function(model) {
-					return model.get('value');
-				})
+				DATASET_ID : this.get('dataVariables')
 			};
 
 			/* The rest of the properties should only be specified if in validInputs */
@@ -337,7 +323,7 @@ var GDP = GDP || {};
 				result.push('Enter a valid data source url and select variables.');
 			}
 			else {
-				if (this.getSelectedDataSourceVariables().length === 0) {
+				if (this.get('dataVariables').length === 0) {
 					result.push('Select at least one variable');
 				}
 				if (!this.get('startDate') && !this.get('endDate')) {
