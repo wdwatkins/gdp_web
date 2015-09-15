@@ -62,7 +62,8 @@ var GDP = GDP || {};
 		/*
 		 * @param {String} datasetId - Id of dataset to retrieve from sciencebase
 		 * @returns {jquery.Promise} - This promise is resolve if the data set model does not need to be updated or if it is
-		 * successfully updated. The promise is rejected if updating the datset failed. The dataSetModel property is also cleared.
+		 * successfully updated. The promise is rejected if updating the dataset failed and an error message is returned.
+		 * The dataSetModel property is also cleared.
 		 */
 		updateDataSetModel : function(datasetId) {
 			var dataSetModel = this.get('dataSetModel');
@@ -201,7 +202,7 @@ var GDP = GDP || {};
 
 			var getDataSourceUrl = this.getWCSDataSourceUrl();
 
-			/* The following property always need to be specified */
+			/* The following property always need to be specified. It should contain the array of selected variables*/
 			var result = {
 				DATASET_ID : this.get('dataVariables')
 			};

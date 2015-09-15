@@ -234,6 +234,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 							emailWPSInputs.filename = [filename];
 						}
 
+						if (self.model.get)
+
 						GDP.wpsClient.sendWpsExecuteRequest(
 							GDP.config.get('application').endpoints.utilityWps + '/WebProcessingService',
 							self.EMAIL_WHEN_FINISHED_ALGORITHM,
