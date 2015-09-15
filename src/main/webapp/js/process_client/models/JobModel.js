@@ -66,6 +66,7 @@ var GDP = GDP || {};
 		 * The dataSetModel property is also cleared.
 		 */
 		updateDataSetModel : function(datasetId) {
+			var self = this;
 			var dataSetModel = this.get('dataSetModel');
 			if (!dataSetModel) {
 				dataSetModel = new GDP.models.DataSetModel();
@@ -81,6 +82,10 @@ var GDP = GDP || {};
 						if (response.records.length > 0){
 							dataSetModel.clear();
 							dataSetModel.set(dataSetModel.parse(response.records[0]));
+							if (dataSetModel.get('dataSources').length === 1) {
+								// auto assign the dataSourceUrl property if only one data source in the data set.
+								self.set('dataSourceUrl', dataSetModel.get('dataSources')[0].url);
+							}
 							deferred.resolve();
 						}
 						else {

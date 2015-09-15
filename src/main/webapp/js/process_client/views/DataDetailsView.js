@@ -104,6 +104,8 @@ var GDP = GDP || {};
 
 			getDataSetModelPromise.done(function() {
 				var dataSourceModel = self.model.get('dataSourceModel');
+				var dataSetModel = self.model.get('dataSetModel');
+				var dataSourceUrl = self.model.get('dataSourceUrl');
 
 				self.listenTo(self.model, 'change:dataSourceUrl', self.changeUrl);
 				self.listenTo(dataSourceModel, 'change:variables', self.updateVariables);
@@ -115,6 +117,7 @@ var GDP = GDP || {};
 				if (_.has(self, 'dataSourceSelectMenuView')) {
 					self.dataSourceSelectMenuView.updateMenuOptions(self.getDataSourceOptions());
 				}
+
 				self.updateVariables();
 				self.changeVariables();
 
@@ -123,6 +126,11 @@ var GDP = GDP || {};
 
 				// Set datePickers start and end dates
 				self.updateStartEndDates(dataSourceModel.get('dateRange'));
+
+				if ((dataSourceUrl) && (dataSourceUrl !== dataSourceModel.get('url'))) {
+					// The model contains a data source URL but not a filled in dataSourceModel
+					self.changeUrl();
+				}
 			});
 		},
 
