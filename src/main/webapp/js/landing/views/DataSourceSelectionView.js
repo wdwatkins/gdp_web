@@ -15,9 +15,7 @@ GDP.LANDING.views = GDP.LANDING.views || {};
 
 		events : {
 			'change .dataset-search-input' : 'filterByText',
-			'change .algorithm-type-filter' : 'filterByAlgorithm',
-			'submit .process-form' : 'goToProcessClient'
-
+			'change .algorithm-type-filter' : 'filterByAlgorithm'
 		},
 
 		/*
