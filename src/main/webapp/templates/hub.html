@@ -6,6 +6,9 @@
 <div id="job-results-div">
 	<button id="retrieve-output-btn" class="btn btn-primary">Retrieve Output</button>
 	<button id="retrieve-input-btn" class="btn btn-primary">Retrieve Process Input</button>
+	{{#if isFromScienceBase }}
+	<button id="save-to-sb-btn" class="btn btn-primary">Save to Sciencebase</button>
+	{{/if}}
 </div>
 <div id="tiles-div">
 	<div class="loading-indicator"><i class="fa fa-5x fa-spinner fa-spin"></i></div>

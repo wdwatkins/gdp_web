@@ -207,7 +207,7 @@ GDP.util.mapUtils = (function() {
 									layers : dataSourceLayer.name
 								},
 								{
-									opacity : 0.2,
+									opacity : 0.5,
 									displayInLayerSwitcher : false,
 									visibility : true,
 									isBaseLayer : false,

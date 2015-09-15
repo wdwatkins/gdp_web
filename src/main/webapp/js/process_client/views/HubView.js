@@ -20,7 +20,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			'click #edit-process-btn' : 'goToProcessPage',
 			'click #submit-job-btn' : 'submitProcessingRequest',
 			'click #retrieve-output-btn' : 'downloadResults',
-			'click #retrieve-input-btn' : 'downloadProcessInputs'
+			'click #retrieve-input-btn' : 'downloadProcessInputs',
+			'click #save-to-sb-btn' : 'saveToSciencebase'
 		},
 
 		render: function () {
@@ -34,7 +35,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				selectedProcess : (process) ? process.attributes : '',
 				processInputs : this.model.getProcessInputs(),
 				messages : messages,
-				invalidJob : invalidJob
+				invalidJob : invalidJob,
+				isFromScienceBase : GDP.incomingParams.caller ? (GDP.incomingParams.caller === 'sciencebase') : false
 			}));
 
 
@@ -234,7 +236,9 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 							emailWPSInputs.filename = [filename];
 						}
 
-						if (self.model.get)
+						if (GDP.incomingParams.caller.toLowerCase() === 'sciencebase') {
+							emailWPSInputs['callback-base-url'] = [GDP.incomingParams.redirect_url + '?result='];
+						}
 
 						GDP.wpsClient.sendWpsExecuteRequest(
 							GDP.config.get('application').endpoints.utilityWps + '/WebProcessingService',
@@ -291,6 +295,12 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			var statusId = this.resultsModel.get('statusId');
 			var data = 'id=' + statusId + '&attachment=true';
 			$.download(url, data, 'get');
+		},
+
+		saveToSciencebase : function() {
+			window.location = GDP.incomingParams.redirect_url + '?result=' + this.resultsModel.get('outputURL') + '?id=' +
+				this.resultsModel.get('statusId');
+
 		}
 	});
 }());
