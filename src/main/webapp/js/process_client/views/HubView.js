@@ -86,12 +86,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 					mapDiv : 'hub-spatial-inset-map'
 				});
 
-				if ((_.has(dataSources, 'length')) && (dataSources.length === 1) && (!self.model.get('dataSourceUrl'))) {
-					// Set the dataSourceUrl in the job model.
-					self.model.set('dataSourceUrl', dataSources[0].url);
-					self.model.set('invalidDataSourceUrl', false);
-					self.$('.data-source-url-selection').html(dataSources[0].url);
-				}
+				self.$('.data-source-url-selection').html(self.model.get('dataSourceUrl'));
 
 				if (datasetModel.has('identifier')) {
 					$metadataTile.find('.panel-body').html(options.metadataTemplate(datasetModel.attributes));

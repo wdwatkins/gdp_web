@@ -417,7 +417,7 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 			jobModel.get('dataSetModel').set({identifier : 'ID1'});
 		});
 
-		it('Expects that if the datasetId id is null except for algorithms', function() {
+		it('Expects that if the datasetId id is null that algorithms are still defined', function() {
 			var promise = jobModel.updateDataSetModel();
 
 			expect(GDP.cswClient.requestGetRecordById).not.toHaveBeenCalled();
