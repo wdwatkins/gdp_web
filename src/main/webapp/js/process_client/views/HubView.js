@@ -36,7 +36,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				processInputs : this.model.getProcessInputs(),
 				messages : messages,
 				invalidJob : invalidJob,
-				isFromScienceBase : GDP.incomingParams.caller.toLowerCase() === 'sciencebase'
+				isFromScienceBase : GDP.incomingParams.caller ? (GDP.incomingParams.caller === 'sciencebase') : false
 			}));
 
 

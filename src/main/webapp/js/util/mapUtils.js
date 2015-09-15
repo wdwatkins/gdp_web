@@ -153,7 +153,7 @@ GDP.util.mapUtils = (function() {
 			strokeOpacity : 0.2,
 			strokeWidth : 1,
 			fillColor : '#440000',
-			fillOpacity : 0.5
+			fillOpacity : 0.2
 		});
 		var boundsLayer = new OpenLayers.Layer.Vector('Dataset extent');
 		boundsLayer.addFeatures([boundsFeature]);
@@ -207,7 +207,7 @@ GDP.util.mapUtils = (function() {
 									layers : dataSourceLayer.name
 								},
 								{
-									opacity : 0.2,
+									opacity : 0.5,
 									displayInLayerSwitcher : false,
 									visibility : true,
 									isBaseLayer : false,
