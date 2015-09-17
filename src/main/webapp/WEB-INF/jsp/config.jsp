@@ -203,11 +203,17 @@
 				],
 				"outputs" : [
 					{
-						"identifier" : "OUTPUT",
-						"title" : "Output File",
+						"identifier" : "NETCDF_OUTPUT",
+						"title" : "NetCDF File",
 						"abstract" : "A NetCDF file containing requested data.",
 						"output-type" : "complex",
 						"format" : "application/netcdf"
+					},{
+						"identifier" : "GEOTIFF",
+						"title" : "GeoTIFF",
+						"abstract" : "A GeoTIFF file containing the requested data.",
+						"output-type" : "complex",
+						"format" : "application/zip"
 					}
 				]
 			},
@@ -510,7 +516,7 @@
 							{
 								"format" : {
 									"mime-type" : "text/xml",
-									"schema" : "http://schemas.opengis.net/gml/2.1.1/feature.xsd<"
+									"schema" : "http://schemas.opengis.net/gml/2.1.1/feature.xsd"
 								}
 							}
 						],
@@ -631,7 +637,7 @@
 						"abstract" : "A delimited text file containing requested process output.",
 						"output-type" : "complex",
 						"format" : "text/csv"
-					}
+					}	
 				]
 			}
 		]
