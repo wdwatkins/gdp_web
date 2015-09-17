@@ -97,7 +97,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			var targetId = evt.target.id;
 			var algorithmName = _.last(targetId.split('-'));
 
-			this.algorithmConfigView = this.algorithmConfigView.remove();
+			this.algorithmConfigView.remove();
 			this.model.get('processVariables').clear({silent : true});
 			this.model.set('algorithmId', this.model.get('processes').findWhere({'name': algorithmName}).get('id'));
 			// initialize processVariables from the defaults in the selected process.
