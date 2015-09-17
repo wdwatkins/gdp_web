@@ -55,6 +55,7 @@ var GDP = GDP || {};
 
 			processVariables : new GDP.PROCESS_CLIENT.model.ProcessVariablesModel(), // These will vary depending on the process algorithm selected
 
+			outputFormat : '',
 			email : '',
 			filename : ''
 		},
@@ -188,6 +189,19 @@ var GDP = GDP || {};
 		},
 
 		/*
+		 * @returns {String or array of string} - outputs for the selected algorithm
+		 */
+		getProcessOutputs : function() {
+			var algorithm = this.getSelectedAlgorithmProcess();
+			if (algorithm) {
+				return algorithm.get('outputs');
+			}
+			else {
+				return [];
+			}
+		},
+
+		/*
 		 * Returns a promise where resolve data is an {Object} where each property represents a simple input to the WPS process.
 		 *     Each property value is an array.
 		 * @returns $.Deferred.promise.
@@ -273,8 +287,9 @@ var GDP = GDP || {};
 		 * @returns {String} - represents the mimeType of the current Job. Note that this can be the empty string
 		 */
 		getMimeType : function() {
-			var mimeType = '';
+			var mimeType = this.get('outputFormat').format;
 			var delimiter = this.get('processVariables').get('DELIMITER');
+			// Override if delimiter specified
 			if (delimiter === 'TAB') {
 				mimeType = 'text/tab-separated-values';
 			}

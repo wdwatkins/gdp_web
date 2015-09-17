@@ -9,8 +9,6 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 	"use strict";
 	GDP.PROCESS_CLIENT.view.ProcessView = GDP.util.BaseView.extend({
 
-		algorithmConfigView : null,
-
 		events : {
 			"click .menu-dropdown-select-process" : "selectProcess",
 			"submit form" : "goToHubPage"
@@ -99,7 +97,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			var targetId = evt.target.id;
 			var algorithmName = _.last(targetId.split('-'));
 
-			this.algorithmConfigView.remove();
+			this.algorithmConfigView = this.algorithmConfigView.remove();
 			this.model.get('processVariables').clear({silent : true});
 			this.model.set('algorithmId', this.model.get('processes').findWhere({'name': algorithmName}).get('id'));
 			// initialize processVariables from the defaults in the selected process.
@@ -110,6 +108,11 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			});
 			this.model.get('processVariables').set(processVars);
 
+			var processOutputs = this.model.getProcessOutputs();
+			if (processOutputs.length > 0) {
+				this.model.set('outputFormat', processOutputs[0]);
+			}
+
 			this.algorithmConfigView = new GDP.PROCESS_CLIENT.view.AlgorithmConfigView({
 				template : this.algorithmTemplate,
 				model : this.model,
@@ -118,7 +121,9 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 		},
 
 		remove : function() {
-			this.algorithmConfigView.remove();
+			if (_.has(this, 'algorithmConfigView')) {
+				this.algorithmConfigView.remove();
+			}
 			GDP.util.BaseView.prototype.remove.apply(this, arguments);
 		},
 

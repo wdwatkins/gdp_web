@@ -203,11 +203,17 @@
 				],
 				"outputs" : [
 					{
-						"identifier" : "OUTPUT",
-						"title" : "Output File",
+						"identifier" : "NETCDF_OUTPUT",
+						"title" : "NetCDF File",
 						"abstract" : "A NetCDF file containing requested data.",
 						"output-type" : "complex",
 						"format" : "application/netcdf"
+					},{
+						"identifier" : "GEOTIFF",
+						"title" : "GeoTIFF",
+						"abstract" : "A GeoTIFF file containing the requested data.",
+						"output-type" : "complex",
+						"format" : "application/zip"
 					}
 				]
 			},
@@ -631,10 +637,10 @@
 						"abstract" : "A delimited text file containing requested process output.",
 						"output-type" : "complex",
 						"format" : "text/csv"
-					}
+							}
+						]
+					}	
 				]
-			}
-		]
 	},
 	"map" : {
 		"extent" : {

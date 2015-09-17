@@ -14,6 +14,7 @@ GDP.PROCESS_CLIENT.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 		'change #process-algorithm-configuration-description input[type="text"]' : 'changeTextProcessVariable',
 		'change #process-algorithm-configuration-description input[type="checkbox"]' : 'changeBooleanProcessVariable',
 		'change #process-algorithm-configuration-description select' : 'changeSelectProcessVariable',
+		'change #output-format-input' : 'changeOutputFormat',
 		'change #email' : 'changeEmail',
 		'change #filename' : 'changeFilename'
 	},
@@ -50,11 +51,13 @@ GDP.PROCESS_CLIENT.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 		"use strict";
 
 		var processInputs = this.model.getProcessInputs();
+		var processOutputs = this.model.getProcessOutputs();
 
 		if (processInputs) {
 			this.$el.html(this.template({
 				"job" : this.model.attributes,
-				"inputs" : processInputs
+				"inputs" : processInputs,
+				"outputs" : (processOutputs.length > 1) ? processOutputs : []
 			}));
 		}
 		return this;
@@ -105,6 +108,14 @@ GDP.PROCESS_CLIENT.view.AlgorithmConfigView = GDP.util.BaseView.extend({
 		newVal[key] = $(ev.target).val();
 
 		processVariables.set(newVal, key);
+	},
+
+	changeOutputFormat : function(ev) {
+		"use strict";
+		var processOutputs = this.model.getProcessOutputs();
+		this.model.set('outputFormat', _.find(processOutputs, function(output) {
+			return output.format === ev.target.value;
+		}));
 	},
 
 	changeEmail : function(ev) {

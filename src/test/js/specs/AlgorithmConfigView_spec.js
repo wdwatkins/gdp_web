@@ -253,7 +253,8 @@ describe('GDP.PROCESS_CLIENT.view.AlgorithmConfigView', function() {
 			];
 			expect(templateSpy).toHaveBeenCalledWith({
 				job : jobModel.attributes,
-				inputs : expectedResult
+				inputs : expectedResult,
+				outputs : []
 			});
 		});
 
