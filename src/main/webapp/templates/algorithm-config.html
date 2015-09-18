@@ -44,17 +44,6 @@
 			{{/ifAlgorithmInputTypeIsComplex}}
 		{{/each}}
 		</div>
-
-		{{#if outputs}}
-		<div class="form-group">
-			<label for="output-format-input">Output Format</label>
-			<select id="output-format-input" class="form-control">
-				{{#each outputs}}
-				<option value="{{format}}" {{defaultSelected format ../job.outputFormat}}>{{title}}</option>
-				{{/each}}
-			</select>
-		</div>
-		{{/if}}
 		
 		<div id="process-algorithm-execution-definition">
 			<label for="email">

@@ -199,21 +199,29 @@
 						"data-type" : "dateTime",
 						"minOccurs" : "0",
 						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "OUTPUT_TYPE",
+						"title" : "Output Format Type",
+						"abstract" : "The output type format for this request. Current implementations: netcdf and geotiff.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"options" : [
+							"netcdf",
+							"geotiff"
+						],
+						"default" : "netcdf",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
 					}
 				],
 				"outputs" : [
 					{
-						"identifier" : "NETCDF_OUTPUT",
-						"title" : "NetCDF File",
+						"identifier" : "OUTPUT",
+						"title" : "Output File",
 						"abstract" : "A NetCDF file containing requested data.",
 						"output-type" : "complex",
 						"format" : "application/netcdf"
-					},{
-						"identifier" : "GEOTIFF",
-						"title" : "GeoTIFF",
-						"abstract" : "A GeoTIFF file containing the requested data.",
-						"output-type" : "complex",
-						"format" : "application/zip"
 					}
 				]
 			},
@@ -516,7 +524,7 @@
 							{
 								"format" : {
 									"mime-type" : "text/xml",
-									"schema" : "http://schemas.opengis.net/gml/2.1.1/feature.xsd"
+									"schema" : "http://schemas.opengis.net/gml/2.1.1/feature.xsd<"
 								}
 							}
 						],
@@ -637,7 +645,7 @@
 						"abstract" : "A delimited text file containing requested process output.",
 						"output-type" : "complex",
 						"format" : "text/csv"
-					}	
+					}
 				]
 			}
 		]
