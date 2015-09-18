@@ -274,7 +274,10 @@ var GDP = GDP || {};
 		 */
 		getMimeType : function() {
 			var mimeType = '';
-			var delimiter = this.get('processVariables').get('DELIMITER');
+			var processVariables = this.get('processVariables');
+			var delimiter = processVariables.get('DELIMITER');
+			var outputType = processVariables.get('OUTPUT_TYPE');
+
 			if (delimiter === 'TAB') {
 				mimeType = 'text/tab-separated-values';
 			}
@@ -283,6 +286,9 @@ var GDP = GDP || {};
 			}
 			else if (delimiter === 'COMMA') {
 				mimeType = 'text/csv';
+			}
+			else if (outputType === 'geotiff') {
+				mimeType = "application/zip";
 			}
 			return mimeType;
 		},

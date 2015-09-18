@@ -199,6 +199,20 @@
 						"data-type" : "dateTime",
 						"minOccurs" : "0",
 						"maxOccurs" : "1"
+					},
+					{
+						"identifier" : "OUTPUT_TYPE",
+						"title" : "Output Format Type",
+						"abstract" : "The output type format for this request. Current implementations: netcdf and geotiff.",
+						"input-type" : "literal",
+						"data-type" : "string",
+						"options" : [
+							"netcdf",
+							"geotiff"
+						],
+						"default" : "netcdf",
+						"minOccurs" : "1",
+						"maxOccurs" : "1"
 					}
 				],
 				"outputs" : [

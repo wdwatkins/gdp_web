@@ -226,6 +226,12 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 			jobModel.get('processVariables').set('DELIMITER', 'COMMA');
 			expect(jobModel.getMimeType()).toEqual('text/csv');
 		});
+
+		it('Expects that if OUTPUT_TYPE is set to geotriff, the mimetype is application/zip', function() {
+			jobModel.get('processVariables').set('DELIMITER', '');
+			jobModel.get('processVariables').set('OUTPUT_TYPE', 'geotiff');
+			expect(jobModel.getMimeType()).toEqual('application/zip');
+		})
 	});
 
 	describe('Tests for getWCSDataSourceUrl', function() {
