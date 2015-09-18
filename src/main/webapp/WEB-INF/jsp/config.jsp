@@ -516,7 +516,7 @@
 							{
 								"format" : {
 									"mime-type" : "text/xml",
-									"schema" : "http://schemas.opengis.net/gml/2.1.1/feature.xsd"
+									"schema" : "http://schemas.opengis.net/gml/2.1.1/feature.xsd<"
 								}
 							}
 						],
@@ -637,10 +637,10 @@
 						"abstract" : "A delimited text file containing requested process output.",
 						"output-type" : "complex",
 						"format" : "text/csv"
+							}
+						]
 					}	
 				]
-			}
-		]
 	},
 	"map" : {
 		"extent" : {
