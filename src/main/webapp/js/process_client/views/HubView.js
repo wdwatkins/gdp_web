@@ -34,7 +34,6 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				areAllAOIVariablesSelected : this.model.attributes.aoiAttributeValues === this.model.SELECT_ALL_AOI_ATTRIBUTE_VALUES,
 				selectedProcess : (process) ? process.attributes : '',
 				processInputs : this.model.getProcessInputs(),
-				showOutputFormat : this.model.getProcessOutputs().length > 1,
 				messages : messages,
 				invalidJob : invalidJob,
 				isFromScienceBase : GDP.incomingParams.caller ? (GDP.incomingParams.caller === 'sciencebase') : false

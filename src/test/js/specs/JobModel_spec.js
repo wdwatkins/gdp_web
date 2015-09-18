@@ -208,9 +208,8 @@ describe('GDP.PROCESS_CLIENT.model.Job', function() {
 	});
 
 	describe('Tests for getMimeType', function() {
-		it('Expects that if DELIMITER is not set as a process variable then the format is set from the outputFormat property is returned', function() {
-			jobModel.set('outputFormat', { format : 'application/geotiff'});
-			expect(jobModel.getMimeType()).toEqual('application/geotiff');
+		it('Expects that if DELIMITER is not set as a process variable then a null string is returned', function() {
+			expect(jobModel.getMimeType()).toEqual('');
 		});
 
 		it('Expects that if DELIMITER is set to tab, the mimetype is for tsv', function() {

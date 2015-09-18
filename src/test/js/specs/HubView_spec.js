@@ -59,7 +59,6 @@ describe('GDP.PROCESS_CLIENT.view.HubView', function() {
 			model.get('dataSetModel').set('dataSources', []);
 			return datasetDeferred.promise();
 		});
-		spyOn(model, 'getProcessOutputs').andReturn([]);
 		datasetDeferred.resolve();
 		templateSpy = jasmine.createSpy('templateSpy');
 
