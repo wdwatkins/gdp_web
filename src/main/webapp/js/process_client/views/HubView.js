@@ -231,7 +231,7 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 							emailWPSInputs.filename = [filename];
 						}
 
-						if (GDP.incomingParams.caller.toLowerCase() === 'sciencebase') {
+						if (_.has(GDP.incomingParams, 'caller') && (GDP.incomingParams.caller.toLowerCase() === 'sciencebase')) {
 							emailWPSInputs['callback-base-url'] = [GDP.incomingParams.redirect_url + '?result='];
 						}
 
