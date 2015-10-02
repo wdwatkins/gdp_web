@@ -1,0 +1,52 @@
+<div class="welcome-view-container"></div>
+<div class="dataset-select-container">
+	
+	<div class="dataset-tile-panel-div panel panel-default">
+		<div class="panel-heading">
+			 <h2 class="panel-title">Dataset Selection</h2>
+		</div>
+		<div class="panel-body">
+			<div class="dataset-filter-container">
+				<div class="dataset-filter">
+					<div>Search&nbsp;</div>
+					<input type="text" class="dataset-search-input" />
+				</div>
+				<div class="dataset-filter">
+					<div>Algorithms</div>
+					{{#each algorithmFilters}}
+					<div class="algorithm-filter-container">
+						<input type="checkbox" id="algorithm{{@index}}" class="algorithm-type-filter" value="{{this}}" />
+						<label for="algorithm{{@index}}">{{this}}
+					</div>
+					{{/each}}
+				</div>
+			</div>
+			<div class="dataset-tile-container">
+			<div class="text-center tile-loading-indicator"><i class="fa fa-spin fa-refresh fa-4x"></i></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" aria-labelledby="data-set-modal-dialog-label" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Select Data Source</h4>
+			</div>
+			<div class="modal-body container-fluid">
+				<div class="dataset-dialog-loading-indicator text-center"><i class="fa fa-spin fa-refresh fa-5x"></i></div>
+				<div class="dataset-dialog-contents"></div>
+			</div>
+			<div class="modal-footer">
+				<form class="process-form" method="POST">
+					<button type="button" class="btn btn-default cancel-btn">Cancel</button>
+					{{#each incomingParams}}
+						<input type="hidden" name="{{@key}}" value="{{this}}" />
+					{{/each}}
+					<button type="submit" class="btn btn-primary process-btn">Process Data Source</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

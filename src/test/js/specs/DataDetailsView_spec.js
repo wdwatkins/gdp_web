@@ -1,254 +1,247 @@
 /*jslint browser: true*/
-/*global sinon,Backbone,jasmine,expect,GDP,_,expect,window*/
-describe('GDP.ADVANCED.view.DataDetailsView', function() {
+/*global sinon,Backbone,jasmine,expect,GDP,_,expect,window, spyOn*/
+describe('GDP.PROCESS_CLIENT.view.DataDetailsView', function() {
 	var model,
 	templateSpy,
-	renderSpy,
 	loggerSpy,
 	server,
 	testView,
-	callWpsSpy,
-	wpsDeferred,
-	wps,
-	url = 'http://cida.usgs.gov';
-	
+	url,
+	dataSourceModel,
+	dataSourceFetchDeferred,
+	updateDataSetModelDeferred,
+	preventDefaultSpy
+
+	var $testDiv;
+
 	//no-op alert
 	window.alert = function(){};
-	
-	//mock promises for patching
-	var resolveWithResponse = function(response){
-		return function(){
-			var deferred = $.Deferred();
-			deferred.resolve(response);
-			return deferred.promise();
-		};
-	};
-	
-	var rejectWithErrorMessage = function(message){
-		return function(){
-			var deferred = $.Deferred();
-			deferred.reject(null, null, message);
-			return deferred.promise();
-		};
-	};
-	
-	beforeEach(function() {
-		server = sinon.fakeServer.create();
-		model = new GDP.ADVANCED.model.Job();
 
-		wpsDeferred = $.Deferred();
+	beforeEach(function() {
+		$('body').append('<div id="test-div"></div>');
+		$testDiv = $('#test-div');
+
+		$testDiv.html('<select id="data-source-select"><option></option></select>' +
+			'<input id="data-source-url" type="url" />' +
+			'<input id="use-cached-checkbox" type="checkbox" />' +
+			'<select id="data-source-vars" multiple /></select>' +
+			'<input id="start-date" type="text" />' +
+			'<input id="end-date" type="text" />'
+		);
+
+		url = 'http://testUrl';
+		GDP.config = {
+			get : function(prop) {
+				if (prop === 'process') {
+					return {
+						processes : [
+							{
+								id : 'ALG1',
+								name : 'NAME1',
+								title : 'TITLE1',
+								type : 'TYPE1'
+							},
+							{
+								id : 'ALG2',
+								name : 'NAME2',
+								title : 'TITLE2',
+								type : 'TYPE1'
+							},
+							{
+								id : 'ALG3',
+								name : 'NAME3',
+								title : 'TITLE3',
+								type : 'TYPE2'
+							}
+						]
+					};
+				}
+				else {
+					return null;
+				}
+			}
+		};
+		model = new GDP.PROCESS_CLIENT.model.Job();
+		updateDataSetModelDeferred = $.Deferred();
+		spyOn(model, 'updateDataSetModel').andReturn(updateDataSetModelDeferred);
+		dataSourceModel = model.get('dataSourceModel');
+		dataSourceFetchDeferred = $.Deferred();
+		spyOn(dataSourceModel, 'fetch').andReturn(dataSourceFetchDeferred);
 
 		templateSpy = jasmine.createSpy('templateSpy');
-		renderSpy = jasmine.createSpy('renderSpy');
-		loggerSpy = jasmine.createSpyObj('logger', ['error']);
-		callWpsSpy = jasmine.createSpy('callWpsSpy').andReturn(wpsDeferred);
+		loggerSpy = jasmine.createSpyObj('logger', ['debug', 'error']);
+		preventDefaultSpy = jasmine.createSpy('preventDefaultSpy');
 
 		GDP.logger = loggerSpy;
-		wps = {
-			sendWpsExecuteRequest : callWpsSpy
-		};
 
-		testView = new GDP.ADVANCED.view.DataDetailsView({
+		testView = new GDP.PROCESS_CLIENT.view.DataDetailsView({
 			model : model,
 			template : templateSpy,
-			wps: wps
+			el : '#test-div'
 		});
-		testView.render = renderSpy;
+		updateDataSetModelDeferred.resolve();
 	});
 
 	afterEach(function() {
-		server.restore();
+		testView.remove();
+		$testDiv.remove();
+		model.get('dataSourceModel').get('variables').reset();
+		model.clear();
 	});
-	it('Expects changeUrl() to change the model\'s dataSourceUrl property', function() {
-		testView.changeUrl({ target : { value : url } });
+
+	it('Expects setUrl() to change the model\'s dataSourceUrl property', function() {
+		testView.setUrl({ target : { value : url } });
 		expect(testView.model.get('dataSourceUrl')).toEqual(url);
 	});
-	
-	it('Expects selectVariables() to change the model\'s dataSourceVariables property', function() {
-		var options = [
-			{
-			text: '',
-			value: '',
-			selected: null
-			},
-			{
-			text: 'Var One',
-			value: 'var1',
-			selected: 'selected'
-			},
-			{
-			text: 'Var Two',
-			value: 'var2',
-			selected: ''
-			}
-		];
-		
-		//call the function with 0, 1, 2, and 3 options.
-		_.each(_.range(options.length), function(numberOfOptions){
-			var optionsToUse = _.first(options, numberOfOptions);
-			testView.selectVariables({ target : {options: optionsToUse }});
-			var selectedOptions= testView.model.get('dataSourceVariables');
-			var expectedToActualPairs = _.zip(optionsToUse, selectedOptions.models);
-			_.each(expectedToActualPairs, function(expectedToActual){
-				var expected = expectedToActual[0],
-					actual = expectedToActual[1].attributes;
-				expect(expected).toEqual(actual);
-			});
-		});
-	});
-	it('should reject the getDateRange promise with an error message if the web service call fails', function(){
-		var expectedErrorMessage = 'error message';
-		testView.wps.sendWpsExecuteRequest = rejectWithErrorMessage(expectedErrorMessage);
-		var promise, actualErrorMessage;
-		runs(function(){
-			promise = testView.getDateRange('mockUrl', 'mockVariableName').fail(function(myMessage){
-				actualErrorMessage = myMessage;
-			});
-		});
-		waitsFor(function(){
-			return 'pending' !== promise.state();
-		});
-		runs(function(){
-			expect(actualErrorMessage).toBe(expectedErrorMessage);
-		});
-	});
-	it('hasExpectedNumericProperties should return true if an object has all expected properties and all the corresponding values are numeric, and false otherwise', function(){
-		var expectedProperties = ['a', 'b'];
-		var failingValues = [
-			//not an object
-			null,
-			
-			//empty object
-			{},
-			
-			//object with only a some of the expected properties
-			{
-				'a': null,
-				'c': null
-			},
-			//object with all expected properties, but no values are numeric
-			{
-				'a': 'not a num',
-				'b': [],
-				'c': {}
-			}
-		],
-		
-		//object with all expected properties and all numeric values
-		passingValue = {
-			'a': 42,
-			'b': 3.14159,
-			'c': {}
-		};
-		_.each(failingValues, function(failingValue){
-			expect(testView.hasExpectedNumericProperties(failingValue, expectedProperties)).toBe(false);
-		});
-		expect(testView.hasExpectedNumericProperties(passingValue, expectedProperties)).toBe(true);
-	});
-	it('isValidDateRangeResponse should return true if a response is a valid date range response, and false otherwise', function(){
-		var unparseableResponses = [
-			null,
-			undefined,
-			false,
-			200,
-			'',
-			{},
-			{availabletimes:null},
-			{
-				availabletimes:{
-					starttime: null
-				}
-			},
-			{
-				availabletimes:{
-					starttime: null,
-					endtime: null
-				}
-			},
-			{
-				availabletimes:{
-					endtime: null
-				}
-			}
-		];
-		_.each(unparseableResponses, function(unparseableResponse){
-			expect(testView.isValidDateRangeResponse(unparseableResponse)).toBe(false);
-		});
-	});
-	it('expects the getDateRange() promise to be rejected with an error message if the web service call succeeds, but delivers an unparseable response', function(){
-		var promise, returnedMessage;
-		
-		//mocks
-		testView.isValidDateRangeResponse = function(){return false;};
-		testView.wps.sendWpsExecuteRequest = resolveWithResponse(null);
-		
-		runs(function(){
-			promise = testView.getDateRange('mockUrl', 'mockVariableName').fail(function(myMessage){
-				returnedMessage = myMessage;
-			});
-		});
-		waitsFor(function(){
-			return 'pending' !== promise.state();
-		});
-		runs(function(){
-			expect(returnedMessage).toBe(testView.failedToParseDateRangeResponseMessage);
-		});
-	});
-	var assertDatesReset = function(testView){
-		var datesAreReset = _.every(_.map(testView.dateModelProperties, function(modelProp){
-				return testView.model.get(modelProp);
-		}), _.isNull);
-		expect(datesAreReset).toBe(true);
-	};
-	it('expects resetDates() to set all date relevant date fields on the model to null', function(){
-		assertDatesReset(testView);
-	});
-	var assertDataDetailFieldsReset = function(testView){
-		assertDatesReset(testView);
-		expect(testView.model.get('dataSourceVariables').isEmpty()).toBe(true);
-		expect(testView.model.get('invalidDataSourceUrl')).toBe(true);
-	};
-	it('expects changeUrl() to initially reset all relevant model fields', function(){
-		testView.getGrids = rejectWithErrorMessage('no-op');
-		var actualUrl = 'http://cida.usgs.gov';
-		testView.changeUrl({target: {value: actualUrl}});
-		assertDataDetailFieldsReset(testView);
-		expect(testView.model.get('dataSourceUrl')).toEqual(actualUrl);
-	});
-	it('expects the getDateRange() promise to be resolved with no arguments if the web service call succeeds with a parseable response', function(){
-		var starttime = {
-			year: 2001,
-			month: 1,
-			day: 1
-		};
-		var endtime = {
-			year: 2001,
-			month: 1,
-			day: 2
-		};
-		var parseableResponse = {
-			availabletimes: {
-				starttime: starttime,
-				endtime: endtime
+
+	it('Expects setSelectedVariables() to change the model\'s dataSourceVariables property', function() {
+		var ev = {
+			target : {
+				selectedOptions : [
+					{
+						value : 'var1'
+					}, {
+						value : 'var2'
+					}
+				]
 			}
 		};
-		
-		var promise,
-		returnedResponse = 'something'; //if successful, this should be set to undefined
-		testView.wps.sendWpsExecuteRequest = resolveWithResponse(parseableResponse);
-		runs(function(){
-			promise = testView.getDateRange('mockUrl', 'mockVariableName').done(function(myResponse){
-				returnedResponse = myResponse;
-			});
+		testView.setSelectedVariables(ev);
+		expect(testView.model.get('dataVariables')).toEqual(['var1', 'var2']);
+	});
+
+	it('Expects setStartDate to change the model\'s startDate property', function() {
+		testView.setStartDate({
+			preventDefault : preventDefaultSpy,
+			target : { value : '2/3/2005' }
 		});
-		waitsFor(function(){
-			return 'pending' !== promise.state();
+
+		expect(testView.model.get('startDate')).toEqual('2/3/2005');
+	});
+
+	it('Expects setEndDate to change the model\'s endDate property', function() {
+		testView.setEndDate({
+			preventDefault : preventDefaultSpy,
+			target : { value : '11/12/2006' }
 		});
-		runs(function(){
-			expect(returnedResponse).toBeUndefined();
-			_.each(testView.dateModelProperties, function(dateModelProperty){
-				expect(testView.model.get(dateModelProperty)).toBeDefined();
-			});
+		expect(testView.model.get('endDate')).toEqual('11/12/2006');
+	});
+
+
+	it('Expects that updating the model\s url property disables all inputs and fetches the data source model', function() {
+		var dataSourceModel = testView.model.get('dataSourceModel');
+		testView.model.set('dataSourceUrl', url);
+
+		expect(testView.$('#data-source-url').is(':disabled')).toBe(true);
+		expect(testView.$('#data-source-select').is(':disabled')).toBe(true);
+		expect(testView.$('#data-source-vars').is(':disabled')).toBe(true);
+		expect(testView.$('#start-date').is(':disabled')).toBe(true);
+		expect(testView.$('#end-date').is(':disabled')).toBe(true);
+
+		expect(dataSourceModel.fetch).toHaveBeenCalledWith({
+			dataSourceUrl : url,
+			allowCached : false
+		});
+
+		$('#use-cached-checkbox').prop('checked', true);
+		testView.model.set('dataSourceUrl', url + '1');
+
+		expect(dataSourceModel.fetch.mostRecentCall.args[0]).toEqual({
+			dataSourceUrl : url + '1',
+			allowCached : true
 		});
 	});
+
+	it('Expects a successful fetch to reenable the inputs', function() {
+		testView.model.set('dataSourceUrl', url);
+		dataSourceFetchDeferred.resolve();
+
+		expect(testView.$('#data-source-url').is(':disabled')).toBe(false);
+		expect(testView.$('#data-source-select').is(':disabled')).toBe(false);
+		expect(testView.$('#data-source-vars').is(':disabled')).toBe(false);
+		expect(testView.$('#start-date').is(':disabled')).toBe(false);
+		expect(testView.$('#end-date').is(':disabled')).toBe(false);
+	});
+
+	it('Expects a failed fetch to reenable the inputs and to clear the dataVariable, startDate, and endDate fields', function() {
+		testView.model.set('dataVariable', ['var1']);
+		testView.model.set('startDate', '2/1/2005');
+		testView.model.set('endDate', '3/1/2005');
+
+		testView.model.set('dataSourceUrl', url);
+		dataSourceFetchDeferred.reject();
+
+		expect(testView.$('#data-source-url').is(':disabled')).toBe(false);
+		expect(testView.$('#data-source-select').is(':disabled')).toBe(false);
+		expect(testView.$('#data-source-vars').is(':disabled')).toBe(false);
+		expect(testView.$('#start-date').is(':disabled')).toBe(false);
+		expect(testView.$('#end-date').is(':disabled')).toBe(false);
+
+		expect(testView.model.get('dataVariable')).toEqual([]);
+		expect(testView.model.get('startDate')).toEqual('');
+		expect(testView.model.get('endDate')).toEqual('');
+	});
+
+	it('Expects that if the variables property in the dataSourceModel are updated, the list of variables is updated', function() {
+		var varPicker = testView.$('#data-source-vars');
+		var dataSourceVariables = new GDP.PROCESS_CLIENT.model.DataSourceVariables();
+		dataSourceVariables.add([
+			{
+				name: 'var1',
+				description : 'Var1',
+				unitsstring : 'u1'
+			}, {
+				name : 'var2',
+				description : 'Var2',
+				unitsstring : 'u2'
+			}
+		]);
+		testView.model.get('dataSourceModel').set('variables', dataSourceVariables);
+
+		expect(varPicker.find('option').length).toBe(2);
+		expect(varPicker.is(':disabled')).toBe(false);
+
+		dataSourceVariables = new GDP.PROCESS_CLIENT.model.DataSourceVariables();
+		testView.model.get('dataSourceModel').set('variables', dataSourceVariables);
+		expect(varPicker.find('option').length).toBe(0);
+		expect(varPicker.is(':disabled')).toBe(true);
+	});
+
+	it('Expects that changing the dateRange in the dataSourceModel sets the values of the start/endDate in the model and sets the disabled state of the date pickers', function() {
+		testView.model.get('dataSourceModel').set('dateRange', {
+			start : '2/1/2005',
+			end : '3/2/2005'
+		});
+
+		expect(testView.model.get('startDate')).toEqual('2/1/2005');
+		expect(testView.model.get('endDate')).toEqual('3/2/2005');
+	});
+
+	it('Expects the variable picker to be updated if the dataVariables property in the model changes', function() {
+		var $variablePicker = testView.$('#data-source-vars');
+		var dataSourceVariables = new GDP.PROCESS_CLIENT.model.DataSourceVariables();
+		dataSourceVariables.add([
+			{
+				name: 'var1',
+				description : 'Var1',
+				unitsstring : 'u1'
+			}, {
+				name : 'var2',
+				description : 'Var2',
+				unitsstring : 'u2'
+			}, {
+				name : 'var3',
+				description : 'Var3',
+				unitsstring : 'u3'
+			}
+		]);
+		testView.model.get('dataSourceModel').set('variables', dataSourceVariables);
+		testView.model.set('dataVariables', ['var1', 'var2']);
+		expect($variablePicker.val()).toEqual(['var1', 'var2']);
+
+		testView.model.set('dataVariables', []);
+		expect($variablePicker.val()).toEqual(null);
+	});
+
+	//Tried to write tests for changeStartDate and changeEndDate but the datepicker did not want to work properly in tests.
 });

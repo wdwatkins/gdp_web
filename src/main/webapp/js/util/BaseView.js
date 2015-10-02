@@ -25,7 +25,7 @@ GDP.util.BaseView = Backbone.View.extend({
 	 *		@prop router {Backbone.Router instance} - defaults to null
 	 *		@prop template {Handlers template function} - defaults to loading the template from NWC.templates - this is useful for testing
 	 *		@prop context {Object} to be used when rendering templateName - defaults to {}
-	 * @returns NWC.view.BaseView
+	 * @returns GDP.util.BaseView
 	 */
 	initialize : function(options) {
 		options = options || {};

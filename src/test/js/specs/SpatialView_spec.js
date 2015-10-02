@@ -1,4 +1,11 @@
-describe('GDP.ADVANCED.VIEW.SpatialView', function() {
+/*global GDP*/
+/*global expect*/
+/*global jasmine*/
+/*global sinon*/
+/*global spyOn*/
+/*global OpenLayers*/
+
+describe('GDP.PROCESS_CLIENT.VIEW.SpatialView', function() {
 	var model;
 	var templateSpy;
 	var loggerSpy;
@@ -10,16 +17,35 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 
 	beforeEach(function() {
 		server = sinon.fakeServer.create();
-		model = new Backbone.Model({
-			aoiName : '',
-			aoiAttribute : '',
-			aoiAttributeValues : []
-		});
+		model = new GDP.PROCESS_CLIENT.model.Job();
 		GDP.config = new GDP.model.Config({
 			application : {
 				endpoints : {
-					geoserver : 'http://fakegeoserver.com'
+					wms : 'http://fakegeoserver.com/wms',
+					wfs : 'http://fakegeoserver.com/wfs'
 				}
+			},
+			process : {
+				processes : [
+						{
+						id : 'ALG1',
+						name : 'NAME1',
+						title : 'TITLE1',
+						type : 'TYPE1'
+					},
+					{
+						id : 'ALG2',
+						name : 'NAME2',
+						title : 'TITLE2',
+						type : 'TYPE1'
+					},
+					{
+						id : 'ALG3',
+						name : 'NAME3',
+						title : 'TITLE3',
+						type : 'TYPE2'
+					}
+				]
 			},
 			map : {
 				extent : {
@@ -33,6 +59,8 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 		wfsDeferred = $.Deferred();
 
 		spyOn(OpenLayers.Layer, 'WMS');
+		spyOn(GDP.PROCESS_CLIENT.view.SpatialView.prototype, '_createDrawPolygonControl');
+
 		templateSpy = jasmine.createSpy('templateSpy');
 		loggerSpy = jasmine.createSpyObj('logger', ['error']);
 		callWFSSpy = jasmine.createSpy('callWFSSpy').andReturn(wfsDeferred);
@@ -46,9 +74,11 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 			}
 		};
 
-		$('body').append('<div id="spatial-map"></div>')
+		spyOn($.fn, 'fileupload');
 
-		testView = new GDP.ADVANCED.view.SpatialView({
+		$('body').append('<div id="test-div"><div id="spatial-map"></div><input id="upload-shapefile-input" type="file" name="qqfile"></div>');
+
+		testView = new GDP.PROCESS_CLIENT.view.SpatialView({
 			model : model,
 			template : templateSpy
 		});
@@ -56,7 +86,7 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 	});
 
 	afterEach(function() {
-		$('#spatial-map').remove();
+		$('#test-div').remove();
 		server.restore();
 	});
 
@@ -74,18 +104,74 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 		expect(loggerSpy.error).toHaveBeenCalled();
 	});
 
+	it('Expects the file upload widget to be initialized', function() {
+		expect($.fn.fileupload).toHaveBeenCalled();
+		var arg = $.fn.fileupload.mostRecentCall.args[0];
+		expect(arg.url).toMatch('uploadhandler');
+	});
+
+	// Couldn't figure out how to trigger a change event or set the file property, so testing the send and done
+	// callbacks by grabbing them from the spy and executing.
+	it('Expects the file upload send function to update the url with the selected file name', function() {
+		var sendCallback = $.fn.fileupload.mostRecentCall.args[0].send;
+		var data = {
+			url : 'http://testfileuploader',
+			files : [{
+				name : 'test_file.zip'
+			}]
+		};
+		sendCallback({}, data);
+		expect(data.url).toMatch('&qqfile=test_file.zip');
+	});
+
+	it('Expects a successful fileupload to update the AOI feature list and to set the aoiName attribute', function() {
+		var data = {
+			result: $.parseXML('<Response><store>test_layer</store><workspace>upload</workspace><name>upload:test_layer</name><success>true</success></Response>')
+		};
+		var getDeferred = $.Deferred();
+		spyOn(testView, 'getAvailableFeatures').andReturn(getDeferred);
+		var doneCallback = $.fn.fileupload.mostRecentCall.args[0].done;
+
+		doneCallback({}, data);
+		expect(testView.getAvailableFeatures).toHaveBeenCalled();
+		getDeferred.resolve();
+		expect(testView.model.get('aoiName')).toEqual('upload:test_layer');
+	});
+
+	it('Expects a failed fileupload to show an alert with the error message', function() {
+		var data = {
+			result : $.parseXML('<Response><error>Process failed during execution Target layer upload:test_layer already exists in the catalog</error><success>false</success></Response>')
+		};
+		var getDeferred = $.Deferred();
+		spyOn(testView, 'getAvailableFeatures').andReturn(getDeferred);
+		spyOn(testView.alertView, 'show');
+		var doneCallback = $.fn.fileupload.mostRecentCall.args[0].done;
+
+		doneCallback({}, data);
+		expect(testView.alertView.show).toHaveBeenCalled();
+		expect(testView.alertView.show.mostRecentCall.args[1]).toMatch('Target layer upload:test_layer');
+	});
+
 	it('Expects a change to aoiName to callWFS to make a DescribeFeatureType request', function() {
-		testView.model.set('aoiName', 'featureName');
+		wfsDeferred.resolve();
+		testView.model.set('aoiName', 'tst:featureName');
 		expect(callWFSSpy.calls.length).toBe(2);
 		var callWfsArgs = callWFSSpy.mostRecentCall.args;
 		expect(callWfsArgs[0].request).toEqual('DescribeFeatureType');
-		expect(callWfsArgs[0].typename).toEqual('featureName');
+		expect(callWfsArgs[0].typename).toEqual('tst:featureName');
+	});
+
+	it('Expects a change to aoiName which is using the draw namepsace to set the aoiAttribute', function() {
+		wfsDeferred.resolve();
+		testView.model.set('aoiName', testView._DRAW_FEATURE_NS +':featureName');
+		expect(testView.model.get('aoiAttribute')).toEqual(testView._DRAW_FEATURE_ATTRIBUTE);
 	});
 
 	//TODO: Add tests to build DOM correctly from DescribeFeaturetype response when aoiName is changed
 
 	it('Expects a change to aoiAttribute to callWFS to make GetFeature request', function() {
-		testView.model.set('aoiName', 'featureName');
+		wfsDeferred.resolve();
+		testView.model.set('aoiName', 'tst:featureName');
 		testView.model.set('aoiAttribute', 'attr1');
 
 		expect(callWFSSpy.calls.length).toBe(3);
@@ -97,19 +183,4 @@ describe('GDP.ADVANCED.VIEW.SpatialView', function() {
 	});
 
 	//TODO: Add tests to build DOM correctly from GetFeature response when aoiAttribute is changed
-
-	it('Expects changeName to change the model\'s aoiName property', function() {
-		testView.changeName({ target : { value : 'thisFeature' } });
-		expect(testView.model.get('aoiName')).toEqual('thisFeature');
-	});
-
-	it('Expects changeAttribute to change the model\'s aoiAttribute property', function() {
-		testView.changeAttribute({ target : { value : 'thisAttribute' } });
-		expect(testView.model.get('aoiAttribute')).toEqual('thisAttribute');
-	});
-
-	it('Expects changeValues to change the model\'s aoiValues property', function() {
-		testView.changeValues({ target : { selectedOptions : [ { text : '1' }, { text : '2' }, { text : '3' } ] } });
-		expect(testView.model.get('aoiAttributeValues')).toEqual(['1', '2', '3']);
-	});
 });

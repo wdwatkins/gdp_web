@@ -1,0 +1,161 @@
+{
+    "gdpAlgorithms": {
+	"54dd5e64e4b08de9379b390b": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm",
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm",
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+	],
+        "54dd5dffe4b08de9379b38de": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e4be4b08de9379b38ff": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5dd9e4b08de9379b38cc": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd63dde4b08de9379b3911": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5de6e4b08de9379b38d2": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5df9e4b08de9379b38db": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd63e3e4b08de9379b3914": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm"
+        ], 
+        "54dd5d21e4b08de9379b38b6": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5d96e4b08de9379b38bd": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCategoricalGridCoverageAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "555c7e54e4b0a92fa7eaddfc": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm"
+        ], 
+        "54dd5e31e4b08de9379b38f3": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5d99e4b08de9379b38bf": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e05e4b08de9379b38e1": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5daee4b08de9379b38c7": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e3de4b08de9379b38f9": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd63eae4b08de9379b3917": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e58e4b08de9379b3905": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5d9ce4b08de9379b38c1": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e37e4b08de9379b38f6": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e5ee4b08de9379b3908": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5d90e4b08de9379b38ba": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5dece4b08de9379b38d5": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e44e4b08de9379b38fc": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5df2e4b08de9379b38d8": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e0be4b08de9379b38e4": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5da4e4b08de9379b38c4": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5ddfe4b08de9379b38cf": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e25e4b08de9379b38ed": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e2be4b08de9379b38f0": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e12e4b08de9379b38e7": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ], 
+        "54dd5e52e4b08de9379b3902": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ],
+        "54dd5e18e4b08de9379b38ea": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ]
+    }
+}

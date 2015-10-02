@@ -9,7 +9,14 @@ GDP.OGC = GDP || {};
 GDP.OGC.WFS = (function () {
 	var capabilitiesCache;
 
-	function _callWFS(data, async, successCallback) {
+	/*
+	 * @param {Object} query parameters to be passed to the WFS call
+	 * @param {String} method to be used for the request. Defaults to 'GET'
+	 * @return jquery.Deferred.promise. If deferred is resolved it will return the data returned in the WFS call.
+	 *     If the WFS returns an exception or fails, the deferred is rejected with an error message returned.
+	 */
+	function _callWFS(data, method) {
+		var deferred = $.Deferred();
 		var defaultData = {
 			'service': 'WFS',
 			'version': '1.1.0'
@@ -21,32 +28,36 @@ GDP.OGC.WFS = (function () {
 		// any conflicts, the property from data will overwrite the one in defaultData.
 		$.extend(wfsData, defaultData, data);
 		GDP.logger.debug('GDP: Calling WFS Service with a ' + wfsData.request + ' request.');
-		var promise = $.ajax({
-			url: GDP.config.get('application').endpoints.geoserver + '/wfs',
-			async: async,
+		$.ajax({
+			url: GDP.config.get('application').endpoints.wfs,
+			method : (method) ? method : 'GET',
 			data: wfsData,
 			cache: false,
 			success: function (data, textStatus, jqXHR) {
-				if (!$(data).find('ExceptionReport').length) {
+				if (GDP.util.findXMLNamespaceTags($(data), 'ows:ExceptionReport').length === 0) {
 					if ('GetCapabilities' === wfsData.request) {
 						capabilitiesCache = data;
 					}
+					deferred.resolve(data);
 				} else {
 					alert('WFS endpoint did not provide a proper response.');
+					deferred.reject('WFS endpoint did not provide a proper response.');
 				}
-				successCallback(data);
+			},
+			error : function(jqXHR, textStatus) {
+				deferred.reject(textStatus);
 			}
 		});
-		return promise;
+		return deferred.promise();
 	}
 
 	function _getBoundsFromCache(featureName) {
 		var result;
 		$(capabilitiesCache).find('FeatureType').each(function () {
 			if ($(this).find('Name').text() === featureName) {
-				var bbox = $(this).find('WGS84BoundingBox');
-				var lowerCorner = $(bbox).find('LowerCorner').text().split(' ');
-				var upperCorner = $(bbox).find('UpperCorner').text().split(' ');
+				var bbox = GDP.util.findXMLNamespaceTags($(this), 'ows:WGS84BoundingBox');
+				var lowerCorner = GDP.util.findXMLNamespaceTags($(bbox), 'ows:LowerCorner').text().split(' ');
+				var upperCorner = GDP.util.findXMLNamespaceTags($(bbox),'ows:UpperCorner').text().split(' ');
 
 				var minx = lowerCorner[0];
 				var miny = lowerCorner[1];

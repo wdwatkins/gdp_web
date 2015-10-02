@@ -33,17 +33,18 @@ GDP.util.templateLoader = function(templateDir) {
 				error : function() {
 					templates[this] = Handlebars.compile('Unable to load template');
 				},
+				cache : false,
 				context : names[i]
 			}));
 		}
-		
+
 		return $.when.apply(null, loadingDeferreds);
 	};
-	
+
 	self.registerHelpers = function () {
 		Handlebars.registerHelper({
 			'ifAlgorithmInputTypeIsLiteral' : function (type, options) {
-				if (type === 'literal') {	
+				if (type === 'literal') {
 					return options.fn(this);
 				}
 				return options.inverse(this);
@@ -66,8 +67,24 @@ GDP.util.templateLoader = function(templateDir) {
 				}
 				return options.inverse(this);
 			},
-			'defaultChecked' : function (bool) {
-				if (bool) {
+			'ifBoolean' : function(obj, options) {
+				if (obj === 'true' || obj === 'false') {
+					return options.fn(this);
+				}
+				else {
+					return options.inverse(this);
+				}
+			},
+			'ifNotBoolean' : function(obj, options) {
+				if (obj === 'true' || obj === 'false') {
+					return options.inverse(this);
+				}
+				else {
+					return options.fn(this);
+				}
+			},
+			'defaultChecked' : function (boolStr) {
+				if (boolStr === 'true') {
 					return 'checked="checked"';
 				}
 				return '';
@@ -77,6 +94,56 @@ GDP.util.templateLoader = function(templateDir) {
 					return 'selected="selected"';
 				}
 				return '';
+			},
+			'isMultiple' : function (maxOccurs) {
+				if (maxOccurs !== '1') {
+					return 'multiple="multiple"';
+				}
+				return '';
+			},
+			'isRequired' : function(minOccurs) {
+				if (minOccurs > 0) {
+					return 'required'
+				}
+				return '';
+			},
+			'selectedVariables' : function(variables) {
+				var selectedVars = _.filter(variables, function(value) {
+					return value.attributes.selected;
+				});
+				return selectedVars.length;
+
+			},
+			'variableTitle' : function(identifier, process) {
+				if (process) {
+					return _.find(process.inputs, function(v) {
+						return v.identifier === identifier;
+					}).title;
+				}
+				else {
+					return '';
+				}
+			},
+			'formatProcessText' : function(obj) {
+				if (obj) {
+					if (_.isArray(obj)) {
+						return obj.join(', ');
+					}
+					if (_.isString(obj)) {
+						return obj;
+					}
+				}
+				else {
+					return '';
+				}
+			},
+			'truncate' : function(str, length) {
+				if (str.length > length) {
+					return str.substr(0, length) + '...';
+				}
+				else {
+					return str;
+				}
 			}
 		});
 	};

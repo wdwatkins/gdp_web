@@ -1,0 +1,66 @@
+#job-processing-div {
+	.make-row();
+}
+
+#job-results-div {
+	display: none;
+	text-align: center;
+	.make-sm-column(12);
+}
+
+#job-processing-div, #job-results-div {
+	margin-top : 15px;
+	margin-bottom: 15px;
+}
+
+.selected-option {
+	background:#fff;
+	border:1px solid #ccc;
+	border-radius:5px;
+	padding:5px 8px;
+	color:#555;
+	overflow:hidden;
+	text-align: left;
+}
+
+#tiles-div {
+	.make-row();
+	.loading-indicator  {
+		text-align : center;
+	}
+	.job-data-tiles {
+		.make-sm-column(12);
+		.make-md-column(6);
+	}
+	.dataset-metadata-tiles {
+		.make-sm-column(12);
+		.make-md-column(6);
+	}
+	.hub-tile {
+		display: none;
+	}
+	
+	.hub-tile h5 {
+		font-weight: bold;
+	}
+	.hub-tile .panel-body {
+		padding: 10px;
+	}
+	.hub-tile .panel-heading {
+		text-align: center;
+		font-weight: bold;
+	}
+	.hub-tile-button-div {
+		margin-top : 10px;
+		text-align: center;
+	}
+	#hub-spatial-inset-map {
+		height: 260px;
+		border : 1px solid black;
+	}
+	#dataset-metadata-wrapper {
+		display: none;
+	}
+}
+
+

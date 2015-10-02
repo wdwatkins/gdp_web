@@ -6,12 +6,12 @@
 	</welcome-file-list>
 	
 	<servlet>
-		<servlet-name>advanced</servlet-name>
-		<jsp-file>/advanced.jsp</jsp-file>
+		<servlet-name>process_client</servlet-name>
+		<jsp-file>/process_client.jsp</jsp-file>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>advanced</servlet-name>
-		<url-pattern>/advanced</url-pattern>
+		<servlet-name>process_client</servlet-name>
+		<url-pattern>/client/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>
@@ -21,6 +21,15 @@
 	<servlet-mapping>
 		<servlet-name>config</servlet-name>
 		<url-pattern>/config</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>algorithms</servlet-name>
+		<jsp-file>/WEB-INF/jsp/algorithms.json</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>algorithms</servlet-name>
+		<url-pattern>/algorithms</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>
@@ -55,6 +64,57 @@
 	<servlet-mapping>
 		<servlet-name>UtilityWpsProxyServlet</servlet-name>
 		<url-pattern>/utilityWps/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ProcessWpsProxyServlet</servlet-name>
+		<servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+		<init-param>
+			<param-name>forward-url-param</param-name>
+			<param-value>gdp.endpoint.processWps</param-value>
+		</init-param>
+		<init-param>
+			<param-name>readTimeout</param-name>
+			<param-value>300000</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProcessWpsProxyServlet</servlet-name>
+		<url-pattern>/processWps/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>CWSProxyServlet</servlet-name>
+		<servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+		<init-param>
+			<param-name>forward-url-param</param-name>
+			<param-value>gdp.endpoint.csw</param-value>
+		</init-param>
+		<init-param>
+			<param-name>readTimeout</param-name>
+			<param-value>300000</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CWSProxyServlet</servlet-name>
+		<url-pattern>/csw/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>CatalogWMSProxyServlet</servlet-name>
+		<servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+		<init-param>
+			<param-name>forward-url-param</param-name>
+			<param-value>gdp.endpoint.catalogwms</param-value>
+		</init-param>
+		<init-param>
+			<param-name>readTimeout</param-name>
+			<param-value>300000</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CatalogWMSProxyServlet</servlet-name>
+		<url-pattern>/catalogwms/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>
