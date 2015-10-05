@@ -219,7 +219,7 @@
         <servlet-name>shapefile-upload-servlet</servlet-name>
         <url-pattern>/uploadhandler</url-pattern>
     </servlet-mapping>
-<!--	    <filter>
+    <filter>
         <filter-name>SearchBotUglyUrlFilter</filter-name>
         <filter-class>gov.usgs.cida.ajax_search_crawler_tools.SearchCrawlerUglyUrlFilter</filter-class>
         <init-param>
@@ -230,5 +230,5 @@
     <filter-mapping>
         <filter-name>SearchBotUglyUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>-->
+    </filter-mapping>
 </web-app>

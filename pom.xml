@@ -262,7 +262,7 @@
 		<dependency>
 			<groupId>gov.usgs.cida.ajax_search_crawler_tools</groupId>
 			<artifactId>ajax_search_crawler_tools</artifactId>
-			<version>0.1.1</version>
+			<version>0.1.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>gov.usgs.cida.simplehash</groupId>
