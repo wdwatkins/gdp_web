@@ -30,8 +30,7 @@ GDP.PROCESS_CLIENT.controller.ProcessClientRouter = Backbone.Router.extend({
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('hub'),
 			metadataTemplate : GDP.PROCESS_CLIENT.templates.getTemplate('data_set_details'),
 			model: this.jobModel,
-			datasetId : datasetid,
-			wps : this.wps
+			datasetId : datasetid
 		});
 	},
 
@@ -39,8 +38,7 @@ GDP.PROCESS_CLIENT.controller.ProcessClientRouter = Backbone.Router.extend({
 		this.showView(GDP.PROCESS_CLIENT.view.SpatialView, {
 			template : GDP.PROCESS_CLIENT.templates.getTemplate('spatial'),
 			model : this.jobModel,
-			datasetId : datasetid,
-			wps : this.wps
+			datasetId : datasetid
 		});
 	},
 
