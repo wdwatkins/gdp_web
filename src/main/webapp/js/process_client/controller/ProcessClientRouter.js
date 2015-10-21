@@ -27,7 +27,7 @@ GDP.PROCESS_CLIENT.controller = GDP.PROCESS_CLIENT.controller || {};
 			'!advanced/spatial' : 'spatial',
 			'!advanced/datadetail' : 'datadetail',
 			'!advanced/process' : 'process',
-			'!advanced/(:whatever)' : 'notFound',
+			'!advanced/:whatever' : 'notFound',
 
 			'!catalog/gdp/dataset/:datasetid' : 'hub',
 			'!catalog/gdp/dataset/:datasetid/spatial' : 'spatial',
@@ -41,7 +41,7 @@ GDP.PROCESS_CLIENT.controller = GDP.PROCESS_CLIENT.controller || {};
 		},
 
 		hub : function(datasetid) {
-			if (isDatasetId(datasetid)) {
+			if (!datasetid || idisDatasetId(datasetid)) {
 				this.showView(GDP.PROCESS_CLIENT.view.HubView, {
 					template : GDP.PROCESS_CLIENT.templates.getTemplate('hub'),
 					metadataTemplate : GDP.PROCESS_CLIENT.templates.getTemplate('data_set_details'),
@@ -55,7 +55,7 @@ GDP.PROCESS_CLIENT.controller = GDP.PROCESS_CLIENT.controller || {};
 		},
 
 		spatial : function(datasetid) {
-			if (isDatasetId(datasetid)) {
+			if (!datasetid || isDatasetId(datasetid)) {
 				this.showView(GDP.PROCESS_CLIENT.view.SpatialView, {
 					template : GDP.PROCESS_CLIENT.templates.getTemplate('spatial'),
 					model : this.jobModel,
@@ -68,7 +68,7 @@ GDP.PROCESS_CLIENT.controller = GDP.PROCESS_CLIENT.controller || {};
 		},
 
 		datadetail : function(datasetid) {
-			if (isDatasetId(datasetid)) {
+			if (!datasetid || isDatasetId(datasetid)) {
 				this.showView(GDP.PROCESS_CLIENT.view.DataDetailsView, {
 					template : GDP.PROCESS_CLIENT.templates.getTemplate('datadetail'),
 					model: this.jobModel,
@@ -81,7 +81,7 @@ GDP.PROCESS_CLIENT.controller = GDP.PROCESS_CLIENT.controller || {};
 		},
 
 		process : function(datasetid) {
-			if (isDatasetId(datasetid)) {
+			if (!datasetid || isDatasetId(datasetid)) {
 				this.showView(GDP.PROCESS_CLIENT.view.ProcessView, {
 					template : GDP.PROCESS_CLIENT.templates.getTemplate('process'),
 					algorithmTemplate : GDP.PROCESS_CLIENT.templates.getTemplate('algorithm-config'),
