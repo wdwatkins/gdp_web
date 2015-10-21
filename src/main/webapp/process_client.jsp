@@ -27,7 +27,7 @@
 				<jsp:include page="template/USGSFooter.jsp">
 					<jsp:param name="relPath" value="<%= baseUrl %>" />
 					<jsp:param name="header-class" value="" />
-					<jsp:param name="site-url" value="<script type='text/javascript'>document.write(document.location.href);</script>" />
+					<jsp:param name="site-url" value="<script type='text/javascript'>document.write(document.location.origin + document.location.pathname + document.location.hash);</script>" />
 					<jsp:param name="contact-info" value="<a href='mailto:gdp@usgs.gov?Subject=GDP%20Derivative%20Portal%20Help%20Request'>Contact the Geo Data Portal team</a>" />
 				</jsp:include>
 			</footer>
@@ -67,6 +67,7 @@
 		<script type="text/javascript" src="<%= baseUrl %>js/process_client/views/AlgorithmConfigView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/process_client/views/ProcessView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/process_client/views/DataDetailsView<%= resourceSuffix %>.js"></script>
+		<script type="text/javascript" src="<%= baseUrl %>js/process_client/views/ErrorView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/process_client/controller/ProcessClientRouter<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="<%= baseUrl %>js/process_client/init<%= resourceSuffix %>.js"></script>
     </body>

@@ -17,7 +17,8 @@ $(document).ready(function() {
 		'process',
 		'algorithm-config',
 		'data_set_details',
-		'welcome'
+		'welcome',
+		'not_found',
 	];
 
 	var PARTIALS = [];
@@ -77,7 +78,10 @@ $(document).ready(function() {
 
 		var origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
 		var root  = GDP.BASE_URL.replace(origin, '');
-		Backbone.history.start({root: root + 'client/'});
+		var successfulRoute = Backbone.history.start({root: root + 'client/'});
+		if (!successfulRoute) {
+			GDP.PROCESS_CLIENT.router.errorPage();
+		}
 	});
 
 });
