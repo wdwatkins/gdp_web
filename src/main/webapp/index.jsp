@@ -23,7 +23,7 @@
 				<jsp:include page="template/USGSFooter.jsp">
 					<jsp:param name="relPath" value="" />
 					<jsp:param name="header-class" value="" />
-					<jsp:param name="site-url" value="<script type='text/javascript'>document.write(document.location.origin + document.location.pathname + document.location.hash);</script>" />
+					<jsp:param name="site-url" value="http://cida.usgs.gov/gdp_web/" />
 					<jsp:param name="contact-info" value="<a href='mailto:gdp@usgs.gov?Subject=GDP%20Derivative%20Portal%20Help%20Request'>Contact the Geo Data Portal team</a>" />
 				</jsp:include>
 			</footer>
