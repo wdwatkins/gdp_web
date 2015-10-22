@@ -41,7 +41,7 @@ GDP.PROCESS_CLIENT.controller = GDP.PROCESS_CLIENT.controller || {};
 		},
 
 		hub : function(datasetid) {
-			if (!datasetid || idisDatasetId(datasetid)) {
+			if (!datasetid || isDatasetId(datasetid)) {
 				this.showView(GDP.PROCESS_CLIENT.view.HubView, {
 					template : GDP.PROCESS_CLIENT.templates.getTemplate('hub'),
 					metadataTemplate : GDP.PROCESS_CLIENT.templates.getTemplate('data_set_details'),
