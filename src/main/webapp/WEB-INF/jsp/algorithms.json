@@ -108,11 +108,6 @@
             "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
         ], 
-        "54dd5e44e4b08de9379b38fc": [
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
-        ], 
         "54dd5df2e4b08de9379b38d8": [
             "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
@@ -128,11 +123,6 @@
             "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
         ], 
-        "54dd5ddfe4b08de9379b38cf": [
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
-        ], 
         "54dd5e25e4b08de9379b38ed": [
             "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
@@ -141,12 +131,7 @@
             "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
-        ], 
-        "54dd5e12e4b08de9379b38e7": [
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
-        ], 
+        ],  
         "54dd5e52e4b08de9379b3902": [
             "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
