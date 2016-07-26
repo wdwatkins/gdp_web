@@ -166,6 +166,16 @@
             "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ],
+        "5797a8d6e4b0858db36ef6ce": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+        ],
+        "5797aa9ce4b0858db36ef6d2": [
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
         ]
     }
 }
