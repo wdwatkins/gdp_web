@@ -4,7 +4,7 @@
 
 	<groupId>gov.usgs.cida</groupId>
 	<artifactId>gdp_web</artifactId>
-	<version>0.0.12-SNAPSHOT</version>
+	<version>0.0.12</version>
 	<packaging>war</packaging>
 
 	<name>gdp_web</name>
@@ -128,7 +128,7 @@
 		<url>https://github.com/USGS-CIDA/gdp_web</url>
 		<connection>scm:git:git@github.com:USGS-CIDA/gdp_web.git</connection>
 		<developerConnection>scm:git:git@github.com:USGS-CIDA/gdp_web.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>gdp_web-0.0.12</tag>
   </scm>
 	
 	<dependencies>
