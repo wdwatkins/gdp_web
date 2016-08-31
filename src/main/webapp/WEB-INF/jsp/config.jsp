@@ -20,7 +20,7 @@
 <%
 	Boolean development = Boolean.parseBoolean(props.getProperty("gdp.development"));
 	String maxPolygonsToShowAttributeValues = props.get("gdp.application.maxPolygonsToShowAttributeValues");
-	maxPolygonsToShowAttributeValues = (maxPolygonsToShowAttributeValues == null) ? "1000" : maxPolygonsToShowAttributeValues;
+	maxPolygonsToShowAttributeValues = (maxPolygonsToShowAttributeValues == null) ? "10000" : maxPolygonsToShowAttributeValues;
 	String geoserverEndpoint = props.get("gdp.geoserver.endpoint");
 	String baseUrl = props.getProperty("gdp.base.url");
 	if (!baseUrl.endsWith("/")) { baseUrl += "/"; }
