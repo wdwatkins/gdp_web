@@ -592,7 +592,27 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				}
 			});
 		},
+		/**
+		 * Asynchronously recalculates the bounding box for the specified feature
+		 * @param {String} workspace
+		 * @param {String} store
+		 * @param {String} layer
+		 * @returns {jqXHR} a promise
+		 */
+		_recalculateFeatureBoundingBox: function(workspace, store, layer){
+			var params = {
+				'workspace' : workspace,
+				'store': store,
+				'layer': layer,
+				'response.encoding' : 'json'
+			};
 
+			var deferred = $.ajax({
+				url: GDP.BASE_URL + 'recalculatebbox?' +  $.param(params),
+				type: 'GET'
+			});
+			return deferred;
+		},
 		/*
 		 * Create the draw control and draw feature layer and add to the map. set up the save strategy to update the saved
 		 * feature and to alert the user when the save is successful or if it has failed. If the save
@@ -604,7 +624,8 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			this.saveStrategy = new OpenLayers.Strategy.Save();
 			this.saveStrategy.events.register('success', null, function() {
 				// Now need to add an attribute so that GDP can use this feature
-				var featureType = self._DRAW_FEATURE_NS + ':' + self.drawFeatureLayer.protocol.featureType;
+				var layerName = self.drawFeatureLayer.protocol.featureType;
+				var featureType = self._DRAW_FEATURE_NS + ':' + layerName;
 				var attribute = self._DRAW_FEATURE_ATTRIBUTE;
 				var value = 0;
 
@@ -628,19 +649,31 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 					url: GDP.config.get('application').endpoints.wfs,
 					type: 'POST',
 					contentType: 'application/xml',
-					data: updateTransaction,
-					success : function() {
-						self.toggleDrawControl();
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-						self.alertView.show('alert-danger', 'Could not update the drawn feature ' + featureType + ' with error ' + textStatus);
-					}
+					data: updateTransaction
 				}).done(function() {
-					self.getAvailableFeatures().done(function() {
-						self.model.set('aoiExtent', GDP.util.mapUtils.transformWGS84ToMercator(GDP.OGC.WFS.getBoundsFromCache(featureType)));
-						self.model.set('aoiName', featureType);
-						self.model.set('aoiAttribute', attribute);
-					});
+					self.toggleDrawControl();
+					
+					//recalculate assume layer and store name are identical
+					var recalculation = self._recalculateFeatureBoundingBox(self._DRAW_FEATURE_NS, layerName, layerName);
+					recalculation.fail(function(jqXHR, textStatus, errorThrown){
+						self.alertView.show('alert-danger', 'Could not recalculate the bounding box for drawn feature ' + featureType + ' with error ' + textStatus);
+					}).always(
+						/* 
+						 * Now that we have attempted to recalculate the bounding box,
+						 * fetch the new bbox and update the model.
+						 * Even if the bbox recalculation failed, it is better to
+						 * execute this so that at least the other client-side 
+						 * attributes can be synched with the server
+						 */
+						function(){
+							self.getAvailableFeatures().done(function() {
+								self.model.set('aoiExtent', GDP.util.mapUtils.transformWGS84ToMercator(GDP.OGC.WFS.getBoundsFromCache(featureType)));
+								self.model.set('aoiName', featureType);
+								self.model.set('aoiAttribute', attribute);
+							});
+						});
+				}).fail(function(jqXHR, textStatus, errorThrown){
+					self.alertView.show('alert-danger', 'Could not update the drawn feature ' + featureType + ' with error ' + textStatus);
 				});
 
 			});
