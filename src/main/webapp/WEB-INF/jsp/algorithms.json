@@ -89,11 +89,6 @@
             "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
         ], 
-        "54dd5e37e4b08de9379b38f6": [
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
-        ], 
         "54dd5e5ee4b08de9379b3908": [
             "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
             "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
@@ -179,8 +174,7 @@
         ],
 	"5806361ce4b0824b2d1d3d86": [
             "gov.usgs.cida.gdp.wps.algorithm.FeatureWeightedGridStatisticsAlgorithm", 
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm", 
-            "gov.usgs.cida.gdp.wps.algorithm.FeatureCoverageOPeNDAPIntersectionAlgorithm"
+            "gov.usgs.cida.gdp.wps.algorithm.FeatureGridStatisticsAlgorithm"
         ]
     }
 }
