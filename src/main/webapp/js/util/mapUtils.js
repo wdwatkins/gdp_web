@@ -29,7 +29,7 @@ GDP.util.mapUtils = (function() {
 	that.createWorldStreetMapLayer = function() {
 		return new OpenLayers.Layer.XYZ(
 			"World Street Map",
-			"http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map" + zyx,
+			"https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map" + zyx,
 			{
 				isBaseLayer: true,
 				units: "m",
