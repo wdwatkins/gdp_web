@@ -129,8 +129,8 @@ var GDP = GDP || {};
 
 				if (uri.protocol === '') {
 					// initially assume http
-					dataSourceUrl = dataSourceUrl.replace(/^/, 'http://');
-					uri.protocol = 'http';
+					dataSourceUrl = dataSourceUrl.replace(/^/, 'https://');
+					uri.protocol = 'https';
 				}
 
 				// TODO: need a cleaner way of testing service type and failing over
