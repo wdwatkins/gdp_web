@@ -45,6 +45,6 @@
 		<script type="text/javascript" src="js/landing/views/DataSetDialogView<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/landing/controller/LandingRouter<%= resourceSuffix %>.js"></script>
 		<script type="text/javascript" src="js/landing/init<%= resourceSuffix %>.js"></script>
-	
+                <script type="text/javascript" src="js/landing/welcome<%= resourceSuffix %>.js"></script>
     </body>
 </html>

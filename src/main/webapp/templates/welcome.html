@@ -1,58 +1,68 @@
 <div class="welcome-view-div">
-	<div class="jumbotron welcome-jumbotron"  {{#if hide }}style="display:none;"{{/if}}>
-		<h1>Welcome to the USGS Geo Data Portal</h1>
-		<div class="welcome-content">
-			<div>This page is a catalog of the datasets that have been tested to 
-					work well for access with the Geo Data Portal (GDP). Select a 
-					dataset below to see more details and access it.</div>
-			<div><a href="https://my.usgs.gov/confluence/display/GeoDataPortal/GDP+Home"  target="_blank">
-				For more information about the GDP, please visit the 
-				documentation home here.</a></div>
-			<div>The increasing availability of downscaled climate projections and 
-				other large data products that summarize or predict climate and 
-				land use conditions, is making use of these data more common in 
-				research and management. Scientists and decision makers often need 
-				to construct ensembles and compare climate hindcasts and future 
-				projections for particular spatial areas. These tasks generally 
-				require an investigator to procure all datasets of interest en 
-				masse, integrate the various data formats and representations into 
-				commonly accessible and comparable formats, and then extract the 
-				subsets of the datasets that are actually of interest. This process 
-				can be challenging and time intensive due to data-transfer, 
-				-storage, and(or) -processing limits, or unfamiliarity with methods 
-				of accessing climate and land use data. Data management for 
-				modeling and assessing the impacts of future climate conditions 
-				is also becoming increasingly expensive due to the size of the 
-				datasets. The Geo Data Portal addresses these limitations, making 
-				access to numerous climate datasets for particular areas of 
-				interest a simple and efficient task.
-			</div>
-			{{#if isLandingPage }}
-			<div class="advanced-users-form-container">
-				Most users should select a dataset from this page. Click the following button for advanced users:&nbsp;
-				<form class="process-form" method="POST" action="client/#!advanced">
-					{{#each incomingParams}}
-						<input type="hidden" name="{{@key}}" value="{{this}}" />
-					{{/each}}
-					<button type="submit" class="btn btn-default">GDP processing for advanced users</button>
-				</form>
-			</div>
-			{{/if}}
-			
-			{{#if aoiMessageContext.sciencebase}}
-			<div>
-				<a href="{{aoiMessageContext.sciencebase.url}}" target="_blank">Areas of interest from ScienceBase already selected.</a>
-			</div>
-			{{/if}}
 
-			{{#if aoiMessageContext.defaultCaller}}
-			<div>
-				Areas of interest {{aoiMessageContext.defaultCaller.itemId}} from {{aoiMessageContext.defaultCaller.caller}} already selected.
-			</div>
-			{{/if}}
-		</div>
-	</div>
-	<div class="toggle-welcome-container">
-		<button class="toggle-welcome" type="button" title="{{button.buttonTitle}}"><i class="fa {{button.buttonIcon}}"></i></button>
-	</div>
+    <div class="welcome-content">
+        <h1>Welcome to the USGS Geo Data Portal</h1>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Vivamus accumsan, ipsum ac sollicitudin tempus, sapien 
+            enim interdum velit, egestas maximus arcu tortor efficitur 
+            quam. Maecenas scelerisque vitae augue ultrices dapibus. 
+            Integer sed est orci. Quisque pulvinar, turpis vitae 
+            pellentesque venenatis, eros sapien dignissim risus, 
+            vitae laoreet ex lacus et elit. 
+        </p>
+
+        <div id="gdpoptions">
+
+            <a href="https://github.com/USGS-CIDA/pyGDP">
+                <div class="gdpOptionContainer">
+                    <div class="gdpOption">
+                        <h4>PYGDP</h4>
+                        <div class="optionImage">
+                            <img src="images/python.svg" alt="Python Language Logo"/>
+                        </div>
+                    </div>
+                </div>
+            </a>    
+
+            <a href="#">
+                <div id="gdpGui" class="gdpOptionContainer">
+                    <div class="gdpOption">
+                        <h4>GDP WEB</h4>
+                        <div class="optionImage">
+                            <img src="images/gdp.svg" alt="Geo Data Portal Logo"/>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://github.com/USGS-R/geoknife">
+                <div class="gdpOptionContainer">
+                    <div class="gdpOption">
+                        <h4>R:GEOKNIFE</h4>
+                        <div class="optionImage">
+                            <img src="images/r.svg" alt="R Language Logo"/>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="citationArea">
+            <h5>Cite GDP</h5>
+            <div class="citationHolder">
+                <div id="copyCitation">
+                    <p>Copy</p>
+                </div>
+                <input id="copyTarget" class="citation" type="text" name="GDPCitation" value="Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce leo velit, consequat in venenatis nec, auctor ac mi. Aenean non turpis sed justo aliquet consequat ut quis orci. In condimentum mi metus, ut suscipit nibh sodales eget. Morbi pretium pellentesque diam molestie hendrerit. Praesent non finibus neque. Donec aliquet ullamcorper eros, quis tristique erat. Vestibulum scelerisque pellentesque euismod. Nam imperdiet arcu a sollicitudin facilisis. Nam tellus enim, vehicula vel purus pretium, sodales viverra tortor. Phasellus eu elit ac urna tincidunt laoreet. Donec molestie egestas turpis nec bibendum. Nunc eget condimentum eros, eget pharetra velit."/>
+            </div>
+        </div>
+
+    </div>
+    <div class="toggleButtonArea">
+        <div class="welcomeToggleButton">
+            <img class="toggleArrow" src="images/togglearrow-01.png" alt="toggle arrow"/>
+        </div>
+    </div>
 </div>

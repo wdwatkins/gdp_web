@@ -1,26 +1,287 @@
-.welcome-view-div {
-	position : relative;
-	min-height : 30px;
+@gray: rgb(238,238,238);
+@border:1px solid rgb(179,179,179);
+@transparent: 0;
+@opaque: 1;
+@animation:buttonToggle .5s ease;
 
-	.welcome-jumbotron {
-		.make-row();
-		margin-bottom : 0px;
-	
-	}
-	.toggle-welcome-container {
-		position : absolute;
-		width : 100%;
-		top : 0px;
-		.toggle-welcome {
-			.center-block();
-		}
-	}
+.container-fluid{
+    background:@gray;
+}
+
+.welcome-view-div {
+    position : relative;
+    min-height : 30px;
+    
+    a{
+        text-decoration:none;
+        color:#000;
+        font-weight:normal;
+    }
+
+    h1{
+        font-size:1.4em;
+    }
+    
+
+    .welcome-jumbotron {
+        /*.make-row();*/
+        margin-bottom : 0px;
+
+    }
+    .toggle-welcome-container {
+        position : absolute;
+        width : 100%;
+        top : 0px;
+        .toggle-welcome {
+            /*.center-block();*/
+        }
+    }
 }
 .advanced-users-form-container {
-	margin-top : 10px;
+    margin-top : 10px;
 }
-	
+
 .advanced-users-form-container form {
-	display:inline-block;
+    display:inline-block;
+}
+
+#gdpoptions{
+    width:230px;
+    margin:0 auto;
+}
+
+.gdpOptionContainer{
+    width:230px;
+    text-align:center;
+    margin:0 0 10px 0;
+}
+
+.gdpOption{
+    background:@gray;
+    border:@border;
+    width:100%;
+    height:230px;
+    border-radius:5px;
+    padding:10px;
+    margin-bottom:5px;
+
+    h4{
+        margin:0 0 15px 0;
+    }
+
+    &:focus{
+        background:#fff;
+    }
+}
+
+.optionImage{
+    width:160px;
+    height:160px;
+    margin:0 auto;
+
+    img{
+        width:100%;
+        height:100%;
+    }
+}
+
+.citationArea{
+
+    h5{
+        margin:5px 0;
+    }
+}
+
+.citationHolder{
+    width:100%;
+    display:flex;
+    flex-direction:row;
+    position:relative;
+}
+
+.success{
+    position:absolute;
+    bottom:-18px;
+    background:green;
+    width:334px;
+    height:20px;
+    color:#fff;
+    padding:2px 5px;
+    font-size:.85em;
+}
+
+#copyCitation{
+    height:35px;
+    width:44px;
+    border-left:@border;
+    border-top:@border;
+    border-bottom:@border;
+    border-radius:5px 0 0 5px;
+    text-align:center;
+    line-height:33px;
+    cursor:pointer;
+
+    &:focus{
+        background:#fff;
+    }
+    
+    p{
+        display:inline-block;
+        width:100%;
+        font-size:.9em;
+    }
+}
+
+.citation{
+    background:#fff;
+    border:@border;
+    border-radius:0 5px 5px 0;
+    width:290px;
+    height:35px;
+    overflow:hidden;
+    padding:5px;
+    transition: all 0.5s ease;
+    outline:none;
+
+    &:hover{
+        max-height:100%;
+        overflow: visible;
+    }
+}
+
+.toggleButtonArea{
+    height:30px;
+    margin-top:10px;
+}
+
+.welcomeToggleButton{
+    background:@gray;
+    border-top:@border;
+    border-left:@border;
+    border-right:@border;
+    width:60px;
+    height:100%;
+    margin:0 auto;
+    border-radius:30px 30px 0 0;
+    transition: all 0.5s ease;
+    text-align:center;
+    cursor:pointer;
+    
+    &:hover{
+        background:rgb(179,179,179);
+    }
+    
+    img{
+        width:17px;
+        margin:9px 0 0 0;
+    }
+}
+
+.welcomeToggleButton .rotate{
+    transform: rotate(180deg);
+    margin:3px 0 0 0;
+}
+
+@-webkit-keyframes buttonToggle{
+    0%{ 
+        opacity:@transparent;
+    }
+    100%{ 
+        opacity:@opaque;
+    }
+}
+
+@-moz-keyframes buttonToggle{
+    0%{ 
+        opacity:@transparent;
+    }
+    100%{ 
+        opacity:@opaque;
+    }
+}
+
+@-o-keyframes buttonToggle{
+    0%{ 
+        opacity:@transparent;
+    }
+    100%{ 
+        opacity:@opaque;
+    }
+}
+
+@keyframes buttonToggle{
+    0%{ 
+        opacity:@transparent;
+    }
+    100%{ 
+        opacity:@opaque;
+    }
+}
+
+.noMargin{
+    margin:-1px 0 5px 0;
+}
+
+.animationTrigger{
+    -webkit-animation: @animation;
+    -moz-animation: @animation;
+    -o-animation: @animation;
+    animation: @animation;
+    border-top:none;
+    border-bottom:@border;
+    border-radius:0 0 30px 30px;
+}
+
+@media screen and (min-width:768px){
+
+    .welcome-view-div{
+        h1{
+            font-size:2em;
+        }
+    }
+
+    #gdpoptions{
+        display:flex;
+        flex-direction:row;
+        width:700px;
+    }
+
+    .gdpOptionContainer{
+        flex:1;
+        margin:10px 10px 10px 0;
+        transition: all 0.5s ease;
+        cursor:pointer;
+
+        &:hover{
+            transform: scale(1.05); 
+        }
+        
+        &:hover .gdpOption{
+            background:#fff;
+        }
+    }
+
+    .gdpOptionContainer:nth-child(3){
+        margin:10px 0 10px 0;
+    }
+
+    #copyCitation{
+
+        &:hover{
+            background:#fff;
+        }
+    }
+}
+
+@media screen and (min-width:1025px){
+
+    .welcome-content{
+        width:960px;
+        margin:0 auto;
+    }
+
+    .gdpOptionContainer{
+        margin-right:20px;
+    }
 }
 
