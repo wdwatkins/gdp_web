@@ -108,9 +108,7 @@ GDP.util = GDP.util || {};
                         target = document.getElementById(targetId);
                     if (!target) {
                         var target = document.createElement("textarea");
-                        target.style.position = "absolute";
-                        target.style.left = "-9999px";
-                        target.style.top = "0";
+                        target.style.display = "none";
                         target.id = targetId;
                         document.body.appendChild(target);
                     }
