@@ -10,18 +10,10 @@ GDP.util = GDP.util || {};
 	GDP.util.WelcomeView = GDP.util.BaseView.extend({
 
 		events : {
-			'click .toggle-welcome' : 'toggleWelcome'
+                        'click #copyCitation' :  'copyToClipboard',
+                        'click .welcomeToggleButton' : 'toggleWelcomeArea', 
+                        'click #gdpGui' : 'toggleWelcomeArea'
 		},
-
-		SHOW_WELCOME : {
-			buttonTitle : 'Hide welcome',
-			buttonIcon : 'fa-angle-double-up'
-		},
-		HIDE_WELCOME : {
-			buttonTitle : 'Show welcome',
-			buttonIcon : 'fa-angle-double-down'
-		},
-
 		/*
 		 * @param options
 		 *      @prop {Function} template - returns a function which will render a template
@@ -89,34 +81,75 @@ GDP.util = GDP.util || {};
 			return context;
 		},
 
-		hideWelcome : function() {
-			var $button = this.$('.toggle-welcome');
-			var $buttonIcon = $button.find('i');
-			var $welcomeDiv = this.$('.welcome-jumbotron');
-
-			$welcomeDiv.slideUp();
-			$button.attr('title', this.HIDE_WELCOME.buttonTitle);
-			$buttonIcon.removeClass(this.SHOW_WELCOME.buttonIcon).addClass(this.HIDE_WELCOME.buttonIcon);
+		toggleWelcomeArea : function() {
+                    //Hides Welcome Content
+                    $('.welcome-content').slideToggle('slow');
+                    //Removes margin from top to rest neatly against header
+                    $('.toggleButtonArea').toggleClass('noMargin');
+                    //Triggers animation for toggle button
+                    $('.welcomeToggleButton').toggleClass('animationTrigger');
+                    //Rotatates arrow inside toggle button
+                    $('.toggleArrow').toggleClass('rotate');
 		},
-
-		showWelcome : function() {
-			var $button = this.$('.toggle-welcome');
-			var $buttonIcon = $button.find('i');
-			var $welcomeDiv = this.$('.welcome-jumbotron');
-
-			$welcomeDiv.slideDown();
-			$button.attr('title', this.SHOW_WELCOME.buttonTitle);
-			$buttonIcon.removeClass(this.HIDE_WELCOME.buttonIcon).addClass(this.SHOW_WELCOME.buttonIcon);
-
-		},
-		toggleWelcome : function() {
-			if (this.$('.toggle-welcome').attr('title') === this.SHOW_WELCOME.buttonTitle) {
-				this.hideWelcome();
-			}
-			else {
-				this.showWelcome()
-			}
-		}
+                
+                copyToClipboard : function () {
+                // create hidden text element, if it doesn't already exist
+                    var elem= document.getElementById("copyTarget");
+                    var targetId = "_hiddenCopyText_";
+                    var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
+                    var origSelectionStart, origSelectionEnd;
+                    if (isInput) {
+                        // can just use the original source element for the selection and copy
+                        target = elem;
+                        origSelectionStart = elem.selectionStart;
+                        origSelectionEnd = elem.selectionEnd;
+                    } else {
+                        // must use a temporary form element for the selection and copy
+                        target = document.getElementById(targetId);
+                    if (!target) {
+                        var target = document.createElement("textarea");
+                        target.style.position = "absolute";
+                        target.style.left = "-9999px";
+                        target.style.top = "0";
+                        target.id = targetId;
+                        document.body.appendChild(target);
+                    }
+                    target.textContent = elem.textContent;
+                    }
+                    // select the content
+                    var currentFocus = document.activeElement;
+                    target.focus();
+                    target.setSelectionRange(0, target.value.length);
+    
+                    // copy the selection
+                    var succeed;
+                    try {
+                        succeed = document.execCommand("copy");
+                    } catch(e) {
+                        succeed = false;
+                    }
+                    // restore original focus
+                    if (currentFocus && typeof currentFocus.focus === "function") {
+                        currentFocus.focus();
+                    }
+                    //Places a Copy Success Message then removes it from DOM
+                    if(succeed === document.execCommand("copy")){
+                        $('.citationHolder').append('<div class="success">Citation Copy Successful</div>');
+                        $('.success').fadeOut(3000, function(){
+                            $(this).remove();
+                        });
+                    }
+    
+                    if (isInput) {
+                        // restore prior selection
+                        elem.setSelectionRange(origSelectionStart, origSelectionEnd);
+                    } else {
+                    // clear temporary content
+                    target.textContent = "";
+                    }
+                    return succeed;
+                }
+                
 	});
 
 }());
