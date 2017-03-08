@@ -4,57 +4,89 @@
 @import "welcome.less";
 
 #banner-area {
-	font-family : Verdana, Arial, Helvetica, sans-serif;
-	font-size : small;
+    font-family : Verdana, Arial, Helvetica, sans-serif;
+    font-size : small;
 }
 
 .dataset-tile-panel-div {
-	.make-row();
-	background-color : @brand-primary;
+    .make-row();
+    background-color : @brand-primary;
 
-	.dataset-tile-container {
-		.make-md-column(9, 0);
-		margin-bottom : 0;
-		border-radius : 0;
-	}
-	.dataset-filter-container {
-		.make-md-column(3, 0);
-		color : white;
-		input {
-			color: black;
-		}
-		.dataset-filter {
-			margin-bottom: 10px;
-			div {
-				font-weight: bold;
-			}
-			label {
-				font-weight: normal;
-			}
-		}
-	}
+    .dataset-tile-container {
+        .make-md-column(9, 0);
+        margin-bottom : 0;
+        border-radius : 0;
+    }
+    .dataset-filter-container {
+        .make-md-column(3, 0);
+        color : white;
+        input {
+            color: black;
+        }
+        .dataset-filter {
+            margin-bottom: 10px;
+            div {
+                font-weight: bold;
+            }
+            label {
+                font-weight: normal;
+            }
+        }
+    }
 }
 .tile-loading-indicator {
-	margin-top : 15px;
+    margin-top : 15px;
 }
 
 .dataset-tile-div {
-	.make-md-column(6, 0);
-	.make-lg-column(4, 0);
-	height : 550px;
+    .make-md-column(6, 0);
+    .make-lg-column(4, 0);
+    height : 550px;
 }
 .dataset-tile-div:hover {
-	background-color : lightgray;
-	opacity: 0.8;
-	cursor : pointer;
+    background-color : lightgray;
+    opacity: 0.8;
+    cursor : pointer;
 }
 .dataset-map {
-	height: 300px;
+    height: 300px;
 }
 
 .dataset-map:hover {
-	cursor: pointer;
+    cursor: pointer;
 }
 .row-spacer:nth-child(3n + 3) {
-	background : red;
+    background : red;
+}
+
+@media (min-width: 992px){
+    
+    .dataset-tile-panel-div .dataset-filter-container{
+        width:18%;
+    }
+    
+    .dataset-tile-panel-div .dataset-tile-container{
+        width:80%;
+    }
+
+    .dataset-tile-div {
+        width: 48.5%;
+        margin: 0 10px 10px 0;
+    }
+}
+
+@media (min-width: 1200px){
+    
+    .dataset-tile-panel-div .dataset-filter-container{
+        width:15%;
+    }
+
+    .dataset-tile-panel-div .dataset-tile-container{
+        width:85%;
+    }
+
+    .dataset-tile-div {
+        width: 30%;
+    }
+    
 }
