@@ -13,8 +13,8 @@ describe('WelcomeView', function() {
 		$('body').append('<div id="test-div"></div>');
 		$testDiv = $('#test-div');
 
-		$testDiv.html('<div class="welcome-jumbotron"></div>' +
-			'<button class="toggle-welcome" title="Hide welcome"><i class="fa fa-angle-double-up"></i>'
+		$testDiv.html('<div class="welcome-content"></div>' +
+			'<img class="toggleArrow" src="images/togglearrow-01.png" alt="toggle arrow"/>'
 		);
 
 		templateSpy = jasmine.createSpy('templateSpy');
@@ -27,72 +27,16 @@ describe('WelcomeView', function() {
 		$.fx.off = false;
 	});
 
-	it('Expects that at initialization the template is called with the correct context if hide is not specified', function() {
-		view = new GDP.util.WelcomeView({
-			template : templateSpy,
-			el : '#test-div',
-			isLandingPage : true
-		});
-		expect(templateSpy).toHaveBeenCalledWith({
-			button : view.SHOW_WELCOME,
-			hide : false,
-			incomingParams : {},
-			aoiMessageContext : {},
-			isLandingPage : true
-		});
-	});
-
-	it('Expects that at initialization the template is called with the correct context if hide is set to true', function() {
-		view = new GDP.util.WelcomeView({
-			template : templateSpy,
-			el : '#test-div',
-			hide : true,
-			isLandingPage : false
-		});
-		expect(templateSpy).toHaveBeenCalledWith({
-			button : view.HIDE_WELCOME,
-			hide : true,
-			incomingParams : {},
-			aoiMessageContext : {},
-			isLandingPage : false
-		});
-	});
-
-	it('Expects that a call to toggleWelcome, toggles the visibility of the .welcome-jumbotron div and updates the toggle button', function() {
+	it('Expects that a call to toggleWelcomeArea, toggles the visibility of the .welcome-content div and rotates arrow', function() {
 		view = new GDP.util.WelcomeView({
 			template : templateSpy,
 			el : '#test-div'
 		});
-		view.toggleWelcome();
-		expect($('.welcome-jumbotron').is(':visible')).toBe(false);
-		expect($('.toggle-welcome').attr('title')).toEqual(view.HIDE_WELCOME.buttonTitle);
-		expect($('i').hasClass(view.HIDE_WELCOME.buttonIcon));
+		view.toggleWelcomeArea();
+		expect($('.welcome-content').is(':visible')).toBe(false);
+		expect($('.toggleArrow').hasClass('rotate'));
 
-		view.toggleWelcome();
-		expect($('.welcome-jumbotron').is(':visible')).toBe(true);
-		expect($('.toggle-welcome').attr('title')).toEqual(view.SHOW_WELCOME.buttonTitle);
-		expect($('i').hasClass(view.SHOW_WELCOME.buttonIcon));
-	});
-
-	it('Expects that a call to hideWelcome, hides the .welcome-jumbotron div and updates the toggle button', function() {
-		view = new GDP.util.WelcomeView({
-			template : templateSpy,
-			el : '#test-div'
-		});
-		view.hideWelcome();
-		expect($('.welcome-jumbotron').is(':visible')).toBe(false);
-		expect($('.toggle-welcome').attr('title')).toEqual(view.HIDE_WELCOME.buttonTitle);
-		expect($('i').hasClass(view.HIDE_WELCOME.buttonIcon));
-	});
-
-	it('Expects that a call to hideWelcome, hides the .welcome-jumbotron div and updates the toggle button', function() {
-		view = new GDP.util.WelcomeView({
-			template : templateSpy,
-			el : '#test-div'
-		});
-		view.showWelcome();
-		expect($('.welcome-jumbotron').is(':visible')).toBe(true);
-		expect($('.toggle-welcome').attr('title')).toEqual(view.SHOW_WELCOME.buttonTitle);
-		expect($('i').hasClass(view.SHOW_WELCOME.buttonIcon));
+		view.toggleWelcomeArea();
+		expect($('.welcome-content').is(':visible')).toBe(true);
 	});
 });
