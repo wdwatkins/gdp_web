@@ -6,7 +6,7 @@ var GDP = GDP || {};
 GDP.util = GDP.util || {};
 (function() {
 	"use strict";
-
+        
 	GDP.util.WelcomeView = GDP.util.BaseView.extend({
 
 		events : {
@@ -18,7 +18,6 @@ GDP.util = GDP.util || {};
 		 * @param options
 		 *      @prop {Function} template - returns a function which will render a template
 		 *      @prop {String} el - Jquery selector where this content should be rendered
-		 *      @prop {Boolean} hide - optional. Set to true if content should initially be hidden.
 		 *      @prop {Boolean} isLandingPage. Set to true if you want the full welcome.
 		 */
 		initialize : function(options) {
@@ -27,19 +26,9 @@ GDP.util = GDP.util || {};
 				incomingParams : GDP.incomingParams,
 				isLandingPage : options.isLandingPage
 			};
-			if (!_.has(options, 'hide')) {
-				options.hide = false;
-			}
-			if (options.hide) {
-				this.context.button = this.HIDE_WELCOME;
-			}
-			else {
-				this.context.button = this.SHOW_WELCOME;
-			}
-			this.context.hide = options.hide;
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 		},
-
+                
 		_getAreasOfInterestMessageContext : function() {
 			var context = {};
 			var parser;
@@ -80,14 +69,15 @@ GDP.util = GDP.util || {};
 			}
 			return context;
 		},
-
+                
 		toggleWelcomeArea : function() {
+                    var button = $('.welcomeToggleButton');
                     //Hides Welcome Content
                     $('.welcome-content').slideToggle('slow');
                     //Removes margin from top to rest neatly against header
                     $('.toggleButtonArea').toggleClass('noMargin');
                     //Triggers animation for toggle button
-                    $('.welcomeToggleButton').toggleClass('animationTrigger');
+                    $(button).toggleClass('animationTrigger');
                     //Rotatates arrow inside toggle button
                     $('.toggleArrow').toggleClass('rotate');
 		},
@@ -147,8 +137,6 @@ GDP.util = GDP.util || {};
                     }
                     return succeed;
                 }
-                
 	});
-
 }());
 
