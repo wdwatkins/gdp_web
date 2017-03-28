@@ -8,7 +8,7 @@ GDP.util = GDP.util || {};
 	"use strict";
         
 	GDP.util.WelcomeView = GDP.util.BaseView.extend({
-
+            
 		events : {
                         'click #copyCitation' :  'copyToClipboard',
                         'click .welcomeToggleButton' : 'toggleWelcomeArea', 
@@ -22,9 +22,10 @@ GDP.util = GDP.util || {};
 		 */
 		initialize : function(options) {
 			this.context = {
+                                pathToImages : GDP.BASE_URL,
 				aoiMessageContext : this._getAreasOfInterestMessageContext(),
 				incomingParams : GDP.incomingParams,
-				isLandingPage : options.isLandingPage
+				isLandingPage : options.isLandingPage,
 			};
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 		},
@@ -71,15 +72,14 @@ GDP.util = GDP.util || {};
 		},
                 
 		toggleWelcomeArea : function() {
-                    var button = $('.welcomeToggleButton');
                     //Hides Welcome Content
-                    $('.welcome-content').slideToggle('slow');
+                    this.$('.welcome-content').slideToggle('slow');
                     //Removes margin from top to rest neatly against header
-                    $('.toggleButtonArea').toggleClass('noMargin');
+                    this.$('.toggleButtonArea').toggleClass('noMargin');
                     //Triggers animation for toggle button
-                    $(button).toggleClass('animationTrigger');
+                    this.$('.welcomeToggleButton').toggleClass('animationTrigger');
                     //Rotatates arrow inside toggle button
-                    $('.toggleArrow').toggleClass('rotate');
+                    this.$('.toggleArrow').toggleClass('rotate');
 		},
                 
                 copyToClipboard : function () {

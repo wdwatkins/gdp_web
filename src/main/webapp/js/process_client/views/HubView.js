@@ -63,12 +63,6 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				isLandingPage : false
 			});
                         
-                        //Finds images for the welcome view
-                        $('#python').attr('src', GDP.BASE_URL + '/images/python.svg'); 
-                        $('#gdp').attr('src', GDP.BASE_URL + '/images/gdp.svg');
-                        $('#R').attr('src', GDP.BASE_URL + '/images/r.svg'); 
-                        $('#Arrow').attr('src', GDP.BASE_URL + '/images/togglearrow-01.png'); 
-                        
                         //hides welcome-content rotates toggle button
                         $('.welcome-content').hide();
                         $('#Arrow').addClass('rotate');
