@@ -25,7 +25,7 @@ GDP.util = GDP.util || {};
                                 pathToImages : GDP.BASE_URL,
 				aoiMessageContext : this._getAreasOfInterestMessageContext(),
 				incomingParams : GDP.incomingParams,
-				isLandingPage : options.isLandingPage,
+				isLandingPage : options.isLandingPage
 			};
 			GDP.util.BaseView.prototype.initialize.apply(this, arguments);
 		},
