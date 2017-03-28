@@ -28,7 +28,6 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 			var process = this.model.getSelectedAlgorithmProcess();
 			var messages = this.model.jobErrorMessages();
 			var invalidJob = (messages.spatial.length !== 0) || (messages.dataDetails.length !== 0) || (messages.algorithm.length !== 0);
-
 			this.$el.html(this.template({
 				jobModel: this.model.attributes,
 				areAllAOIVariablesSelected : this.model.attributes.aoiAttributeValues === this.model.SELECT_ALL_AOI_ATTRIBUTE_VALUES,
@@ -63,11 +62,16 @@ GDP.PROCESS_CLIENT.view = GDP.PROCESS_CLIENT.view || {};
 				hide : this.model.get('dataSetModel') !== null,
 				isLandingPage : false
 			});
-
+                        
+                        //hides welcome-content rotates toggle button
+                        $('.welcome-content').hide();
+                        $('#Arrow').addClass('rotate');
+                        $('.welcomeToggleButton').addClass('animationTrigger');
+                        
 			this.childViews.alertView = new GDP.util.AlertView({
 				el : '#job-processing-messages-div'
 			});
-
+                        
 			// Used to store retrieval results id
 			this.resultsModel = new Backbone.Model();
 

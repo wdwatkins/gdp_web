@@ -8,14 +8,20 @@
     background:@gray;
 }
 
+.welcome-view-container{
+    margin-top:0;
+}
+
 .welcome-view-div {
     position : relative;
     min-height : 30px;
     
     a{
         text-decoration:none;
+        outline: none;
         color:#000;
         font-weight:normal;
+        background: none;
     }
 
     h1{
@@ -37,7 +43,7 @@
 .gdpOption{
     background:@gray;
     border:@border;
-    width:100%;
+    width:230px;
     height:230px;
     border-radius:5px;
     padding:10px;
@@ -226,7 +232,7 @@
     }
 
     .gdpOptionContainer{
-        flex:1;
+        flex: 1;
         margin:10px 10px 10px 0;
         transition: all 0.5s ease;
         cursor:pointer;
